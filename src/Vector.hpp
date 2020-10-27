@@ -157,6 +157,16 @@ Vector<V>::operator[](std::uint64_t i) const noexcept
 { return *(mHead + i); }
 
 template <typename V>
+V*
+Vector<V>::operator+(std::uint64_t i) noexcept
+{ return mHead + i; }
+
+template <typename V>
+V const*
+Vector<V>::operator+(std::uint64_t i) const noexcept
+{ return mHead + i; }
+
+template <typename V>
 Vector<V>::operator V*() noexcept
 { return mHead; }
 

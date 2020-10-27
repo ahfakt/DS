@@ -14,7 +14,7 @@ struct ENode {
 	VNode<V, E> *in, *out;
 	union {
 		E value;
-		std::byte eraw[sizeof(V)];
+		std::byte eraw[sizeof(E)];
 	};
 
 	template <typename ... Args>

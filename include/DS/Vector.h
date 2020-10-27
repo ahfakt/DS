@@ -42,6 +42,9 @@ public:
 	V& operator[](std::uint64_t i) noexcept;
 	V const& operator[](std::uint64_t i) const noexcept;
 
+	V* operator+(std::uint64_t i) noexcept;
+	V const* operator+(std::uint64_t i) const noexcept;
+
 	operator V*() noexcept;
 	operator V const*() const noexcept;
 

@@ -56,6 +56,7 @@ public:
 
 	template <typename v = V, typename e = E>
 	Digraph& operator=(std::enable_if_t<(Stream::isDeserializable<v> || std::is_trivially_copyable_v<v>) && (Stream::isDeserializable<e> || std::is_trivially_copyable_v<e>), Stream::Input>&);
+
 	template <typename v, typename e>
 	friend std::enable_if_t<(Stream::isDeserializable<v> || std::is_trivially_copyable_v<v>) && (Stream::isDeserializable<e> || std::is_trivially_copyable_v<e>), Stream::Output&>
 	operator<<(Stream::Output& os, Digraph<v, e> const& digraph);

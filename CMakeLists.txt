@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.14)
-project(DS VERSION 0.5 DESCRIPTION "")
+cmake_minimum_required(VERSION 3.17)
+project(DS VERSION 0.9 DESCRIPTION "")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 add_library(${PROJECT_NAME} INTERFACE)
-add_subdirectory(${PROJECT_SOURCE_DIR}/../Stream ${PROJECT_SOURCE_DIR}/../Stream/build)
+add_subdirectory(${PROJECT_SOURCE_DIR}/../Stream ${PROJECT_BINARY_DIR}/../../Stream/${CMAKE_BUILD_TYPE})
 
 target_link_libraries(${PROJECT_NAME} INTERFACE Stream)
 target_include_directories(${PROJECT_NAME} INTERFACE include)
