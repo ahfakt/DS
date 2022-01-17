@@ -195,8 +195,6 @@ Digraph<V, E>::deserializeVertices(Stream::Input& vInput, DP::Factory<V, VIDType
 		}
 		mVTail->next = nullptr;
 	}
-	else
-		mVTail = mVHead = nullptr;
 
 	return vs;
 }
