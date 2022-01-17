@@ -121,7 +121,7 @@ requires Deserializable&lt;K, <a class="elRef" href="../../../Stream/d7/d83/clas
 <tr class="memitem:a818795d22ffe028657cd23a0a6bb523a"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d6d/structDS_1_1SNode.html#a818795d22ffe028657cd23a0a6bb523a">Create</a> (<a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *P, <a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *S, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, KArgs &amp;&amp;... kArgs)</td></tr>
 <tr class="separator:a818795d22ffe028657cd23a0a6bb523a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab94118792667b750133c6cc01f58a659"><td class="memTemplParams" colspan="2">template&lt;typename IDType , typename ... FArgs&gt; </td></tr>
-<tr class="memitem:ab94118792667b750133c6cc01f58a659"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d6d/structDS_1_1SNode.html#ab94118792667b750133c6cc01f58a659">Create</a> (<a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *P, <a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *S, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, DP::Factory&lt; K, IDType, FArgs ... &gt; const &amp;factory)</td></tr>
+<tr class="memitem:ab94118792667b750133c6cc01f58a659"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d6d/structDS_1_1SNode.html#ab94118792667b750133c6cc01f58a659">Create</a> (<a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *P, <a class="el" href="../../db/d6d/structDS_1_1SNode.html">SNode</a> *S, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; K, IDType, FArgs ... &gt; const &amp;factory)</td></tr>
 <tr class="separator:ab94118792667b750133c6cc01f58a659"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -460,7 +460,7 @@ template&lt;typename IDType , typename ... FArgs&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DP::Factory&lt; K, IDType, FArgs ... &gt; const &amp;&#160;</td>
+          <td class="paramtype"><a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; K, IDType, FArgs ... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>factory</em>&#160;</td>
         </tr>
         <tr>
@@ -479,7 +479,7 @@ template&lt;typename IDType , typename ... FArgs&gt; </div>
 <p class="definition">Definition at line <a class="el" href="../../d0/d32/SNode_8hpp_source.html#l00100">100</a> of file <a class="el" href="../../d0/d32/SNode_8hpp_source.html">SNode.hpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    {</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">auto</span> state = Stream::Get&lt;state_t&gt;(input);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> <span class="keyword">const</span>&amp; createInfo = DP::Factory&lt;K, IDType, FArgs ...&gt;::GetCreateInfo(Stream::Get&lt;IDType&gt;(input));</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> <span class="keyword">const</span>&amp; createInfo = <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, IDType, FArgs ...&gt;::GetCreateInfo</a>(Stream::Get&lt;IDType&gt;(input));</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">auto</span>* t = <span class="keyword">new</span>(createInfo.size) SNode(createInfo.create, Stream::Get&lt;std::remove_cvref_t&lt;FArgs&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">if</span> (state.hasLeft) {</div>
@@ -499,6 +499,7 @@ template&lt;typename IDType , typename ... FArgs&gt; </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            <span class="keywordflow">throw</span>;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        }</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    }</div>
+<div class="ttc" id="aclassDP_1_1Factory_html"><div class="ttname"><a href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -170,10 +170,10 @@ $(function() {
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> IDType, <span class="keyword">typename</span> ... FArgs&gt;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">static</span> SNode*</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    Create(SNode* P, SNode* S, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; input, DP::Factory&lt;K, IDType, FArgs ...&gt; <span class="keyword">const</span>&amp; factory)</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    Create(SNode* P, SNode* S, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; input, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, IDType, FArgs ...&gt;</a> <span class="keyword">const</span>&amp; factory)</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    {</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">auto</span> state = Stream::Get&lt;state_t&gt;(input);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> <span class="keyword">const</span>&amp; createInfo = DP::Factory&lt;K, IDType, FArgs ...&gt;::GetCreateInfo(Stream::Get&lt;IDType&gt;(input));</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> <span class="keyword">const</span>&amp; createInfo = <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, IDType, FArgs ...&gt;::GetCreateInfo</a>(Stream::Get&lt;IDType&gt;(input));</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">auto</span>* t = <span class="keyword">new</span>(createInfo.size) SNode(createInfo.create, Stream::Get&lt;std::remove_cvref_t&lt;FArgs&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">if</span> (state.hasLeft) {</div>
@@ -457,6 +457,7 @@ $(function() {
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>}<span class="comment">//namespace DS</span></div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">#endif </span><span class="comment">//DS_SNODE_HPP</span></div>
+<div class="ttc" id="aclassDP_1_1Factory_html"><div class="ttname"><a href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a></div></div>
 <div class="ttc" id="aclassDS_1_1Holder_html"><div class="ttname"><a href="../../df/d44/classDS_1_1Holder.html">DS::Holder</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d98/Holder_8hpp_source.html#l00056">Holder.hpp:56</a></div></div>
 <div class="ttc" id="aconceptStream_1_1Serializable_html"><div class="ttname"><a href="../../../Stream/de/d51/conceptStream_1_1Serializable.html">Stream::Serializable</a></div></div>
 <div class="ttc" id="astructDS_1_1SNode_html"><div class="ttname"><a href="../../db/d6d/structDS_1_1SNode.html">DS::SNode</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d32/SNode_8hpp_source.html#l00009">SNode.hpp:9</a></div></div>
