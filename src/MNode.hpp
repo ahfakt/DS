@@ -82,19 +82,19 @@ struct MNode {
 	template <typename ... KArgs, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			Stream::Input& kInput, KArgs&& ... kArgs, Stream::Input& vInput, VArgs&& ... vArgs)
+			KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
 	requires Deserializable<K, Stream::Input, KArgs ...> && Deserializable<V, Stream::Input, VArgs ...>
 	{
-		auto state = Stream::Get<state_t>(kInput);
+		auto state = Stream::Get<state_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
 		t->state._ = 2;
 
 		try {
 			if (state.hasValue) {
-				::new(static_cast<void*>(t->val)) Holder<V>(vInput, std::forward<VArgs>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<VArgs>(vArgs) ...);
 				t->state.hasValue = true;
 			}
-			::new(static_cast<void*>(t->key)) Holder<K>(kInput, std::forward<KArgs>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<KArgs>(kArgs) ...);
 		} catch (...) {
 			if (t->state.hasValue)
 				t->val->~V();
@@ -104,69 +104,12 @@ struct MNode {
 
 		try {
 			if (state.hasLeft) {
-				t->left = MNode::Create(P, t, kInput, std::forward<KArgs>(kArgs) ..., vInput, std::forward<VArgs>(vArgs) ...);
+				t->left = MNode::Create(P, t, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...);
 				t->state.hasLeft = true;
 			} else
 				t->left = P;
 			if (state.hasRight) {
-				t->right = MNode::Create(t, S, kInput, std::forward<KArgs>(kArgs) ..., vInput, std::forward<VArgs>(vArgs) ...);
-				t->state.hasRight = true;
-			} else
-				t->right = S;
-			t->state.balance = state.balance;
-			return t;
-		} catch (...) {
-			delete t;
-			throw;
-		}
-	}
-
-	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
-	static MNode*
-	Create(MNode* P, MNode* S,
-			Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const& kFactory,
-			Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-	{
-		auto state = Stream::Get<state_t>(kInput);
-		MNode* t;
-
-		if (state.hasValue) {
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(vInput));
-			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
-			t->state._ = 2;
-			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(vInput) ...);
-				t->state.hasValue = true;
-			} catch (...) {
-				operator delete(t);
-				throw;
-			}
-		} else {
-			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), sizeof(V)));
-			t->state._ = 2;
-		}
-
-		try {
-			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(kInput));
-			if (kCreateInfo.size > sizeof(K))
-				throw Exception("kCreateInfo.size is greater than the size of K.");
-
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.create, Stream::Get<std::remove_cvref_t<KFArgs>>(kInput) ...);
-		} catch (...) {
-			if (t->state.hasValue)
-				t->val->~V();
-			operator delete(t);
-			throw;
-		}
-
-		try {
-			if (state.hasLeft) {
-				t->left = MNode::Create(P, t, kInput, kFactory, vInput, vFactory);
-				t->state.hasLeft = true;
-			} else
-				t->left = P;
-			if (state.hasRight) {
-				t->right = MNode::Create(t, S, kInput, kFactory, vInput, vFactory);
+				t->right = MNode::Create(t, S, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...);
 				t->state.hasRight = true;
 			} else
 				t->right = S;
@@ -181,19 +124,18 @@ struct MNode {
 	template <typename ... KArgs, typename VIDType, typename ... VFArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			Stream::Input& kInput, KArgs&& ... kArgs,
-			Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+			KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
 	requires Deserializable<K, Stream::Input, KArgs ...>
 	{
-		auto state = Stream::Get<state_t>(kInput);
+		auto state = Stream::Get<state_t>(input);
 		MNode* t;
 
 		if (state.hasValue) {
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(vInput));
+			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->state._ = 2;
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(vInput) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(input) ...);
 				t->state.hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -205,7 +147,7 @@ struct MNode {
 		}
 
 		try {
-			::new(static_cast<void*>(t->key)) Holder<K>(kInput, std::forward<KArgs>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<KArgs>(kArgs) ...);
 		} catch (...) {
 			if (t->state.hasValue)
 				t->val->~V();
@@ -215,12 +157,12 @@ struct MNode {
 
 		try {
 			if (state.hasLeft) {
-				t->left = MNode::Create(P, t, kInput, std::forward<KArgs>(kArgs) ..., vInput, vFactory);
+				t->left = MNode::Create(P, t, std::forward<KArgs>(kArgs) ..., input, vFactory);
 				t->state.hasLeft = true;
 			} else
 				t->left = P;
 			if (state.hasRight) {
-				t->right = MNode::Create(t, S, kInput, std::forward<KArgs>(kArgs) ..., vInput, vFactory);
+				t->right = MNode::Create(t, S, std::forward<KArgs>(kArgs) ..., input, vFactory);
 				t->state.hasRight = true;
 			} else
 				t->right = S;
@@ -235,24 +177,23 @@ struct MNode {
 	template <typename KIDType, typename ... KFArgs, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const& kFactory,
-			Stream::Input& vInput, VArgs&& ... vArgs)
+			DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
 	requires Deserializable<V, Stream::Input, VArgs ...>
 	{
-		auto state = Stream::Get<state_t>(kInput);
+		auto state = Stream::Get<state_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
 		t->state._ = 2;
 
 		try {
 			if (state.hasValue) {
-				::new(static_cast<void*>(t->val)) Holder<V>(vInput, std::forward<VArgs>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<VArgs>(vArgs) ...);
 				t->state.hasValue = true;
 			}
-			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(kInput));
+			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw Exception("kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.create, Stream::Get<std::remove_cvref_t<KFArgs>>(kInput) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.create, Stream::Get<std::remove_cvref_t<KFArgs>>(input) ...);
 		} catch (...) {
 			if (t->state.hasValue)
 				t->val->~V();
@@ -262,12 +203,68 @@ struct MNode {
 
 		try {
 			if (state.hasLeft) {
-				t->left = MNode::Create(P, t, kInput, kFactory, vInput, std::forward<VArgs>(vArgs) ...);
+				t->left = MNode::Create(P, t, kFactory, input, std::forward<VArgs>(vArgs) ...);
 				t->state.hasLeft = true;
 			} else
 				t->left = P;
 			if (state.hasRight) {
-				t->right = MNode::Create(t, S, kInput, kFactory, vInput, std::forward<VArgs>(vArgs) ...);
+				t->right = MNode::Create(t, S, kFactory, input, std::forward<VArgs>(vArgs) ...);
+				t->state.hasRight = true;
+			} else
+				t->right = S;
+			t->state.balance = state.balance;
+			return t;
+		} catch (...) {
+			delete t;
+			throw;
+		}
+	}
+
+	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
+	static MNode*
+	Create(MNode* P, MNode* S,
+			DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+	{
+		auto state = Stream::Get<state_t>(input);
+		MNode* t;
+
+		if (state.hasValue) {
+			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
+			t->state._ = 2;
+			try {
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(input) ...);
+				t->state.hasValue = true;
+			} catch (...) {
+				operator delete(t);
+				throw;
+			}
+		} else {
+			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), sizeof(V)));
+			t->state._ = 2;
+		}
+
+		try {
+			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
+			if (kCreateInfo.size > sizeof(K))
+				throw Exception("kCreateInfo.size is greater than the size of K.");
+
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.create, Stream::Get<std::remove_cvref_t<KFArgs>>(input) ...);
+		} catch (...) {
+			if (t->state.hasValue)
+				t->val->~V();
+			operator delete(t);
+			throw;
+		}
+
+		try {
+			if (state.hasLeft) {
+				t->left = MNode::Create(P, t, kFactory, input, vFactory);
+				t->state.hasLeft = true;
+			} else
+				t->left = P;
+			if (state.hasRight) {
+				t->right = MNode::Create(t, S, kFactory, input, vFactory);
 				t->state.hasRight = true;
 			} else
 				t->right = S;

@@ -32,21 +32,21 @@ class Digraph {
 
 	template <typename ... VArgs>
 	Vector<VNode<V, E>*>
-	deserializeVertices(Stream::Input& vInput, VArgs&& ... vArgs)
+	deserializeVertices(Stream::Input& input, VArgs&& ... vArgs)
 	requires Deserializable<V, Stream::Input, VArgs ...>;
 
 	template <typename VIDType, typename ... VFArgs>
 	Vector<VNode<V, E>*>
-	deserializeVertices(Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
+	deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
 
 	template <typename ... EArgs>
 	void
-	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& eInput, EArgs&& ... eArgs)
+	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, EArgs&& ... eArgs)
 	requires Deserializable<E, Stream::Input, EArgs ...>;
 
 	template <typename EIDType, typename ... EFArgs>
 	void
-	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& eInput, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
+	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
 
 public:
 	template <Constness>
@@ -91,19 +91,19 @@ public:
 	operator=(Digraph value) noexcept;
 
 	template <typename ... VArgs, typename ... EArgs>
-	Digraph(Stream::Input& vInput, VArgs&& ... vArgs, Stream::Input& eInput, EArgs&& ... eArgs)
+	Digraph(VArgs&& ... vArgs, Stream::Input& input, EArgs&& ... eArgs)
 	requires Deserializable<V, Stream::Input, VArgs ...> && Deserializable<E, Stream::Input, EArgs ...>;
 
-	template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
-	Digraph(Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& eInput, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
-
 	template <typename ... VArgs, typename EIDType, typename ... EFArgs>
-	Digraph(Stream::Input& vInput, VArgs&& ... vArgs, Stream::Input& eInput, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
+	Digraph(VArgs&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
 	requires Deserializable<V, Stream::Input, VArgs ...>;
 
 	template <typename VIDType, typename ... VFArgs, typename ... EArgs>
-	Digraph(Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& eInput, EArgs&& ... eArgs)
+	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, EArgs&& ... eArgs)
 	requires Deserializable<E, Stream::Input, EArgs ...>;
+
+	template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
+	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
 
 	template <typename v, typename e>
 	friend Stream::Output&
@@ -194,11 +194,9 @@ public:
 	[[nodiscard]] std::uint64_t
 	getOutDegree() const noexcept;
 
-	AdjacencyList<Direction::BACKWARD, c>
-	getIn() const noexcept;
-
-	AdjacencyList<Direction::FORWARD, c>
-	getOut() const noexcept;
+	template <Direction d>
+	AdjacencyList<d, c>
+	getAdjacencyList() const noexcept;
 
 	VDescriptor const&
 	unsetIn() const noexcept
@@ -368,6 +366,12 @@ public:
 
 	Iterator
 	operator--(int) noexcept;
+
+	VDescriptor<c> const&
+	operator*() const noexcept;
+
+	VDescriptor<c> const*
+	operator->() const noexcept;
 };//class Digraph<V, E>::VView<Constness>::Iterator<Direction, Constness>
 
 template <typename V, typename E>
@@ -456,6 +460,12 @@ public:
 
 	Iterator
 	operator--(int) noexcept;
+
+	EDescriptor<c> const&
+	operator*() const noexcept;
+
+	EDescriptor<c> const*
+	operator->() const noexcept;
 };//class Digraph<V, E>::EView<Constness>::Iterator<Direction, Constness>
 
 template <typename V, typename E>
@@ -545,6 +555,12 @@ public:
 
 	Iterator
 	operator--(int) noexcept;
+
+	EDescriptor<c> const&
+	operator*() const noexcept;
+
+	EDescriptor<c> const*
+	operator->() const noexcept;
 };//class Digraph<V, E>::AdjacencyList<Direction, Constness>::Iterator<Direction, Constness>
 
 }//namespace DS

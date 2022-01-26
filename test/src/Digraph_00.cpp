@@ -30,20 +30,17 @@ testTraverse()
 			digraph.addEdge(true).setIn(vertices[14]).setOut(vertices[15]);
 
 	{
-		auto vertexView = digraph.getVertexView();
-		for (auto v = vertexView.begin(), ve = vertexView.end(); v != ve; ++v) {
+		for (auto v : digraph.getVertexView()) {
 			std::cout << *v;
 			if (v.hasOut()) {
 				std::cout << "\n\t";
-				auto outList = v.getOut();
-				for (auto e = outList.begin(), ee = outList.end(); e != ee; ++e) {
+				for (auto e : v.getAdjacencyList<Direction::FORWARD>()) {
 					std::cout << " > " << *e.getOut();
 				}
 			}
 			if (v.hasIn()) {
 				std::cout << "\n\t";
-				auto inList = v.getIn();
-				for (auto e = inList.begin(), ee = inList.end(); e != ee; ++e) {
+				for (auto e : v.getAdjacencyList<Direction::BACKWARD>()) {
 					std::cout << " > " << *e.getIn();
 				}
 			}
@@ -57,7 +54,7 @@ testTraverse()
 		auto vertexView = digraph.prepareTraverse<Traverse::BREADTH_FIRST>().getVertexView();
 		digraph.resetTraverse();
 
-		std::array<int, 15> bfsPre = {8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15};
+		std::array<Digraph<int, bool>::vertex, 15> bfsPre = {vertices[8], vertices[4], vertices[12], vertices[2], vertices[6], vertices[10], vertices[14], vertices[1], vertices[3], vertices[5], vertices[7], vertices[9], vertices[11], vertices[13], vertices[15]};
 		assert(std::equal(vertexView.begin(), vertexView.end(), bfsPre.begin()));
 	}
 
@@ -67,7 +64,7 @@ testTraverse()
 		auto vertexView = digraph.prepareTraverse<Traverse::DEPTH_FIRST>().getVertexView();
 		digraph.resetTraverse();
 
-		std::array<int, 15> dfsPre = {8, 4, 2, 1, 3, 6, 5, 7, 12, 10, 9, 11, 14, 13, 15};
+		std::array<Digraph<int, bool>::vertex, 15> dfsPre = {vertices[8], vertices[4], vertices[2], vertices[1], vertices[3], vertices[6], vertices[5], vertices[7], vertices[12], vertices[10], vertices[9], vertices[11], vertices[14], vertices[13], vertices[15]};
 		assert(std::equal(vertexView.begin(), vertexView.end(), dfsPre.begin()));
 	}
 
@@ -77,7 +74,7 @@ testTraverse()
 		auto vertexView = digraph.prepareTraverse<Traverse::BREADTH_FIRST, Order::POSTORDER>().getVertexView();
 		digraph.resetTraverse();
 
-		std::array<int, 15> bfsPost = {1, 3, 5, 7, 9, 11, 13, 15, 2, 6, 10, 14, 4, 12, 8};
+		std::array<Digraph<int, bool>::vertex, 15> bfsPost = {vertices[1], vertices[3], vertices[5], vertices[7], vertices[9], vertices[11], vertices[13], vertices[15], vertices[2], vertices[6], vertices[10], vertices[14], vertices[4], vertices[12], vertices[8]};
 		assert(std::equal(vertexView.begin(), vertexView.end(), bfsPost.begin()));
 	}
 
@@ -86,7 +83,7 @@ testTraverse()
 			digraph.prepareTraverse(v);
 		auto vertexView = digraph.prepareTraverse<Traverse::DEPTH_FIRST, Order::POSTORDER>().getVertexView();
 
-		std::array<int, 15> dfsPost = {1, 3, 2, 5, 7, 6, 4, 9, 11, 10, 13, 15, 14, 12, 8};
+		std::array<Digraph<int, bool>::vertex, 15> dfsPost = {vertices[1], vertices[3], vertices[2], vertices[5], vertices[7], vertices[6], vertices[4], vertices[9], vertices[11], vertices[10], vertices[13], vertices[15], vertices[14], vertices[12], vertices[8]};
 		assert(std::equal(vertexView.begin(), vertexView.end(), dfsPost.begin()));
 	}
 }

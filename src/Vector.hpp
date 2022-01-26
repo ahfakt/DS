@@ -18,7 +18,7 @@ requires std::is_copy_constructible_v<T>
 		Holder<T> const* src = other.mHead;
 		do {
 			try {
-				::new(static_cast<void*>(mHead + mSize)) Holder<T>(static_cast<T const&>(src));
+				::new(static_cast<void*>(mHead + mSize)) Holder<T>(static_cast<T const&>(*src));
 			} catch (...) {
 				this->~Vector();
 				throw;
@@ -94,7 +94,7 @@ requires Stream::Serializable<T, Stream::Output>
 	Holder<T> const* beg = vector.mHead;
 	Holder<T> const* const end = beg + vector.mSize;
 	for (; beg < end; ++beg)
-		output << static_cast<T const&>(beg);
+		output << static_cast<T const&>(*beg);
 	return output;
 }
 
@@ -164,7 +164,7 @@ Vector<T>::pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ...
 		::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.create, std::forward<CArgs>(cArgs) ...);
 		return mHead + mSize++;
 	}
-	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
+	Vector v(mCapacity > 1 ? mCapacity * 1.5 : 2);
 	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo.create, std::forward<CArgs>(cArgs) ...);
 	try {
 		for (std::uint64_t i = 0; i < mSize; ++i)

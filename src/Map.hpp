@@ -31,20 +31,29 @@ Map<K, V>::operator=(Map value) noexcept
 
 template <typename K, typename V>
 template <typename ... KArgs, typename ... VArgs>
-Map<K, V>::Map(Stream::Input& kInput, KArgs&& ... kArgs, Stream::Input& vInput, VArgs&& ... vArgs)
+Map<K, V>::Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
 requires Deserializable<K, Stream::Input, KArgs ...> && Deserializable<V, Stream::Input, VArgs ...>
-		: Container(Stream::Get<std::uint64_t>(kInput))
-		, mRoot(mSize ? MNode<K, V>::Create(nullptr, nullptr, kInput, std::forward<KArgs>(kArgs) ..., vInput, std::forward<VArgs>(vArgs) ...) : nullptr)
+		: Container(Stream::Get<std::uint64_t>(input))
+		, mRoot(mSize ? MNode<K, V>::Create(nullptr, nullptr, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...) : nullptr)
 {}
 
 template <typename K, typename V>
-template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
-Map<K, V>::Map(Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-		: Container(Stream::Get<std::uint64_t>(kInput))
+template <typename ... KArgs, typename VIDType, typename ... VFArgs>
+Map<K, V>::Map(KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+requires Deserializable<K, Stream::Input, KArgs ...>
+		: Container(Stream::Get<std::uint64_t>(input))
+		, mRoot(mSize ? MNode<K, V>::Create(nullptr, nullptr, std::forward<KArgs>(kArgs) ..., input, vFactory) : nullptr)
+{}
+
+template <typename K, typename V>
+template <typename KIDType, typename ... KFArgs, typename ... VArgs>
+Map<K, V>::Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
+requires Deserializable<V, Stream::Input, VArgs ...>
+		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
 		try {
-			mRoot = MNode<K, V>::Create(nullptr, nullptr, kInput, kFactory, vInput, vFactory);
+			mRoot = MNode<K, V>::Create(nullptr, nullptr, kFactory, input, std::forward<VArgs>(vArgs) ...);
 		} catch (typename MNode<K, V>::Exception& exc) {
 			throw Exception(exc);
 		}
@@ -52,22 +61,13 @@ Map<K, V>::Map(Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const&
 }
 
 template <typename K, typename V>
-template <typename ... KArgs, typename VIDType, typename ... VFArgs>
-Map<K, V>::Map(Stream::Input& kInput, KArgs&& ... kArgs, Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-requires Deserializable<K, Stream::Input, KArgs ...>
-		: Container(Stream::Get<std::uint64_t>(kInput))
-		, mRoot(mSize ? MNode<K, V>::Create(nullptr, nullptr, kInput, std::forward<KArgs>(kArgs) ..., vInput, vFactory) : nullptr)
-{}
-
-template <typename K, typename V>
-template <typename KIDType, typename ... KFArgs, typename ... VArgs>
-Map<K, V>::Map(Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& vInput, VArgs&& ... vArgs)
-requires Deserializable<V, Stream::Input, VArgs ...>
-		: Container(Stream::Get<std::uint64_t>(kInput))
+template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
+Map<K, V>::Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
 		try {
-			mRoot = MNode<K, V>::Create(nullptr, nullptr, kInput, kFactory, vInput, std::forward<VArgs>(vArgs) ...);
+			mRoot = MNode<K, V>::Create(nullptr, nullptr, kFactory, input, vFactory);
 		} catch (typename MNode<K, V>::Exception& exc) {
 			throw Exception(exc);
 		}
@@ -185,15 +185,15 @@ typename Map<K, V>::iterator
 Map<K, V>::add(Iterator<d, c> const& it)
 requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V> && std::is_copy_assignable_v<V>
 {
-	MNode<K, V>* t = get(it.pos->key).pos;
+	MNode<K, V>* t = operator[](it.pos->key).pos;
 	if (t) {
 		if (t->state.hasValue) {
 			if (it.pos->state.hasValue)
-				 *t->val = *it.pos->val;
+				 static_cast<V&>(t->val) = static_cast<V const&>(it.pos->val);
 			else
 				t->unset();
 		} else if (it.pos->state.hasValue)
-			t->set(*it.pos->val);
+			t->set(static_cast<V const&>(it.pos->val));
 		return t;
 	} else {
 		t = ::new MNode<K, V>(it.pos->key);
@@ -205,7 +205,7 @@ requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V> && s
 				throw;
 			}
 		}
-		return addNode(t);
+		return put(t);
 	}
 }
 
@@ -232,13 +232,13 @@ Map<K, V>::remove(T&& key) noexcept
 template <typename K, typename V>
 template <typename T>
 typename Map<K, V>::iterator
-Map<K, V>::get(T&& k) noexcept
-{ return static_cast<Map const*>(this)->get(std::forward<T>(k)).pos; }
+Map<K, V>::operator[](T&& k) noexcept
+{ return static_cast<Map const&>(*this)[std::forward<T>(k)].pos; }
 
 template <typename K, typename V>
 template <typename T>
 typename Map<K, V>::const_iterator
-Map<K, V>::get(T&& k) const noexcept
+Map<K, V>::operator[](T&& k) const noexcept
 {
 	if (MNode<K, V>* t = mRoot) {
 		do {
@@ -261,14 +261,14 @@ Map<K, V>::get(T&& k) const noexcept
 
 template <typename K, typename V>
 typename Map<K, V>::iterator
-Map<K, V>::operator[](std::uint64_t i) noexcept
-{ return static_cast<Map const*>(this)->operator[](i).pos; }
+Map<K, V>::at(std::uint64_t i) noexcept
+{ return static_cast<Map const*>(this)->at(i).pos; }
 
 template <typename K, typename V>
 typename Map<K, V>::const_iterator
-Map<K, V>::operator[](std::uint64_t i) const noexcept
+Map<K, V>::at(std::uint64_t i) const noexcept
 { // TODO: O(n)->O(logn) childCount?
-	const_iterator it;
+	const_iterator it(nullptr);
 	if (i < mSize / 2) {
 		it.pos = first();
 		for (std::uint64_t j = 0; j < i; ++j)

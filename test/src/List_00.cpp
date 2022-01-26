@@ -33,14 +33,14 @@ testStreamConstructor()
 	std::array<std::string, 3>	strArr = {"1", "2", "3"};
 	{// For each element in stream, default construct and deserialize
 		stream << std::uint64_t(strArr.size());
-		for (auto i: strArr)
+		for (auto const& i: strArr)
 			stream << i;
 		List<std::string> strList(stream);
 		assert((std::equal(std::begin(strArr), std::end(strArr), strList.begin())));
 	}
 	{// For each element in stream, construct with "0" and deserialize
 		stream << std::uint64_t(strArr.size());
-		for (auto i: strArr)
+		for (auto const& i: strArr)
 			stream << i;
 		List<std::string> strList(stream, "0");
 		assert((std::equal(std::begin(strArr), std::end(strArr), strList.begin())));

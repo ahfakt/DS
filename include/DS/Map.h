@@ -62,19 +62,19 @@ public:
 	operator=(Map value) noexcept;
 
 	template <typename ... KArgs, typename ... VArgs>
-	Map(Stream::Input& kInput, KArgs&& ... kArgs, Stream::Input& vInput, VArgs&& ... vArgs)
+	Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
 	requires Deserializable<K, Stream::Input, KArgs ...> && Deserializable<V, Stream::Input, VArgs ...>;
 
-	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
-	Map(Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
-
 	template <typename ... KArgs, typename VIDType, typename ... VFArgs>
-	Map(Stream::Input& kInput, KArgs&& ... kArgs, Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+	Map(KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
 	requires Deserializable<K, Stream::Input, KArgs ...>;
 
 	template <typename KIDType, typename ... KFArgs, typename ... VArgs>
-	Map(Stream::Input& kInput, DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& vInput, VArgs&& ... vArgs)
+	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
 	requires Deserializable<V, Stream::Input, VArgs ...>;
+
+	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
+	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
 
 	template <typename k, typename v>
 	friend Stream::Output&
@@ -133,17 +133,17 @@ public:
 
 	template <typename T>
 	iterator
-	get(T&& k) noexcept;
+	operator[](T&& k) noexcept;
 
 	template <typename T>
 	const_iterator
-	get(T&& k) const noexcept;
+	operator[](T&& k) const noexcept;
 
 	iterator
-	operator[](std::uint64_t i) noexcept;
+	at(std::uint64_t i) noexcept;
 
 	const_iterator
-	operator[](std::uint64_t i) const noexcept;
+	at(std::uint64_t i) const noexcept;
 
 	iterator
 	begin() noexcept;

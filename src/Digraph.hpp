@@ -8,8 +8,7 @@ requires std::is_copy_constructible_v<V> && std::is_copy_constructible_v<E>
 {
 	Map<VNode<V, E> const*, VNode<V, E>*> map;
 
-	if (other.mVerticesSize) {
-		mVerticesSize = other.mVerticesSize;
+	if (mVerticesSize = other.mVerticesSize) {
 		(mVTail = mVHead = ::new LNode<VNode<V, E>>(static_cast<V const&>(static_cast<VNode<V, E> const*>(other.mVHead->val)->val)))->prev = nullptr;
 		try {
 			map.put(static_cast<VNode<V, E> const*>(other.mVHead->val))
@@ -29,15 +28,14 @@ requires std::is_copy_constructible_v<V> && std::is_copy_constructible_v<E>
 	}
 
 	try {
-		if (other.mEdgesSize) {
-			mEdgesSize = other.mEdgesSize;
+		if (mEdgesSize = other.mEdgesSize) {
 			(mETail = mEHead = ::new LNode<ENode<V, E>>(static_cast<E const&>(static_cast<ENode<V, E> const*>(other.mEHead->val)->val)))->prev = nullptr;
 			if (static_cast<ENode<V, E> const*>(other.mEHead->val)->in)
 				static_cast<ENode<V, E>*>(mEHead->val)
-					->setIn(map.get(static_cast<ENode<V, E> const*>(other.mEHead->val)->in)->value);
+					->setIn(map[static_cast<ENode<V, E> const*>(other.mEHead->val)->in]->value);
 			if (static_cast<ENode<V, E> const*>(other.mEHead->val)->out)
 				static_cast<ENode<V, E>*>(mEHead->val)
-					->setOut(map.get(static_cast<ENode<V, E> const*>(other.mEHead->val)->out)->value);
+					->setOut(map[static_cast<ENode<V, E> const*>(other.mEHead->val)->out]->value);
 			LNode<ENode<V, E>> const* src = other.mEHead;
 			while (src = src->next) {
 				try {
@@ -49,10 +47,10 @@ requires std::is_copy_constructible_v<V> && std::is_copy_constructible_v<E>
 				}
 				if (static_cast<ENode<V, E> const*>(src->val)->in)
 					static_cast<ENode<V, E>*>(mETail->val)
-						->setIn(map.get(static_cast<ENode<V, E> const*>(src->val)->in)->value);
+						->setIn(map[static_cast<ENode<V, E> const*>(src->val)->in]->value);
 				if (static_cast<ENode<V, E> const*>(src->val)->out)
 					static_cast<ENode<V, E>*>(mETail->val)
-						->setOut(map.get(static_cast<ENode<V, E> const*>(src->val)->out)->value);
+						->setOut(map[static_cast<ENode<V, E> const*>(src->val)->out]->value);
 			}
 			mETail->next = nullptr;
 		}
@@ -84,26 +82,26 @@ Digraph<V, E>::operator=(Digraph value) noexcept
 
 template <typename V, typename E>
 template <typename ... VArgs, typename ... EArgs>
-Digraph<V, E>::Digraph(Stream::Input& vInput, VArgs&& ... vArgs, Stream::Input& eInput, EArgs&& ... eArgs)
+Digraph<V, E>::Digraph(VArgs&& ... vArgs, Stream::Input& input, EArgs&& ... eArgs)
 requires Deserializable<V, Stream::Input, VArgs ...> && Deserializable<E, Stream::Input, EArgs ...>
-{ deserializeEdges(deserializeVertices(vInput, std::forward<VArgs>(vArgs) ...), eInput, std::forward<EArgs>(eArgs) ...); }
-
-template <typename V, typename E>
-template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
-Digraph<V, E>::Digraph(Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& eInput, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
-{ deserializeEdges(deserializeVertices(vInput, vFactory), eInput, eFactory); }
+{ deserializeEdges(deserializeVertices(input, std::forward<VArgs>(vArgs) ...), input, std::forward<EArgs>(eArgs) ...); }
 
 template <typename V, typename E>
 template <typename ... VArgs, typename EIDType, typename ... EFArgs>
-Digraph<V, E>::Digraph(Stream::Input& vInput, VArgs&& ... vArgs, Stream::Input& eInput, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
+Digraph<V, E>::Digraph(VArgs&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
 requires Deserializable<V, Stream::Input, VArgs ...>
-{ deserializeEdges(deserializeVertices(vInput, std::forward<VArgs>(vArgs) ...), eInput, eFactory); }
+{ deserializeEdges(deserializeVertices(input, std::forward<VArgs>(vArgs) ...), input, eFactory); }
 
 template <typename V, typename E>
 template <typename VIDType, typename ... VFArgs, typename ... EArgs>
-Digraph<V, E>::Digraph(Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& eInput, EArgs&& ... eArgs)
+Digraph<V, E>::Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, EArgs&& ... eArgs)
 requires Deserializable<E, Stream::Input, EArgs ...>
-{ deserializeEdges(deserializeVertices(vInput, vFactory), eInput, std::forward<EArgs>(eArgs) ...); }
+{ deserializeEdges(deserializeVertices(input, vFactory), input, std::forward<EArgs>(eArgs) ...); }
+
+template <typename V, typename E>
+template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
+Digraph<V, E>::Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
+{ deserializeEdges(deserializeVertices(input, vFactory), input, eFactory); }
 
 template <typename V, typename E>
 Stream::Output&
@@ -123,8 +121,8 @@ requires Stream::Serializable<V, Stream::Output> && Stream::Serializable<E, Stre
 	output << digraph.mEdgesSize;
 	for (auto const* le = digraph.mEHead; le; le = le->next)
 		output << static_cast<E const&>(static_cast<ENode<V, E> const*>(le->val)->val)
-			<< map.get(static_cast<ENode<V, E> const*>(le->val)->in)->value
-			<< map.get(static_cast<ENode<V, E> const*>(le->val)->out)->value;
+			<< map[static_cast<ENode<V, E> const*>(le->val)->in]->value
+			<< map[static_cast<ENode<V, E> const*>(le->val)->out]->value;
 
 	return output;
 }
@@ -132,27 +130,27 @@ requires Stream::Serializable<V, Stream::Output> && Stream::Serializable<E, Stre
 template <typename V, typename E>
 Digraph<V, E>::~Digraph()
 {
-	mVertices.~List();
 	mEdges.~List();
+	mVertices.~List();
 }
 
 template <typename V, typename E>
 template <typename ... VArgs>
 Vector<VNode<V, E>*>
-Digraph<V, E>::deserializeVertices(Stream::Input& vInput, VArgs&& ... vArgs)
+Digraph<V, E>::deserializeVertices(Stream::Input& input, VArgs&& ... vArgs)
 requires Deserializable<V, Stream::Input, VArgs ...>
 {
-	mVerticesSize = Stream::Get<std::uint64_t>(vInput);
+	mVerticesSize = Stream::Get<std::uint64_t>(input);
 	Vector<VNode<V, E>*> vs(mVerticesSize + 1);
 	vs.pushBack(nullptr);
 
 	if (mVerticesSize) {
-		(mVTail = mVHead = ::new LNode<VNode<V, E>>(vInput, std::forward<VArgs>(vArgs) ...))->prev = nullptr;
+		(mVTail = mVHead = ::new LNode<VNode<V, E>>(input, std::forward<VArgs>(vArgs) ...))->prev = nullptr;
 		vs.pushBack(static_cast<VNode<V, E>*>(mVHead->val));
 		std::uint64_t size = mVerticesSize;
 		while (--size) {
 			try {
-				(mVTail->next = ::new LNode<VNode<V, E>>(vInput, std::forward<VArgs>(vArgs) ...))->prev = mVTail;
+				(mVTail->next = ::new LNode<VNode<V, E>>(input, std::forward<VArgs>(vArgs) ...))->prev = mVTail;
 				mVTail = mVTail->next;
 			} catch (...) {
 				mVertices.~List();
@@ -169,23 +167,23 @@ requires Deserializable<V, Stream::Input, VArgs ...>
 template <typename V, typename E>
 template <typename VIDType, typename ... VFArgs>
 Vector<VNode<V, E>*>
-Digraph<V, E>::deserializeVertices(Stream::Input& vInput, DP::Factory<V, VIDType, VFArgs ...> const&)
+Digraph<V, E>::deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const&)
 {
-	mVerticesSize = Stream::Get<std::uint64_t>(vInput);
+	mVerticesSize = Stream::Get<std::uint64_t>(input);
 	Vector<VNode<V, E>*> vs(mVerticesSize + 1);
 	vs.pushBack(nullptr);
 
 	if (mVerticesSize) {
 		{
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(vInput));
-			(mVTail = mVHead = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(vInput) ...))->prev = nullptr;
+			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+			(mVTail = mVHead = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(input) ...))->prev = nullptr;
 		}
 		vs.pushBack(static_cast<VNode<V, E>*>(mVHead->val));
 		std::uint64_t size = mVerticesSize;
 		while (--size) {
 			try {
-				auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(vInput));
-				(mVTail->next = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(vInput) ...))->prev = mVTail;
+				auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+				(mVTail->next = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(input) ...))->prev = mVTail;
 				mVTail = mVTail->next;
 			} catch (...) {
 				mVertices.~List();
@@ -202,22 +200,21 @@ Digraph<V, E>::deserializeVertices(Stream::Input& vInput, DP::Factory<V, VIDType
 template <typename V, typename E>
 template <typename ... EArgs>
 void
-Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& eInput, EArgs&& ... eArgs)
+Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, EArgs&& ... eArgs)
 requires Deserializable<E, Stream::Input, EArgs ...>
 {
 	try {
-		mEdgesSize = Stream::Get<std::uint64_t>(eInput);
-		if (mEdgesSize) {
-			(mETail = mEHead = ::new LNode<ENode<V, E>>(eInput, std::forward<EArgs>(eArgs) ...))->prev = nullptr;
+		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
+			(mETail = mEHead = ::new LNode<ENode<V, E>>(input, std::forward<EArgs>(eArgs) ...))->prev = nullptr;
 			try {
-				static_cast<ENode<V, E>*>(mEHead->val)->setIn(vs[Stream::Get<std::uint64_t>(eInput)]);
-				static_cast<ENode<V, E>*>(mEHead->val)->setOut(vs[Stream::Get<std::uint64_t>(eInput)]);
+				static_cast<ENode<V, E>*>(mEHead->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
+				static_cast<ENode<V, E>*>(mEHead->val)->setOut(vs[Stream::Get<std::uint64_t>(input)]);
 				std::uint64_t size = mEdgesSize;
 				while (--size) {
-					(mETail->next = ::new LNode<ENode<V, E>>(eInput, std::forward<EArgs>(eArgs) ...))->prev = mETail;
+					(mETail->next = ::new LNode<ENode<V, E>>(input, std::forward<EArgs>(eArgs) ...))->prev = mETail;
 					mETail = mETail->next;
-					static_cast<ENode<V, E>*>(mETail->val)->setIn(vs[Stream::Get<std::uint64_t>(eInput)]);
-					static_cast<ENode<V, E>*>(mETail->val)->setOut(vs[Stream::Get<std::uint64_t>(eInput)]);
+					static_cast<ENode<V, E>*>(mETail->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
+					static_cast<ENode<V, E>*>(mETail->val)->setOut(vs[Stream::Get<std::uint64_t>(input)]);
 				}
 			} catch (...) {
 				mEdges.~List();
@@ -234,25 +231,24 @@ requires Deserializable<E, Stream::Input, EArgs ...>
 template <typename V, typename E>
 template <typename EIDType, typename ... EFArgs>
 void
-Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& eInput, DP::Factory<E, EIDType, EFArgs ...> const&)
+Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const&)
 {
 	try {
-		mEdgesSize = Stream::Get<std::uint64_t>(eInput);
-		if (mEdgesSize) {
+		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
 			{
-				auto const& eCreateInfo = DP::Factory<E, EIDType, EFArgs ...>::GetCreateInfo(Stream::Get<EIDType>(eInput));
-				(mETail = mEHead = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo.create, Stream::Get<std::remove_cvref_t<EFArgs>>(eInput) ...))->prev = nullptr;
+				auto const& eCreateInfo = DP::Factory<E, EIDType, EFArgs ...>::GetCreateInfo(Stream::Get<EIDType>(input));
+				(mETail = mEHead = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo.create, Stream::Get<std::remove_cvref_t<EFArgs>>(input) ...))->prev = nullptr;
 			}
 			try {
-				static_cast<ENode<V, E>*>(mEHead->val)->setIn(vs[Stream::Get<std::uint64_t>(eInput)]);
-				static_cast<ENode<V, E>*>(mEHead->val)->setOut(vs[Stream::Get<std::uint64_t>(eInput)]);
+				static_cast<ENode<V, E>*>(mEHead->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
+				static_cast<ENode<V, E>*>(mEHead->val)->setOut(vs[Stream::Get<std::uint64_t>(input)]);
 				std::uint64_t size = mEdgesSize;
 				while (--size) {
-					auto const& eCreateInfo = DP::Factory<E, EIDType, EFArgs ...>::GetCreateInfo(Stream::Get<EIDType>(eInput));
-					(mETail->next = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo.create, Stream::Get<std::remove_cvref_t<EFArgs>>(eInput) ...))->prev = mETail;
+					auto const& eCreateInfo = DP::Factory<E, EIDType, EFArgs ...>::GetCreateInfo(Stream::Get<EIDType>(input));
+					(mETail->next = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo.create, Stream::Get<std::remove_cvref_t<EFArgs>>(input) ...))->prev = mETail;
 					mETail = mETail->next;
-					static_cast<ENode<V, E>*>(mETail->val)->setIn(vs[Stream::Get<std::uint64_t>(eInput)]);
-					static_cast<ENode<V, E>*>(mETail->val)->setOut(vs[Stream::Get<std::uint64_t>(eInput)]);
+					static_cast<ENode<V, E>*>(mETail->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
+					static_cast<ENode<V, E>*>(mETail->val)->setOut(vs[Stream::Get<std::uint64_t>(input)]);
 				}
 			} catch (...) {
 				mEdges.~List();
@@ -290,7 +286,7 @@ class Digraph<V, E>::VDescriptor<Constness::NCONST>
 Digraph<V, E>::addVertex(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, VCArgs&& ... cArgs)
 {
 	mVertices.pushFront(new(Offset(&VNode<V, E>::val) + vCreateInfo.size)
-			LNode<VNode<V, E>>(vCreateInfo.create, std::forward<VCArgs>(cArgs) ...));
+		LNode<VNode<V, E>>(vCreateInfo.create, std::forward<VCArgs>(cArgs) ...));
 	return static_cast<VNode<V, E>*>(mVHead->val);
 }
 
@@ -551,14 +547,9 @@ Digraph<V, E>::VDescriptor<c>::getOutDegree() const noexcept
 
 template <typename V, typename E>
 template <Constness c>
-class Digraph<V, E>::AdjacencyList<Direction::BACKWARD, c>
-Digraph<V, E>::VDescriptor<c>::getIn() const noexcept
-{ return pos; }
-
-template <typename V, typename E>
-template <Constness c>
-class Digraph<V, E>::AdjacencyList<Direction::FORWARD, c>
-Digraph<V, E>::VDescriptor<c>::getOut() const noexcept
+template <Direction d>
+class Digraph<V, E>::AdjacencyList<d, c>
+Digraph<V, E>::VDescriptor<c>::getAdjacencyList() const noexcept
 { return pos; }
 
 template <typename V, typename E>
@@ -872,6 +863,20 @@ Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator--(int) noexcept
 }
 
 template <typename V, typename E>
+template <Constness vvc>
+template <Direction d, Constness c>
+class Digraph<V, E>::VDescriptor<c> const&
+Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator*() const noexcept
+{ return *this; }
+
+template <typename V, typename E>
+template <Constness vvc>
+template <Direction d, Constness c>
+class Digraph<V, E>::VDescriptor<c> const*
+Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator->() const noexcept
+{ return this; }
+
+template <typename V, typename E>
 template <Constness c>
 Digraph<V, E>::EView<c>::EView(LNode<ENode<V, E>>* head, LNode<ENode<V, E>>* tail) noexcept
 		: mHead(head)
@@ -1021,6 +1026,20 @@ Digraph<V, E>::EView<evc>::Iterator<d, c>::operator--(int) noexcept
 }
 
 template <typename V, typename E>
+template <Constness evc>
+template <Direction d, Constness c>
+class Digraph<V, E>::EDescriptor<c> const&
+Digraph<V, E>::EView<evc>::Iterator<d, c>::operator*() const noexcept
+{ return *this; }
+
+template <typename V, typename E>
+template <Constness evc>
+template <Direction d, Constness c>
+class Digraph<V, E>::EDescriptor<c> const*
+Digraph<V, E>::EView<evc>::Iterator<d, c>::operator->() const noexcept
+{ return this; }
+
+template <typename V, typename E>
 template <Direction d, Constness c>
 template <Constness oc>
 class Digraph<V, E>::AdjacencyList<d, c>&
@@ -1168,5 +1187,19 @@ Digraph<V, E>::AdjacencyList<ald, alc>::Iterator<d, c>::operator--(int) noexcept
 			: (d == Direction::FORWARD ? this->pos->left : this->pos->right);
 	return r;
 }
+
+template <typename V, typename E>
+template <Direction ald, Constness alc>
+template <Direction d, Constness c>
+class Digraph<V, E>::EDescriptor<c> const&
+Digraph<V, E>::AdjacencyList<ald, alc>::Iterator<d, c>::operator*() const noexcept
+{ return *this; }
+
+template <typename V, typename E>
+template <Direction ald, Constness alc>
+template <Direction d, Constness c>
+class Digraph<V, E>::EDescriptor<c> const*
+Digraph<V, E>::AdjacencyList<ald, alc>::Iterator<d, c>::operator->() const noexcept
+{ return this; }
 
 }//namespace DS
