@@ -104,43 +104,43 @@ $(function() {
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ... KArgs, <span class="keyword">typename</span> ... VArgs&gt;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>Map&lt;K, V&gt;::Map(<a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; kInput, KArgs&amp;&amp; ... kArgs, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; vInput, VArgs&amp;&amp; ... vArgs)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>Map&lt;K, V&gt;::Map(KArgs&amp;&amp; ... kArgs, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; input, VArgs&amp;&amp; ... vArgs)</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">requires</span> Deserializable&lt;K, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>, KArgs ...&gt; &amp;&amp; Deserializable&lt;V, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>, VArgs ...&gt;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(kInput))</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        , mRoot(mSize ? MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, kInput, std::forward&lt;KArgs&gt;(kArgs) ..., vInput, std::forward&lt;VArgs&gt;(vArgs) ...) : <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        , mRoot(mSize ? MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, std::forward&lt;KArgs&gt;(kArgs) ..., input, std::forward&lt;VArgs&gt;(vArgs) ...) : <span class="keyword">nullptr</span>)</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{}</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KIDType, <span class="keyword">typename</span> ... KFArgs, <span class="keyword">typename</span> VIDType, <span class="keyword">typename</span> ... VFArgs&gt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>Map&lt;K, V&gt;::Map(<a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; kInput, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, KIDType, KFArgs ...&gt;</a> <span class="keyword">const</span>&amp; kFactory, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; vInput, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;V, VIDType, VFArgs ...&gt;</a> <span class="keyword">const</span>&amp; vFactory)</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        : Container(<a class="code hl_namespaceRef" href="../../../Stream/d0/d04/classStream_1_1Buffer.html">Stream</a>::Get&lt;<a class="code hl_namespaceRef" href="../../../Stream/d5/dba/structstd_1_1is__error__code__enum_3_01Stream_1_1Buffer_1_1Exception_1_1Code_01_4.html">std</a>::uint64_t&gt;(kInput))</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">if</span> (mSize) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            mRoot = MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, kInput, kFactory, vInput, vFactory);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        } <span class="keywordflow">catch</span> (<span class="keyword">typename</span> MNode&lt;K, V&gt;::Exception&amp; exc) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordflow">throw</span> Exception(exc);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        }</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ... KArgs, <span class="keyword">typename</span> VIDType, <span class="keyword">typename</span> ... VFArgs&gt;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>Map&lt;K, V&gt;::Map(<a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; kInput, KArgs&amp;&amp; ... kArgs, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; vInput, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;V, VIDType, VFArgs ...&gt;</a> <span class="keyword">const</span>&amp; vFactory)</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">requires</span> Deserializable&lt;K, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>, KArgs ...&gt;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(kInput))</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        , mRoot(mSize ? MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, kInput, std::forward&lt;KArgs&gt;(kArgs) ..., vInput, vFactory) : <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>{}</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KIDType, <span class="keyword">typename</span> ... KFArgs, <span class="keyword">typename</span> ... VArgs&gt;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>Map&lt;K, V&gt;::Map(<a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; kInput, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, KIDType, KFArgs ...&gt;</a> <span class="keyword">const</span>&amp; kFactory, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; vInput, VArgs&amp;&amp; ... vArgs)</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">requires</span> Deserializable&lt;V, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>, VArgs ...&gt;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(kInput))</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ... KArgs, <span class="keyword">typename</span> VIDType, <span class="keyword">typename</span> ... VFArgs&gt;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>Map&lt;K, V&gt;::Map(KArgs&amp;&amp; ... kArgs, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; input, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;V, VIDType, VFArgs ...&gt;</a> <span class="keyword">const</span>&amp; vFactory)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">requires</span> Deserializable&lt;K, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>, KArgs ...&gt;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        , mRoot(mSize ? MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, std::forward&lt;KArgs&gt;(kArgs) ..., input, vFactory) : <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>{}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KIDType, <span class="keyword">typename</span> ... KFArgs, <span class="keyword">typename</span> ... VArgs&gt;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>Map&lt;K, V&gt;::Map(<a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, KIDType, KFArgs ...&gt;</a> <span class="keyword">const</span>&amp; kFactory, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; input, VArgs&amp;&amp; ... vArgs)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">requires</span> Deserializable&lt;V, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>, VArgs ...&gt;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>{</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> (mSize) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            mRoot = MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, kFactory, input, std::forward&lt;VArgs&gt;(vArgs) ...);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        } <span class="keywordflow">catch</span> (<span class="keyword">typename</span> MNode&lt;K, V&gt;::Exception&amp; exc) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">throw</span> Exception(exc);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> KIDType, <span class="keyword">typename</span> ... KFArgs, <span class="keyword">typename</span> VIDType, <span class="keyword">typename</span> ... VFArgs&gt;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>Map&lt;K, V&gt;::Map(<a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;K, KIDType, KFArgs ...&gt;</a> <span class="keyword">const</span>&amp; kFactory, <a class="code hl_namespaceRef" href="../../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html">Stream::Input</a>&amp; input, <a class="code hl_classRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory&lt;V, VIDType, VFArgs ...&gt;</a> <span class="keyword">const</span>&amp; vFactory)</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        : Container(<a class="code hl_namespaceRef" href="../../../Stream/d0/d04/classStream_1_1Buffer.html">Stream</a>::Get&lt;<a class="code hl_namespaceRef" href="../../../Stream/d5/dba/structstd_1_1is__error__code__enum_3_01Stream_1_1Buffer_1_1Exception_1_1Code_01_4.html">std</a>::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">if</span> (mSize) {</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            mRoot = MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, kInput, kFactory, vInput, std::forward&lt;VArgs&gt;(vArgs) ...);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            mRoot = MNode&lt;K, V&gt;::Create(<span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, kFactory, input, vFactory);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        } <span class="keywordflow">catch</span> (<span class="keyword">typename</span> MNode&lt;K, V&gt;::Exception&amp; exc) {</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordflow">throw</span> Exception(exc);</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
@@ -258,15 +258,15 @@ $(function() {
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>Map&lt;K, V&gt;::add(Iterator&lt;d, c&gt; <span class="keyword">const</span>&amp; it)</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="keyword">requires</span> std::is_copy_constructible_v&lt;K&gt; &amp;&amp; std::is_copy_constructible_v&lt;V&gt; &amp;&amp; std::is_copy_assignable_v&lt;V&gt;</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>{</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    MNode&lt;K, V&gt;* t = get(it.pos-&gt;key).pos;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    MNode&lt;K, V&gt;* t = operator[](it.pos-&gt;key).pos;</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">if</span> (t) {</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">if</span> (t-&gt;state.hasValue) {</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            <span class="keywordflow">if</span> (it.pos-&gt;state.hasValue)</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                 *t-&gt;val = *it.pos-&gt;val;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                 <span class="keyword">static_cast&lt;</span>V&amp;<span class="keyword">&gt;</span>(t-&gt;val) = <span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(it.pos-&gt;val);</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                t-&gt;unset();</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (it.pos-&gt;state.hasValue)</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            t-&gt;set(*it.pos-&gt;val);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            t-&gt;set(<span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(it.pos-&gt;val));</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">return</span> t;</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        t = ::new MNode&lt;K, V&gt;(it.pos-&gt;key);</div>
@@ -278,7 +278,7 @@ $(function() {
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                <span class="keywordflow">throw</span>;</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            }</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        }</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">return</span> addNode(t);</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">return</span> put(t);</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>}</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
@@ -305,13 +305,13 @@ $(function() {
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="keyword">typename</span> Map&lt;K, V&gt;::iterator</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>Map&lt;K, V&gt;::get(T&amp;&amp; k) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Map const*<span class="keyword">&gt;</span>(<span class="keyword">this</span>)-&gt;get(std::forward&lt;T&gt;(k)).pos; }</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>Map&lt;K, V&gt;::operator[](T&amp;&amp; k) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Map const&amp;<span class="keyword">&gt;</span>(*this)[std::forward&lt;T&gt;(k)].pos; }</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="keyword">typename</span> Map&lt;K, V&gt;::const_iterator</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>Map&lt;K, V&gt;::get(T&amp;&amp; k) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>Map&lt;K, V&gt;::operator[](T&amp;&amp; k) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>{</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordflow">if</span> (MNode&lt;K, V&gt;* t = mRoot) {</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordflow">do</span> {</div>
@@ -334,14 +334,14 @@ $(function() {
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="keyword">typename</span> Map&lt;K, V&gt;::iterator</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>Map&lt;K, V&gt;::operator[](std::uint64_t i) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Map const*<span class="keyword">&gt;</span>(<span class="keyword">this</span>)-&gt;<span class="keyword">operator</span>[](i).pos; }</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>Map&lt;K, V&gt;::at(std::uint64_t i) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Map const*<span class="keyword">&gt;</span>(<span class="keyword">this</span>)-&gt;at(i).pos; }</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> K, <span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span><span class="keyword">typename</span> Map&lt;K, V&gt;::const_iterator</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>Map&lt;K, V&gt;::operator[](std::uint64_t i) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>Map&lt;K, V&gt;::at(std::uint64_t i) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>{ <span class="comment">// TODO: O(n)-&gt;O(logn) childCount?</span></div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    const_iterator it;</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    const_iterator it(<span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keywordflow">if</span> (i &lt; mSize / 2) {</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        it.pos = first();</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keywordflow">for</span> (std::uint64_t j = 0; j &lt; i; ++j)</div>
