@@ -2,357 +2,373 @@
 
 namespace DS {
 
-template <typename K>
-Set<K>::Set(Set const& other)
+template <typename K, typename C, typename ... Cs>
+Set<K, C, Cs ...>::Set(Set const& other)
 requires std::is_copy_constructible_v<K>
 		: Container(other.mSize)
-		, mRoot(other.mRoot ? SNode<K>::Create(nullptr, nullptr, other.mRoot) : nullptr)
-{}
-
-template <typename K>
-Set<K>::Set(Set&& other) noexcept
-{ swap(*this, other); }
-
-template <typename K>
-void
-swap(Set<K>& a, Set<K>& b) noexcept
 {
-	std::swap(a.mSize, b.mSize);
-	std::swap(a.mRoot, b.mRoot);
+	if (mSize) {
+		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, other.mRoot[0]);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<SNode<K, C, Cs ...>, Exception>(mRoot);
+	}
 }
 
-template <typename K>
-Set<K>&
-Set<K>::operator=(Set value) noexcept
+template <typename K, typename C, typename ... Cs>
+Set<K, C, Cs ...>::Set(Set&& other) noexcept
+{ swap(*this, other); }
+
+template <typename K, typename C, typename ... Cs>
+void
+swap(Set<K, C, Cs ...>& a, Set<K, C, Cs ...>& b) noexcept
+{
+	std::swap(a.mSize, b.mSize);
+	std::swap_ranges(a.mRoot, a.mRoot + sizeof...(Cs) + 1, b.mRoot);
+}
+
+template <typename K, typename C, typename ... Cs>
+Set<K, C, Cs ...>&
+Set<K, C, Cs ...>::operator=(Set value) noexcept
 {
 	swap(*this, value);
 	return *this;
 }
 
-template <typename K>
+template <typename K, typename C, typename ... Cs>
 template <typename ... KArgs>
-Set<K>::Set(Stream::Input& input, KArgs&& ... kArgs)
-requires Deserializable<K, Stream::Input, KArgs ...>
+Set<K, C, Cs ...>::Set(Stream::Input& input, KArgs&& ... kArgs)
+requires Deserializable<K, Stream::Input&, KArgs ...>
 		: Container(Stream::Get<std::uint64_t>(input))
-		, mRoot(mSize ? SNode<K>::Create(nullptr, nullptr, input, std::forward<KArgs>(kArgs) ...) : nullptr)
-{}
+{
+	if (mSize) {
+		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, input, std::forward<KArgs>(kArgs) ...);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<SNode<K, C, Cs ...>, Exception>(mRoot);
+	}
+}
 
-template <typename K>
+template <typename K, typename C, typename ... Cs>
 template <typename IDType, typename ... FArgs>
-Set<K>::Set(Stream::Input& input, DP::Factory<K, IDType, FArgs ...> const& factory)
+Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, IDType, FArgs ...> const& factory)
 		: Container(Stream::Get<std::uint64_t>(input))
-		, mRoot(mSize ? SNode<K>::Create(nullptr, nullptr, input, factory) : nullptr)
-{}
+{
+	if (mSize) {
+		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, input, factory);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<SNode<K, C, Cs ...>, Exception>(mRoot);
+	}
+}
 
-template <typename K>
+template <typename K, typename C, typename ... Cs>
 Stream::Output&
-operator<<(Stream::Output& output, Set<K> const& set)
-requires Stream::Serializable<K, Stream::Output>
+operator<<(Stream::Output& output, Set<K, C, Cs ...> const& set)
+requires Stream::Serializable<K, Stream::Output&>
 {
 	output << set.mSize;
-	if (set.mRoot)
-		set.mRoot->serialize(output);
+	if (set.mRoot[0])
+		reinterpret_cast<SNode<K, C, Cs ...> const*>(set.mRoot[0])->serialize(output);
 	return output;
 }
 
-/*
-template <typename K>
-Set<K>&
-Set<K>::toDot(Stream::Output& output) requires Serializable<K>
+template <typename K, typename C, typename... Cs>
+template <std::size_t N>
+Stream::Format::DotOutput&
+Set<K, C, Cs...>::toDot(Stream::Format::DotOutput& dotOutput) const
 {
-	auto s = begin();
-	output << "digraph G {\n\trankdir=\"TB\"\n\tsplines=false\n\tnode [shape=circle style=filled fillcolor=\"whse;0.8:black\" fixedsize=true]\n";
-	if (s) {
-		do {
-			output << "\t" << s.pos->key << " [gradientangle=" << (s.pos->state.isLeft ? "315" : (s.pos->state
-																									  .isRight ? "225" : "270")) << "]\n";
-			if (s.pos->left)
-				output << "\t" << s.pos->key << ":w -> " << s.pos->left->key << (s.pos->state
-																					 .hasLeft ? ":n\n" : ":s [style=\"dashed\" constraint=false]\n");
-			if (s.pos->right)
-				output << "\t" << s.pos->key << ":e -> " << s.pos->right->key << (s.pos->state
-																					  .hasRight ? ":n\n" : ":s [style=\"dashed\" constraint=false]\n");
-		} while (++s);
-	}
-
-	output << "}\n";
-	return *this;
+	mRoot[N]->template toDot<N>(dotOutput);
+	reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
+	if constexpr (N < sizeof...(Cs))
+		return toDot<N + 1>(dotOutput);
+	return dotOutput;
 }
- */
 
-template <typename K>
-Set<K>::~Set()
-{ delete mRoot; }
-
-template <typename K>
-SNode<K>*
-Set<K>::put(SNode<K>* created) noexcept
+template <typename K, typename C, typename ... Cs>
+Stream::Format::DotOutput&
+operator<<(Stream::Format::DotOutput& dotOutput, Set<K, C, Cs ...> const& set)
+requires Stream::Serializable<K, Stream::Format::DotOutput&>
 {
-	if (mRoot) {
-		SNode<K>* t = created;
-		if (SNode<K>* s = mRoot->attach(created)) {
-			if (s != mRoot)
-				mRoot = s;
-		}
-		if (created == t)
-			++mSize;
-		else
-			delete t;
-	} else {
-		mRoot = created;
-		created->left = nullptr;
-		created->right = nullptr;
-		++mSize;
-	}
+
+	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";
+	if (set.mRoot[0])
+		set.toDot(dotOutput);
+	dotOutput << "}\n";
+	return dotOutput;
+}
+
+template <typename K, typename C, typename ... Cs>
+Set<K, C, Cs ...>::~Set()
+{
+	if (mRoot[0])
+		mRoot[0]->template deleteTree<SNode<K, C, Cs ...>>();
+}
+
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+SNode<K, C, Cs ...>*
+Set<K, C, Cs ...>::putAsRoot(SNode<K, C, Cs ...>* created) noexcept
+{
+	mRoot[N] = created;
+	created->template left<N>(nullptr);
+	created->template right<N>(nullptr);
+	created->template state<N>(2);
+	if constexpr (N < sizeof...(Cs))
+		return putAsRoot<N + 1>(created);
+	++mSize;
 	return created;
 }
 
-template <typename K>
-template <typename ... KArgs>
-typename Set<K>::const_iterator
-Set<K>::put(KArgs&& ... kArgs)
-{ return put(::new SNode<K>(std::forward<KArgs>(kArgs) ...)); }
-
-template <typename K>
-template <Derived<K> DK, typename ... DKArgs>
-typename Set<K>::const_iterator
-Set<K>::put(DKArgs&& ... dkArgs)
-{ return put(reinterpret_cast<SNode<K>*>(::new SNode<DK>(std::forward<DKArgs>(dkArgs) ...))); }
-
-template <typename K>
-template <typename ... CIArgs, typename ... CArgs>
-typename Set<K>::const_iterator
-Set<K>::put(DP::CreateInfo<K, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
-{ return put(new(createInfo.size) SNode<K>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
-
-template <typename K>
-template <typename T>
-bool
-Set<K>::remove(T&& k) noexcept
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+SNode<K, C, Cs ...>*
+Set<K, C, Cs ...>::putToRoot(SNode<K, C, Cs ...>* created) noexcept
 {
-	SNode<K>* toDel = nullptr;
-	if (mRoot) {
-		if (SNode<K>* s = mRoot->detach(std::forward<T>(k), toDel)) {
-			if (s != mRoot)
-				mRoot = s;
-		} else if (toDel == mRoot)
-			mRoot = nullptr;
-		if (toDel) {
-			delete toDel;
-			--mSize;
-		}
+	auto* s = created;
+	if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template attach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&created)))
+		mRoot[N] = t;
+	else if (s != created) { // found an existing node
+		delete s;
+		return created;
 	}
+	if constexpr (N < sizeof...(Cs)) {
+		created = putToRoot<N + 1>(created);
+		if (s != created) { // later comparators found an existing node
+			// rollback last attachment
+			if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template detach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&s)))
+				mRoot[N] = t;
+		}
+		return created;
+	}
+	// last comparator is successful
+	++mSize;
+	return created;
+}
+
+template <typename K, typename C, typename ... Cs>
+SNode<K, C, Cs ...>*
+Set<K, C, Cs ...>::put(SNode<K, C, Cs ...>* created) noexcept
+{ return mRoot[0] ? putToRoot(created) : putAsRoot(created); }
+
+
+template <typename K, typename C, typename ... Cs>
+template <typename ... KArgs>
+typename Set<K, C, Cs ...>::template const_iterator<>
+Set<K, C, Cs ...>::put(KArgs&& ... kArgs)
+{ return put(::new SNode<K, C, Cs ...>(std::forward<KArgs>(kArgs) ...)); }
+
+template <typename K, typename C, typename ... Cs>
+template <Derived<K> DK, typename ... DKArgs>
+typename Set<K, C, Cs ...>::template const_iterator<>
+Set<K, C, Cs ...>::put(DKArgs&& ... dkArgs)
+{ return put(reinterpret_cast<SNode<K, C, Cs ...>*>(::new SNode<DK>(std::forward<DKArgs>(dkArgs) ...))); }
+
+template <typename K, typename C, typename ... Cs>
+template <typename ... CIArgs, typename ... CArgs>
+typename Set<K, C, Cs ...>::template const_iterator<>
+Set<K, C, Cs ...>::put(DP::CreateInfo<K, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
+{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
+
+
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+SNode<K, C, Cs ...>*
+Set<K, C, Cs ...>::remove(SNode<K, C, Cs ...>* toDel) noexcept
+{
+	auto* s = toDel;
+	if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template detach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&toDel)))
+		mRoot[N] = t;
+	else if (s != toDel)
+		return toDel;
+	if constexpr (N < sizeof...(Cs)) {
+		toDel = remove<N + 1>(toDel);
+		if (s != toDel) {
+			// later comparators found another one or could not find it at all
+			// if it is root it means nothing happened already
+			if (s != mRoot[N]) {
+				// rollback last detachment
+				if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template attach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&s)))
+					mRoot[N] = t;
+			}
+		} else if (s == mRoot[N])
+			mRoot[N] = nullptr;
+		return toDel;
+	}
+	// last comparator is successful
+	if (s == mRoot[N])
+		mRoot[N] = nullptr;
+	delete s;
+	--mSize;
 	return toDel;
 }
 
-template <typename K>
-template <typename T>
-typename Set<K>::const_iterator
-Set<K>::get(T&& k) const noexcept
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N, typename T>
+bool
+Set<K, C, Cs ...>::remove(T&& k) noexcept
 {
-	if (SNode<K>* t = mRoot) {
-		do {
-			if (k < static_cast<K const&>(t->key)) {
-				if (t->state.hasLeft)
-					t = t->left;
-				else
-					return nullptr;
-			} else if (static_cast<K const&>(t->key) < k) {
-				if (t->state.hasRight)
-					t = t->right;
-				else
-					return nullptr;
-			} else
-				return t;
-		} while (true);
+	if (mRoot[N]) {
+		if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<T>(k)))
+			return t == remove(reinterpret_cast<SNode<K, C, Cs ...>*>(t));
 	}
-	return nullptr;
+	return false;
 }
 
-template <typename K>
-typename Set<K>::const_iterator
-Set<K>::operator[](std::uint64_t i) const noexcept
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N, typename T>
+typename Set<K, C, Cs ...>::template const_iterator<N>
+Set<K, C, Cs ...>::get(T&& k) const noexcept
+{ return mRoot[N] ? reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<T>(k)) : nullptr; }
+
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_iterator<N>
+Set<K, C, Cs ...>::at(std::uint64_t i) const noexcept
 { // TODO: O(n)->O(logn) childCount?
-	const_iterator it;
-	if (i < mSize / 2) {
-		it.pos = first();
-		for (std::uint64_t j = 0; j < i; ++j)
-			++it;
-	} else {
-		it.pos = last();
-		for (std::uint64_t j = mSize - 1; i < j; --j)
-			--it;
+	const_iterator<N> it(nullptr);
+	if (mRoot[N]) {
+		if (i < mSize / 2) {
+			it.pos = mRoot[N]->template leftMost<N>();
+			for (std::uint64_t j = 0; j < i; ++j)
+				++it;
+		} else {
+			it.pos = mRoot[N]->template rightMost<N>();
+			for (std::uint64_t j = mSize - 1; i < j; --j)
+				--it;
+		}
 	}
 	return it;
 }
 
-template <typename K>
-typename Set<K>::const_iterator
-Set<K>::begin() const noexcept
-{ return first(); }
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_iterator<N>
+Set<K, C, Cs ...>::begin() const noexcept
+{ return mRoot[N] ? mRoot[N]->template leftMost<N>() : nullptr; }
 
-template <typename K>
-typename Set<K>::const_iterator
-Set<K>::end() const noexcept
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_iterator<N>
+Set<K, C, Cs ...>::end() const noexcept
 { return nullptr; }
 
-template <typename K>
-typename Set<K>::const_reverse_iterator
-Set<K>::rbegin() const noexcept
-{ return last(); }
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_reverse_iterator<N>
+Set<K, C, Cs ...>::rbegin() const noexcept
+{ return mRoot[N] ? mRoot[N]->template rightMost<N>() : nullptr; }
 
-template <typename K>
-typename Set<K>::const_reverse_iterator
-Set<K>::rend() const noexcept
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_reverse_iterator<N>
+Set<K, C, Cs ...>::rend() const noexcept
 { return nullptr; }
 
-template <typename K>
-typename Set<K>::const_iterator
-Set<K>::cbegin() const noexcept
-{ return first(); }
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_iterator<N>
+Set<K, C, Cs ...>::cbegin() const noexcept
+{ return begin<N>(); }
 
-template <typename K>
-typename Set<K>::const_iterator
-Set<K>::cend() const noexcept
-{ return nullptr; }
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_iterator<N>
+Set<K, C, Cs ...>::cend() const noexcept
+{ return end<N>(); }
 
-template <typename K>
-typename Set<K>::const_reverse_iterator
-Set<K>::crbegin() const noexcept
-{ return last(); }
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_reverse_iterator<N>
+Set<K, C, Cs ...>::crbegin() const noexcept
+{ return rbegin<N>(); }
 
-template <typename K>
-typename Set<K>::const_reverse_iterator
-Set<K>::crend() const noexcept
-{ return nullptr; }
+template <typename K, typename C, typename ... Cs>
+template <std::size_t N>
+typename Set<K, C, Cs ...>::template const_reverse_iterator<N>
+Set<K, C, Cs ...>::crend() const noexcept
+{ return rend<N>(); }
 
-template <typename K>
-SNode<K>*
-Set<K>::first() const noexcept
-{
-	SNode<K>* t;
-	if (t = mRoot)
-		while (t->state.hasLeft)
-			t = t->left;
-	return t;
-}
-
-template <typename K>
-SNode<K>*
-Set<K>::last() const noexcept
-{
-	SNode<K>* t;
-	if (t = mRoot)
-		while (t->state.hasRight)
-			t = t->right;
-	return t;
-}
-
-template <typename K>
-template <Direction d>
-Set<K>::Iterator<d>::Iterator(SNode<K>* pos) noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+Set<K, C, Cs ...>::Iterator<d, n>::Iterator(TNode<sizeof...(Cs) + 1>* pos) noexcept
 		: pos(pos)
 {}
 
-template <typename K>
-template <Direction d>
-template <Direction od>
-Set<K>::Iterator<d>::Iterator(Iterator<od> const& other) noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+template <Direction od, std::size_t on>
+Set<K, C, Cs ...>::Iterator<d, n>::Iterator(Iterator<od, on> const& other) noexcept
 		: pos(other.pos)
 {}
 
-template <typename K>
-template <Direction d>
-template <Direction od>
-class Set<K>::Iterator<d>&
-Set<K>::Iterator<d>::operator=(Iterator<od> const& other) noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+template <Direction od, std::size_t on>
+class Set<K, C, Cs ...>::Iterator<d, n>&
+Set<K, C, Cs ...>::Iterator<d, n>::operator=(Iterator<od, on> const& other) noexcept
 {
 	pos = other.pos;
 	return *this;
 }
 
-template <typename K>
-template <Direction d>
-class Set<K>::Iterator<d>&
-Set<K>::Iterator<d>::inc() noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+class Set<K, C, Cs ...>::Iterator<d, n>&
+Set<K, C, Cs ...>::Iterator<d, n>::operator++() noexcept
 {
-	if (pos->state.hasRight) {
-		pos = pos->right;
-		while (pos->state.hasLeft)
-			pos = pos->left;
-	} else
-		pos = pos->right;
+	pos = (d == Direction::FORWARD ? pos->template next<n>() : pos->template prev<n>());
 	return *this;
 }
 
-template <typename K>
-template <Direction d>
-class Set<K>::Iterator<d>&
-Set<K>::Iterator<d>::dec() noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+class Set<K, C, Cs ...>::Iterator<d, n>
+Set<K, C, Cs ...>::Iterator<d, n>::operator++(int) noexcept
 {
-	if (pos->state.hasLeft) {
-		pos = pos->left;
-		while (pos->state.hasRight)
-			pos = pos->right;
-	} else
-		pos = pos->left;
+	auto* r = pos;
+	pos = (d == Direction::FORWARD ? pos->template next<n>() : pos->template prev<n>());
+	return r;
+}
+
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+class Set<K, C, Cs ...>::Iterator<d, n>&
+Set<K, C, Cs ...>::Iterator<d, n>::operator--() noexcept
+{
+	pos = (d == Direction::FORWARD ? pos->template prev<n>() : pos->template next<n>());
 	return *this;
 }
 
-template <typename K>
-template <Direction d>
-class Set<K>::Iterator<d>&
-Set<K>::Iterator<d>::operator++() noexcept
-{ return d == Direction::FORWARD ? inc() : dec(); }
-
-template <typename K>
-template <Direction d>
-class Set<K>::Iterator<d>
-Set<K>::Iterator<d>::operator++(int) noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+class Set<K, C, Cs ...>::Iterator<d, n>
+Set<K, C, Cs ...>::Iterator<d, n>::operator--(int) noexcept
 {
 	auto* r = pos;
-	this->operator++();
+	pos = (d == Direction::FORWARD ? pos->template prev<n>() : pos->template next<n>());
 	return r;
 }
 
-template <typename K>
-template <Direction d>
-class Set<K>::Iterator<d>&
-Set<K>::Iterator<d>::operator--() noexcept
-{ return d == Direction::FORWARD ? dec() : inc(); }
-
-template <typename K>
-template <Direction d>
-class Set<K>::Iterator<d>
-Set<K>::Iterator<d>::operator--(int) noexcept
-{
-	auto* r = pos;
-	this->operator--();
-	return r;
-}
-
-template <typename K>
-template <Direction d>
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
 K const&
-Set<K>::Iterator<d>::operator*() const noexcept
-{ return static_cast<K const&>(pos->key); }
+Set<K, C, Cs ...>::Iterator<d, n>::operator*() const noexcept
+{ return static_cast<K const&>(reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
 
-template <typename K>
-template <Direction d>
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
 K const*
-Set<K>::Iterator<d>::operator->() const noexcept
-{ return static_cast<K const*>(pos->key); }
+Set<K, C, Cs ...>::Iterator<d, n>::operator->() const noexcept
+{ return static_cast<K const*>(&reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
 
-template <typename K>
-template <Direction d>
-template <Direction od>
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+template <Direction od, std::size_t on>
 bool
-Set<K>::Iterator<d>::operator==(Iterator<od> const& other) const noexcept
+Set<K, C, Cs ...>::Iterator<d, n>::operator==(Iterator<od, on> const& other) const noexcept
 { return pos == other.pos; }
 
-template <typename K>
-template <Direction d>
-Set<K>::Iterator<d>::operator bool() const noexcept
+template <typename K, typename C, typename ... Cs>
+template <Direction d, std::size_t n>
+Set<K, C, Cs ...>::Iterator<d, n>::operator bool() const noexcept
 { return pos; }
 
 }//namespace DS

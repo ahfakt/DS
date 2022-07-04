@@ -34,11 +34,8 @@ enum class Order : bool {
 	POSTORDER	= true
 };
 
-template <typename T, typename InputType, typename ... Args>
-concept Deserializable = Stream::Constructible<T, InputType, Args ...> || Stream::Extractable<T, InputType, Args ...>;
-
 template <typename T, typename InputRef, typename ... Args>
-concept DeserializableR = Stream::ConstructibleR<T, InputRef, Args ...> || Stream::ExtractableR<T, InputRef, Args ...>;
+concept Deserializable = Stream::Constructible<T, InputRef, Args ...> || Stream::Extractable<T, InputRef, Args ...>;
 
 template <typename D, typename T>
 concept Derived = std::is_base_of_v<T, D>;
@@ -72,17 +69,17 @@ public:
 	{ createFunc(reinterpret_cast<void*>(raw), std::forward<CArgs>(cArgs) ...); }
 
 	template <typename ... Args>
-	Holder(Stream::InType auto& input, Args&& ... args)
+	Holder(Stream::In auto& input, Args&& ... args)
 	requires std::constructible_from<T, decltype(input), Args ...>
 	{ ::new(reinterpret_cast<void*>(raw)) T(input, std::forward<Args>(args) ...); }
 
 	template <typename ... Args>
-	Holder(Stream::InType auto& input, Args&& ... args)
-	requires std::constructible_from<T, Args ...> && Stream::DeserializableR<T, decltype(input)>
+	Holder(Stream::In auto& input, Args&& ... args)
+	requires std::constructible_from<T, Args ...> && Stream::Deserializable<T, decltype(input)>
 	{ input >> *new(reinterpret_cast<void*>(raw)) T(std::forward<Args>(args) ...); }
 
-	Holder(Stream::InType auto& input)
-	requires std::is_trivially_default_constructible_v<T> && Stream::DeserializableR<T, decltype(input)>
+	Holder(Stream::In auto& input)
+	requires std::is_trivially_default_constructible_v<T> && Stream::Deserializable<T, decltype(input)>
 	{ input >> *reinterpret_cast<T*>(raw); }
 
 	T*
@@ -129,6 +126,14 @@ template <typename Node, typename T>
 Node*
 ValToNode(T* val, Holder<T> Node::* m)
 { return reinterpret_cast<Node*>(reinterpret_cast<std::byte*>(val) - reinterpret_cast<std::byte*>(&(reinterpret_cast<Node*>(0)->*m))); }
+
+template<std::size_t N, typename First, typename ... Others>
+struct nth
+{ using type = typename nth<N - 1, Others ...>::type; };
+
+template<typename First, typename ... Others>
+struct nth<0, First, Others ...>
+{ using type = First; };
 
 }//namespace DS
 

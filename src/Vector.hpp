@@ -7,7 +7,9 @@ Vector<T>::Vector(std::uint64_t reserve)
 		: Container(0)
 		, mHead(reserve ? reinterpret_cast<Holder<T>*>(::operator new(sizeof(T) * reserve)) : nullptr)
 		, mCapacity(reserve)
-{}
+{
+	// TODO: Custom bad alloc exception
+}
 
 template <typename T>
 Vector<T>::Vector(Vector const& other)
@@ -52,7 +54,7 @@ Vector<T>::operator=(Vector value) noexcept
 template <typename T>
 template <typename ... TArgs>
 Vector<T>::Vector(Stream::Input& input, TArgs&& ... tArgs)
-requires Deserializable<T, Stream::Input, TArgs ...>
+requires Deserializable<T, Stream::Input&, TArgs ...>
 		: Vector(Stream::Get<std::uint64_t>(input))
 {
 	while (mSize < mCapacity) {
@@ -88,7 +90,7 @@ Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const&
 template <typename T>
 Stream::Output&
 operator<<(Stream::Output& output, Vector<T> const& vector)
-requires Stream::Serializable<T, Stream::Output>
+requires Stream::Serializable<T, Stream::Output&>
 {
 	output << vector.mSize;
 	Holder<T> const* beg = vector.mHead;
@@ -185,8 +187,15 @@ Vector<T>::capacity() const noexcept
 
 template <typename T>
 void
-Vector<T>::resize(std::uint64_t i) noexcept
-{ mSize = i; }
+Vector<T>::reserve(std::uint64_t n)
+{
+	if (n > mCapacity) {
+		Vector v(n);
+		for (std::uint64_t i = 0; i < mSize; ++i)
+			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
+		swap(*this, v);
+	}
+}
 
 template <typename T>
 T&
@@ -215,6 +224,16 @@ Vector<T>::operator T*() noexcept
 template <typename T>
 Vector<T>::operator T const*() const noexcept
 { return reinterpret_cast<T const*>(mHead); }
+
+template <typename T>
+typename Vector<T>::iterator
+Vector<T>::at(std::uint64_t i) noexcept
+{ return mHead + i; }
+
+template <typename T>
+typename Vector<T>::const_iterator
+Vector<T>::at(std::uint64_t i) const noexcept
+{ return mHead + i; }
 
 template <typename T>
 typename Vector<T>::iterator
@@ -342,6 +361,13 @@ template <Direction d, Constness c>
 TConstness<T, c>*
 Vector<T>::Iterator<d, c>::operator->() const noexcept
 { return pos; }
+
+template <typename T>
+template <Direction d, Constness c>
+template <Direction od, Constness oc>
+std::uint64_t
+Vector<T>::Iterator<d, c>::operator-(Iterator<od, oc> const& other) const noexcept
+{ return pos - other.pos; }
 
 template <typename T>
 template <Direction d, Constness c>

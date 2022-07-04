@@ -47,7 +47,7 @@ List<T>::operator=(List value) noexcept
 template <typename T>
 template <typename ... TArgs>
 List<T>::List(Stream::Input& input, TArgs&& ... tArgs)
-requires Deserializable<T, Stream::Input, TArgs ...>
+requires Deserializable<T, Stream::Input&, TArgs ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
@@ -96,7 +96,7 @@ List<T>::List(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const&)
 template <typename T>
 Stream::Output&
 operator<<(Stream::Output& output, List<T> const& list)
-requires Stream::Serializable<T, Stream::Output>
+requires Stream::Serializable<T, Stream::Output&>
 {
 	output << list.mSize;
 	for (LNode<T> const* l = list.mHead; l; l = l->next)

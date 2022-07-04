@@ -63,7 +63,7 @@ public:
 
 	template <typename ... TArgs>
 	explicit List(Stream::Input& input, TArgs&& ... tArgs)
-	requires Deserializable<T, Stream::Input, TArgs ...>;
+	requires Deserializable<T, Stream::Input&, TArgs ...>;
 
 	template <typename IDType, typename ... FArgs>
 	List(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const& factory);
@@ -71,7 +71,7 @@ public:
 	template <typename t>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, List<t> const& list)
-	requires Stream::Serializable<t, Stream::Output>;
+	requires Stream::Serializable<t, Stream::Output&>;
 
 	/**
 	template <typename t>

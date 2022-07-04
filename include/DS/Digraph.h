@@ -33,7 +33,7 @@ class Digraph {
 	template <typename ... VArgs>
 	Vector<VNode<V, E>*>
 	deserializeVertices(Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<V, Stream::Input, VArgs ...>;
+	requires Deserializable<V, Stream::Input&, VArgs ...>;
 
 	template <typename VIDType, typename ... VFArgs>
 	Vector<VNode<V, E>*>
@@ -42,7 +42,7 @@ class Digraph {
 	template <typename ... EArgs>
 	void
 	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, EArgs&& ... eArgs)
-	requires Deserializable<E, Stream::Input, EArgs ...>;
+	requires Deserializable<E, Stream::Input&, EArgs ...>;
 
 	template <typename EIDType, typename ... EFArgs>
 	void
@@ -92,15 +92,15 @@ public:
 
 	template <typename ... VArgs, typename ... EArgs>
 	Digraph(VArgs&& ... vArgs, Stream::Input& input, EArgs&& ... eArgs)
-	requires Deserializable<V, Stream::Input, VArgs ...> && Deserializable<E, Stream::Input, EArgs ...>;
+	requires Deserializable<V, Stream::Input&, VArgs ...> && Deserializable<E, Stream::Input&, EArgs ...>;
 
 	template <typename ... VArgs, typename EIDType, typename ... EFArgs>
 	Digraph(VArgs&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
-	requires Deserializable<V, Stream::Input, VArgs ...>;
+	requires Deserializable<V, Stream::Input&, VArgs ...>;
 
 	template <typename VIDType, typename ... VFArgs, typename ... EArgs>
 	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, EArgs&& ... eArgs)
-	requires Deserializable<E, Stream::Input, EArgs ...>;
+	requires Deserializable<E, Stream::Input&, EArgs ...>;
 
 	template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
 	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
@@ -108,7 +108,7 @@ public:
 	template <typename v, typename e>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Digraph<v, e> const& digraph)
-	requires Stream::Serializable<v, Stream::Output> && Stream::Serializable<e, Stream::Output>;
+	requires Stream::Serializable<v, Stream::Output&> && Stream::Serializable<e, Stream::Output&>;
 
 	~Digraph();
 

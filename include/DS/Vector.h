@@ -41,7 +41,7 @@ public:
 
 	template <typename ... TArgs>
 	explicit Vector(Stream::Input& input, TArgs&& ... tArgs)
-	requires Deserializable<T, Stream::Input, TArgs ...>;
+	requires Deserializable<T, Stream::Input&, TArgs ...>;
 
 	template <typename IDType, typename ... FArgs>
 	Vector(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const& factory);
@@ -49,7 +49,7 @@ public:
 	template <typename t>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Vector<t> const& vector)
-	requires Stream::Serializable<t, Stream::Output>;
+	requires Stream::Serializable<t, Stream::Output&>;
 
 	~Vector();
 
@@ -69,7 +69,7 @@ public:
 	capacity() const noexcept;
 
 	void
-	resize(std::uint64_t i) noexcept;
+	reserve(std::uint64_t n);
 
 	T&
 	operator[](std::uint64_t i) noexcept;
@@ -86,6 +86,12 @@ public:
 	explicit operator T*() noexcept;
 
 	explicit operator T const*() const noexcept;
+
+	iterator
+	at(std::uint64_t i) noexcept;
+
+	const_iterator
+	at(std::uint64_t i) const noexcept;
 
 	iterator
 	begin() noexcept;
@@ -161,6 +167,10 @@ public:
 
 	TConstness<T, c>*
 	operator->() const noexcept;
+
+	template <Direction od, Constness oc>
+	std::uint64_t
+	operator-(Iterator<od, oc> const& other) const noexcept;
 
 	template <Direction od, Constness oc>
 	bool

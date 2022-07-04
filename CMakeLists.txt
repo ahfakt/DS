@@ -4,7 +4,7 @@ project(DS VERSION 0.7 DESCRIPTION "")
 set(CMAKE_CXX_STANDARD 20)
 
 
-set(DEPENDENCIES DP Stream)
+set(DEPENDENCIES DP Stream StreamFormat)
 set(INC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INC_LIST
@@ -18,12 +18,13 @@ set(SRC_LIST
 		${SRC_ROOT}/Digraph.hpp
 		${SRC_ROOT}/LNode.hpp
 		${SRC_ROOT}/ENode.hpp
+		${SRC_ROOT}/Holder.hpp
 		${SRC_ROOT}/List.hpp
 		${SRC_ROOT}/Map.hpp
 		${SRC_ROOT}/MNode.hpp
 		${SRC_ROOT}/Set.hpp
 		${SRC_ROOT}/SNode.hpp
-		${SRC_ROOT}/Holder.hpp
+		${SRC_ROOT}/TNode.hpp
 		${SRC_ROOT}/Vector.hpp
 		${SRC_ROOT}/VNode.hpp)
 

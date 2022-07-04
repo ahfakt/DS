@@ -4,6 +4,7 @@
 #include "DS/Container.h"
 #include "DP/Factory.h"
 #include "../src/MNode.hpp"
+#include "StreamFormat/Dot.h"
 
 namespace DS {
 
@@ -14,38 +15,47 @@ namespace DS {
  * @tparam	V Value type to be mapped by K in Map
  * @details	K can map any V and V-based objects in a Map object, even if V is an abstract class.
  */
-template <typename K, typename V>
+template <typename K, typename V, typename C = std::less<>, typename ... Cs>
 class Map : public Container {
-	MNode<K, V>* mRoot = nullptr;
+	TNode<sizeof...(Cs) + 1>* mRoot[sizeof...(Cs) + 1] = {};
 
-	MNode<K, V>*
-	first() const noexcept;
+	template <std::size_t N = 0>
+	MNode<K, V, C, Cs ...>*
+	putAsRoot(MNode<K, V, C, Cs ...>* created) noexcept;
 
-	MNode<K, V>*
-	last() const noexcept;
+	template <std::size_t N = 0>
+	MNode<K, V, C, Cs ...>*
+	putToRoot(MNode<K, V, C, Cs ...>* created) noexcept;
 
-	MNode<K, V>*
-	put(MNode<K, V>* created) noexcept;
+	MNode<K, V, C, Cs ...>*
+	put(MNode<K, V, C, Cs ...>* created) noexcept;
+
+	template <std::size_t N = 0>
+	MNode<K, V, C, Cs ...>*
+	remove(MNode<K, V, C, Cs ...>* toDel) noexcept;
+
+	template <std::size_t N = 0>
+	Stream::Format::DotOutput&
+	toDot(Stream::Format::DotOutput& dotOutput) const;
 
 public:
-	template <Direction, Constness>
+	template <Direction, Constness, std::size_t N = 0>
 	class Iterator;
 
-	using iterator = Iterator<Direction::FORWARD, Constness::NCONST>;
-	using reverse_iterator = Iterator<Direction::BACKWARD, Constness::NCONST>;
-	using const_iterator = Iterator<Direction::FORWARD, Constness::CONST>;
-	using const_reverse_iterator = Iterator<Direction::BACKWARD, Constness::CONST>;
+	template <std::size_t N = 0>
+	using iterator = Iterator<Direction::FORWARD, Constness::NCONST, N>;
 
-	template <Constness c>
-	class Entry {
-		std::uint8_t _;
-	public:
-		K const key;
-		TConstness<V, c> value;
-	};
+	template <std::size_t N = 0>
+	using reverse_iterator = Iterator<Direction::BACKWARD, Constness::NCONST, N>;
 
-	struct Exception : std::runtime_error
-	{ using std::runtime_error::runtime_error; };
+	template <std::size_t N = 0>
+	using const_iterator = Iterator<Direction::FORWARD, Constness::CONST, N>;
+
+	template <std::size_t N = 0>
+	using const_reverse_iterator = Iterator<Direction::BACKWARD, Constness::CONST, N>;
+
+	struct Exception : std::system_error
+	{ using std::system_error::system_error; };
 
 	Map() noexcept = default;
 
@@ -54,161 +64,168 @@ public:
 
 	Map(Map&& other) noexcept;
 
-	template <typename k, typename v>
+	template <typename k, typename v, typename c, typename ... cs>
 	friend void
-	swap(Map<k, v>& a, Map<k, v>& b) noexcept;
+	swap(Map<k, v, c, cs ...>& a, Map<k, v, c, cs ...>& b) noexcept;
 
 	Map&
 	operator=(Map value) noexcept;
 
 	template <typename ... KArgs, typename ... VArgs>
-	Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<K, Stream::Input, KArgs ...> && Deserializable<V, Stream::Input, VArgs ...>;
+	explicit Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
+	requires Deserializable<K, Stream::Input&, KArgs ...> && Deserializable<V, Stream::Input&, VArgs ...>;
 
 	template <typename ... KArgs, typename VIDType, typename ... VFArgs>
 	Map(KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-	requires Deserializable<K, Stream::Input, KArgs ...>;
+	requires Deserializable<K, Stream::Input&, KArgs ...>;
 
 	template <typename KIDType, typename ... KFArgs, typename ... VArgs>
 	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<V, Stream::Input, VArgs ...>;
+	requires Deserializable<V, Stream::Input&, VArgs ...>;
 
 	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
 	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
 
-	template <typename k, typename v>
+	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Output&
-	operator<<(Stream::Output& output, Map<k, v> const& map)
-	requires Stream::Serializable<k, Stream::Output> && Stream::Serializable<v, Stream::Output>;
+	operator<<(Stream::Output& output, Map<k, v, c, cs ...> const& map)
+	requires Stream::Serializable<k, Stream::Output&> && Stream::Serializable<v, Stream::Output&>;
+
+	template <typename k, typename v, typename c, typename ... cs>
+	friend Stream::Format::DotOutput&
+	operator<<(Stream::Format::DotOutput& dotOutput, Map<k, v, c, cs ...> const& map)
+	requires Stream::Serializable<k, Stream::Format::DotOutput&> && Stream::Serializable<v, Stream::Format::DotOutput&>;
 
 	~Map();
 
 	template <typename ... KArgs>
-	iterator
+	iterator<>
 	put(KArgs&& ... kArgs);
 
 	template <typename ... KArgs, Derived<V> DV>
-	iterator
+	iterator<>
 	put(KArgs&& ... kArgs);
 
 	template <typename ... KArgs, typename ... VCIArgs>
-	iterator
+	iterator<>
 	put(KArgs&& ... kArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
 
 
 	template <EqDerived<K> DK, typename ... DKArgs>
-	iterator
+	iterator<>
 	put(DKArgs&& ... dkArgs);
 
 	template <EqDerived<K> DK, typename ... DKArgs, Derived<V> DV>
-	iterator
+	iterator<>
 	put(DKArgs&& ... dkArgs);
 
 	template <EqDerived<K> DK, typename ... DKArgs, typename ... VCIArgs>
-	iterator
+	iterator<>
 	put(DKArgs&& ... dkArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
 
 
 	template <typename ... KCIArgs, typename ... KCArgs>
-	iterator
+	iterator<>
 	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs);
 
 	template <typename ... KCIArgs, typename ... KCArgs, Derived<V> DV>
-	iterator
+	iterator<>
 	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs);
 
 	template <typename ... KCIArgs, typename ... KCArgs, typename ... VCIArgs>
-	iterator
+	iterator<>
 	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
 
-
-	template <Direction d, Constness c>
-	iterator
-	add(Iterator<d, c> const&)
-	requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V> && std::is_copy_assignable_v<V>;
-
-	template <typename T>
+	template <typename T, std::size_t N = 0>
 	bool
 	remove(T&& k) noexcept;
 
-	template <typename T>
-	iterator
-	operator[](T&& k) noexcept;
+	template <typename T, std::size_t N = 0>
+	iterator<N>
+	get(T&& k) noexcept;
 
-	template <typename T>
-	const_iterator
-	operator[](T&& k) const noexcept;
+	template <typename T, std::size_t N = 0>
+	const_iterator<N>
+	get(T&& k) const noexcept;
 
-	iterator
+	template <std::size_t N = 0>
+	iterator<N>
 	at(std::uint64_t i) noexcept;
 
-	const_iterator
+	template <std::size_t N = 0>
+	const_iterator<N>
 	at(std::uint64_t i) const noexcept;
 
-	iterator
+	template <std::size_t N = 0>
+	iterator<N>
 	begin() noexcept;
 
-	const_iterator
+	template <std::size_t N = 0>
+	const_iterator<N>
 	begin() const noexcept;
 
-	iterator
+	template <std::size_t N = 0>
+	iterator<N>
 	end() noexcept;
 
-	const_iterator
+	template <std::size_t N = 0>
+	const_iterator<N>
 	end() const noexcept;
 
-	reverse_iterator
+	template <std::size_t N = 0>
+	reverse_iterator<N>
 	rbegin() noexcept;
 
-	const_reverse_iterator
+	template <std::size_t N = 0>
+	const_reverse_iterator<N>
 	rbegin() const noexcept;
 
-	reverse_iterator
+	template <std::size_t N = 0>
+	reverse_iterator<N>
 	rend() noexcept;
 
-	const_reverse_iterator
+	template <std::size_t N = 0>
+	const_reverse_iterator<N>
 	rend() const noexcept;
 
-	const_iterator
+	template <std::size_t N = 0>
+	const_iterator<N>
 	cbegin() const noexcept;
 
-	const_iterator
+	template <std::size_t N = 0>
+	const_iterator<N>
 	cend() const noexcept;
 
-	const_reverse_iterator
+	template <std::size_t N = 0>
+	const_reverse_iterator<N>
 	crbegin() const noexcept;
 
-	const_reverse_iterator
+	template <std::size_t N = 0>
+	const_reverse_iterator<N>
 	crend() const noexcept;
-};//class Map<K, V>
+};//class Map<K, V, C, Cs ...>
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator {
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+class Map<K, V, C, Cs ...>::Iterator {
 	friend class Map;
 
 protected:
-	MNode<K, V>* pos;
+	TNode<sizeof...(Cs) + 1>* pos;
 
-	Iterator&
-	inc() noexcept;
-
-	Iterator&
-	dec() noexcept;
-
-	Iterator(MNode<K, V>* pos) noexcept;
+	Iterator(TNode<sizeof...(Cs) + 1>* pos) noexcept;
 
 public:
-	template <Direction od, Constness oc>
-	Iterator(Iterator<od, oc> const& other) noexcept
+	template <Direction od, Constness oc, std::size_t on>
+	Iterator(Iterator<od, oc, on> const& other) noexcept
 	requires ConstCompat<c, oc>;
 
-	template <Direction od, Constness oc>
+	template <Direction od, Constness oc, std::size_t on>
 	Iterator&
-	operator=(Iterator<od, oc> const& other) noexcept
+	operator=(Iterator<od, oc, on> const& other) noexcept
 	requires ConstCompat<c, oc>;
 
-	bool
+	[[nodiscard]] bool
 	hasValue() const noexcept;
 
 	void
@@ -242,18 +259,18 @@ public:
 	Iterator
 	operator--(int) noexcept;
 
-	Entry<c>&
+	std::pair<K const, TConstness<V, c>>&
 	operator*() const noexcept;
 
-	Entry<c>*
+	std::pair<K const, TConstness<V, c>>*
 	operator->() const noexcept;
 
-	template <Direction od, Constness oc>
+	template <Direction od, Constness oc, std::size_t on>
 	bool
-	operator==(Iterator<od, oc> const& other) const noexcept;
+	operator==(Iterator<od, oc, on> const& other) const noexcept;
 
 	explicit operator bool() const noexcept;
-};//class Map<K, V>::Iterator<Direction, Constness>
+};//class Map<K, V, C, Cs ...>::Iterator<Direction, Constness, std::size_t>
 
 }//namespace DS
 

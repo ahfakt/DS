@@ -2,511 +2,524 @@
 
 namespace DS {
 
-template <typename K, typename V>
-Map<K, V>::Map(Map const& other)
+template <typename K, typename V, typename C, typename ... Cs>
+Map<K, V, C, Cs ...>::Map(Map const& other)
 requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V>
 		: Container(other.mSize)
-		, mRoot(other.mRoot ? MNode<K, V>::Create(nullptr, nullptr, other.mRoot) : nullptr)
-{}
-
-template <typename K, typename V>
-Map<K, V>::Map(Map&& other) noexcept
-{ swap(*this, other); }
-
-template <typename K, typename V>
-void
-swap(Map<K, V>& a, Map<K, V>& b) noexcept
 {
-	std::swap(a.mSize, b.mSize);
-	std::swap(a.mRoot, b.mRoot);
+	if (mSize) {
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, other.mRoot[0]);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
+	}
 }
 
-template <typename K, typename V>
-Map<K, V>&
-Map<K, V>::operator=(Map value) noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+Map<K, V, C, Cs ...>::Map(Map&& other) noexcept
+{ swap(*this, other); }
+
+template <typename K, typename V, typename C, typename ... Cs>
+void
+swap(Map<K, V, C, Cs ...>& a, Map<K, V, C, Cs ...>& b) noexcept
+{
+	std::swap(a.mSize, b.mSize);
+	std::swap_ranges(a.mRoot, a.mRoot + sizeof...(Cs) + 1, b.mRoot);
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+Map<K, V, C, Cs ...>&
+Map<K, V, C, Cs ...>::operator=(Map value) noexcept
 {
 	swap(*this, value);
 	return *this;
 }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KArgs, typename ... VArgs>
-Map<K, V>::Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
-requires Deserializable<K, Stream::Input, KArgs ...> && Deserializable<V, Stream::Input, VArgs ...>
+Map<K, V, C, Cs ...>::Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
+requires Deserializable<K, Stream::Input&, KArgs ...> && Deserializable<V, Stream::Input&, VArgs ...>
 		: Container(Stream::Get<std::uint64_t>(input))
-		, mRoot(mSize ? MNode<K, V>::Create(nullptr, nullptr, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...) : nullptr)
-{}
+{
+	if (mSize) {
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
+	}
+}
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KArgs, typename VIDType, typename ... VFArgs>
-Map<K, V>::Map(KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-requires Deserializable<K, Stream::Input, KArgs ...>
+Map<K, V, C, Cs ...>::Map(KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+requires Deserializable<K, Stream::Input&, KArgs ...>
 		: Container(Stream::Get<std::uint64_t>(input))
-		, mRoot(mSize ? MNode<K, V>::Create(nullptr, nullptr, std::forward<KArgs>(kArgs) ..., input, vFactory) : nullptr)
-{}
+{
+	if (mSize) {
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, std::forward<KArgs>(kArgs) ..., input, vFactory);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
+	}
+}
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename KIDType, typename ... KFArgs, typename ... VArgs>
-Map<K, V>::Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
-requires Deserializable<V, Stream::Input, VArgs ...>
+Map<K, V, C, Cs ...>::Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
+requires Deserializable<V, Stream::Input&, VArgs ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		try {
-			mRoot = MNode<K, V>::Create(nullptr, nullptr, kFactory, input, std::forward<VArgs>(vArgs) ...);
-		} catch (typename MNode<K, V>::Exception& exc) {
-			throw Exception(exc);
-		}
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, kFactory, input, std::forward<VArgs>(vArgs) ...);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
-Map<K, V>::Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+Map<K, V, C, Cs ...>::Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		try {
-			mRoot = MNode<K, V>::Create(nullptr, nullptr, kFactory, input, vFactory);
-		} catch (typename MNode<K, V>::Exception& exc) {
-			throw Exception(exc);
-		}
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, kFactory, input, vFactory);
+		if constexpr(sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 Stream::Output&
-operator<<(Stream::Output& output, Map<K, V> const& map)
-requires Stream::Serializable<K, Stream::Output> && Stream::Serializable<V, Stream::Output>
+operator<<(Stream::Output& output, Map<K, V, C, Cs ...> const& map)
+requires Stream::Serializable<K, Stream::Output&> && Stream::Serializable<V, Stream::Output&>
 {
 	output << map.mSize;
-	if (map.mRoot)
-		map.mRoot->serialize(output);
+	if (map.mRoot[0])
+		reinterpret_cast<MNode<K, V, C, Cs ...> const*>(map.mRoot[0])->serialize(output);
 	return output;
 }
 
-template <typename K, typename V>
-Map<K, V>::~Map()
-{ delete mRoot; }
-
-template <typename K, typename V>
-MNode<K, V>*
-Map<K, V>::put(MNode<K, V>* created) noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+Stream::Format::DotOutput&
+Map<K, V, C, Cs ...>::toDot(Stream::Format::DotOutput& dotOutput) const
 {
-	if (mRoot) {
-		MNode<K, V>* t = created;
-		if (MNode<K, V>* m = mRoot->attach(created)) {
-			if (m != mRoot)
-				mRoot = m;
-		}
-		if (created == t)
-			++mSize;
-		else
-			delete t;
-	} else {
-		mRoot = created;
-		++mSize;
-	}
+	mRoot[N]->template toDot<N>(dotOutput);
+	reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
+	reinterpret_cast<MNode<K, V, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
+	if constexpr (N < sizeof...(Cs))
+		return toDot<N + 1>(dotOutput);
+	return dotOutput;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+Stream::Format::DotOutput&
+operator<<(Stream::Format::DotOutput& dotOutput, Map<K, V, C, Cs ...> const& map)
+requires Stream::Serializable<K, Stream::Format::DotOutput&> && Stream::Serializable<V, Stream::Format::DotOutput&>
+{
+	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";
+	if (map.mRoot[0])
+		map.toDot(dotOutput);
+	dotOutput << "}\n";
+	return dotOutput;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+Map<K, V, C, Cs ...>::~Map()
+{
+	if (mRoot[0])
+		mRoot[0]->template deleteTree<MNode<K, V, C, Cs ...>>();
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+MNode<K, V, C, Cs ...>*
+Map<K, V, C, Cs ...>::putAsRoot(MNode<K, V, C, Cs ...>* created) noexcept
+{
+	mRoot[N] = created;
+	created->template left<N>(nullptr);
+	created->template right<N>(nullptr);
+	created->template state<N>(2);
+	if constexpr (N < sizeof...(Cs))
+		return putAsRoot<N + 1>(created);
+	++mSize;
 	return created;
 }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+MNode<K, V, C, Cs ...>*
+Map<K, V, C, Cs ...>::putToRoot(MNode<K, V, C, Cs ...>* created) noexcept
+{
+	auto* m = created;
+	if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template attach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&created)))
+		mRoot[N] = t;
+	else if (m != created) { // found an existing node
+		delete m;
+		return created;
+	}
+	if constexpr (N < sizeof...(Cs)) {
+		created = putToRoot<N + 1>(created);
+		if (m != created) { // later comparators found an existing node
+			// rollback last attachment
+			if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template detach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&m)))
+				mRoot[N] = t;
+		}
+		return created;
+	}
+	// last comparator is successful
+	++mSize;
+	return created;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+MNode<K, V, C, Cs ...>*
+Map<K, V, C, Cs ...>::put(MNode<K, V, C, Cs ...>* created) noexcept
+{ return mRoot[0] ? putToRoot(created) : putAsRoot(created); }
+
+
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KArgs>
-typename Map<K, V>::iterator
-Map<K, V>::put(KArgs&& ... kArgs)
-{ return put(::new MNode<K, V>(std::forward<KArgs>(kArgs) ...)); }
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(KArgs&& ... kArgs)
+{ return put(::new MNode<K, V, C, Cs ...>(std::forward<KArgs>(kArgs) ...)); }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KArgs, Derived<V> DV>
-typename Map<K, V>::iterator
-Map<K, V>::put(KArgs&& ... kArgs)
-{ return put(reinterpret_cast<MNode<K, V>*>(::new MNode<K, DV>(std::forward<KArgs>(kArgs) ...))); }
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(KArgs&& ... kArgs)
+{ return put(reinterpret_cast<MNode<K, V, C, Cs ...>*>(::new MNode<K, DV>(std::forward<KArgs>(kArgs) ...))); }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KArgs, typename ... VCIArgs>
-typename Map<K, V>::iterator
-Map<K, V>::put(KArgs&& ... kArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo)
-{ return put(new(vCreateInfo.size) MNode<K, V>(std::forward<KArgs>(kArgs) ...)); }
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(KArgs&& ... kArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo)
+{ return put(new(vCreateInfo.size) MNode<K, V, C, Cs ...>(std::forward<KArgs>(kArgs) ...)); }
 
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <EqDerived<K> DK, typename ... DKArgs>
-typename Map<K, V>::iterator
-Map<K, V>::put(DKArgs&& ... dkArgs)
-{ return put(reinterpret_cast<MNode<K, V>*>(::new MNode<DK, V>(std::forward<DKArgs>(dkArgs) ...))); }
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(DKArgs&& ... dkArgs)
+{ return put(reinterpret_cast<MNode<K, V, C, Cs ...>*>(::new MNode<DK, V>(std::forward<DKArgs>(dkArgs) ...))); }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <EqDerived<K> DK, typename ... DKArgs, Derived<V> DV>
-typename Map<K, V>::iterator
-Map<K, V>::put(DKArgs&& ... dkArgs)
-{ return put(reinterpret_cast<MNode<K, V>*>(::new MNode<DK, DV>(std::forward<DKArgs>(dkArgs) ...))); }
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(DKArgs&& ... dkArgs)
+{ return put(reinterpret_cast<MNode<K, V, C, Cs ...>*>(::new MNode<DK, DV>(std::forward<DKArgs>(dkArgs) ...))); }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <EqDerived<K> DK, typename ... DKArgs, typename ... VCIArgs>
-typename Map<K, V>::iterator
-Map<K, V>::put(DKArgs&& ... dkArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo)
-{ return put(reinterpret_cast<MNode<K, V>*>(new(vCreateInfo.size) MNode<DK, V>(std::forward<DKArgs>(dkArgs) ...))); }
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(DKArgs&& ... dkArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo)
+{ return put(reinterpret_cast<MNode<K, V, C, Cs ...>*>(new(vCreateInfo.size) MNode<DK, V>(std::forward<DKArgs>(dkArgs) ...))); }
 
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KCIArgs, typename ... KCArgs>
-typename Map<K, V>::iterator
-Map<K, V>::put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs)
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs)
 {
 	if (kCreateInfo.size > sizeof(K))
-		throw Exception("kCreateInfo.size is greater than the size of K.");
-	return put(::new MNode<K, V>(kCreateInfo.create, std::forward<KCArgs>(kcArgs) ...));
+		throw Exception(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
+	return put(::new MNode<K, V, C, Cs ...>(kCreateInfo.create, std::forward<KCArgs>(kcArgs) ...));
 }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KCIArgs, typename ... KCArgs, Derived<V> DV>
-typename Map<K, V>::iterator
-Map<K, V>::put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs)
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs)
 {
 	if (kCreateInfo.size > sizeof(K))
-		throw Exception("kCreateInfo.size is greater than the size of K.");
-	return put(reinterpret_cast<MNode<K, V>*>(::new MNode<K, DV>(kCreateInfo.create, std::forward<KCArgs>(kcArgs) ...)));
+		throw Exception(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
+	return put(reinterpret_cast<MNode<K, V, C, Cs ...>*>(::new MNode<K, DV>(kCreateInfo.create, std::forward<KCArgs>(kcArgs) ...)));
 }
 
-template <typename K, typename V>
+template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KCIArgs, typename ... KCArgs, typename ... VCIArgs>
-typename Map<K, V>::iterator
-Map<K, V>::put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo)
+typename Map<K, V, C, Cs ...>::template iterator<>
+Map<K, V, C, Cs ...>::put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo)
 {
 	if (kCreateInfo.size > sizeof(K))
-		throw Exception("kCreateInfo.size is greater than the size of K.");
-	return put(reinterpret_cast<MNode<K, V>*>(new(vCreateInfo.size) MNode<K, V>(kCreateInfo.create, std::forward<KCArgs>(kcArgs) ...)));
+		throw Exception(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
+	return put(reinterpret_cast<MNode<K, V, C, Cs ...>*>(new(vCreateInfo.size) MNode<K, V, C, Cs ...>(kCreateInfo.create, std::forward<KCArgs>(kcArgs) ...)));
 }
 
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-typename Map<K, V>::iterator
-Map<K, V>::add(Iterator<d, c> const& it)
-requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V> && std::is_copy_assignable_v<V>
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+MNode<K, V, C, Cs ...>*
+Map<K, V, C, Cs ...>::remove(MNode<K, V, C, Cs ...>* toDel) noexcept
 {
-	MNode<K, V>* t = operator[](it.pos->key).pos;
-	if (t) {
-		if (t->state.hasValue) {
-			if (it.pos->state.hasValue)
-				 static_cast<V&>(t->val) = static_cast<V const&>(it.pos->val);
-			else
-				t->unset();
-		} else if (it.pos->state.hasValue)
-			t->set(static_cast<V const&>(it.pos->val));
-		return t;
-	} else {
-		t = ::new MNode<K, V>(it.pos->key);
-		if (it.pos->state.hasValue) {
-			try {
-				t->set(*it.pos->val);
-			} catch (...) {
-				delete t;
-				throw;
+	auto* m = toDel;
+	if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template detach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&toDel)))
+		mRoot[N] = t;
+	else if (m != toDel)
+		return toDel;
+	if constexpr (N < sizeof...(Cs)) {
+		toDel = remove<N + 1>(toDel);
+		if (m != toDel) {
+			// later comparators found another one or could not find it at all
+			// if it is root it means nothing happened already
+			if (m != mRoot[N]) {
+				// rollback last detachment
+				if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template attach<N>(reinterpret_cast<TNode<sizeof...(Cs) + 1>**>(&m)))
+					mRoot[N] = t;
 			}
-		}
-		return put(t);
+		} else if (m == mRoot[N])
+			mRoot[N] = nullptr;
+		return toDel;
 	}
-}
-
-template <typename K, typename V>
-template <typename T>
-bool
-Map<K, V>::remove(T&& key) noexcept
-{
-	MNode<K, V>* toDel = nullptr;
-	if (mRoot) {
-		if (MNode<K, V>* m = mRoot->detach(key, toDel)) {
-			if (m != mRoot)
-				mRoot = m;
-		} else if (toDel == mRoot)
-			mRoot = nullptr;
-		if (toDel) {
-			delete toDel;
-			--mSize;
-		}
-	}
+	// last comparator is successful
+	if (m == mRoot[N])
+		mRoot[N] = nullptr;
+	delete m;
+	--mSize;
 	return toDel;
 }
 
-template <typename K, typename V>
-template <typename T>
-typename Map<K, V>::iterator
-Map<K, V>::operator[](T&& k) noexcept
-{ return static_cast<Map const&>(*this)[std::forward<T>(k)].pos; }
-
-template <typename K, typename V>
-template <typename T>
-typename Map<K, V>::const_iterator
-Map<K, V>::operator[](T&& k) const noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename T, std::size_t N>
+bool
+Map<K, V, C, Cs ...>::remove(T&& k) noexcept
 {
-	if (MNode<K, V>* t = mRoot) {
-		do {
-			if (k < static_cast<K const&>(t->key)) {
-				if (t->state.hasLeft)
-					t = t->left;
-				else
-					return nullptr;
-			} else if (static_cast<K const&>(t->key) < k) {
-				if (t->state.hasRight)
-					t = t->right;
-				else
-					return nullptr;
-			} else
-				return t;
-		} while (true);
+	if (mRoot[N]) {
+		if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<T>(k)))
+			return t == remove(reinterpret_cast<MNode<K, V, C, Cs ...>*>(t));
 	}
-	return nullptr;
+	return false;
 }
 
-template <typename K, typename V>
-typename Map<K, V>::iterator
-Map<K, V>::at(std::uint64_t i) noexcept
-{ return static_cast<Map const*>(this)->at(i).pos; }
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename T, std::size_t N>
+typename Map<K, V, C, Cs ...>::template iterator<N>
+Map<K, V, C, Cs ...>::get(T&& k) noexcept
+{ return mRoot[N] ? reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<T>(k)) : nullptr; }
 
-template <typename K, typename V>
-typename Map<K, V>::const_iterator
-Map<K, V>::at(std::uint64_t i) const noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename T, std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_iterator<N>
+Map<K, V, C, Cs ...>::get(T&& k) const noexcept
+{ return const_cast<Map*>(this)->template get<N>(std::forward<T>(k)); }
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template iterator<N>
+Map<K, V, C, Cs ...>::at(std::uint64_t i) noexcept
 { // TODO: O(n)->O(logn) childCount?
-	const_iterator it(nullptr);
-	if (i < mSize / 2) {
-		it.pos = first();
-		for (std::uint64_t j = 0; j < i; ++j)
-			++it;
-	} else {
-		it.pos = last();
-		for (std::uint64_t j = mSize - 1; i < j; --j)
-			--it;
+	iterator<N> it(nullptr);
+	if (mRoot[N]) {
+		if (i < mSize / 2) {
+			it.pos = mRoot[N]->template leftMost<N>();
+			for (std::uint64_t j = 0; j < i; ++j)
+				++it;
+		} else {
+			it.pos = mRoot[N]->template rightMost<N>();
+			for (std::uint64_t j = mSize - 1; i < j; --j)
+				--it;
+		}
 	}
 	return it;
 }
 
-template <typename K, typename V>
-typename Map<K, V>::iterator
-Map<K, V>::begin() noexcept
-{ return first(); }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_iterator<N>
+Map<K, V, C, Cs ...>::at(std::uint64_t i) const noexcept
+{ return const_cast<Map*>(this)->at<N>(i); }
 
-template <typename K, typename V>
-typename Map<K, V>::const_iterator
-Map<K, V>::begin() const noexcept
-{ return first(); }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template iterator<N>
+Map<K, V, C, Cs ...>::begin() noexcept
+{ return mRoot[N] ? mRoot[N]->template leftMost<N>() : nullptr; }
 
-template <typename K, typename V>
-typename Map<K, V>::iterator
-Map<K, V>::end() noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_iterator<N>
+Map<K, V, C, Cs ...>::begin() const noexcept
+{ return const_cast<Map*>(this)->begin<N>(); }
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template iterator<N>
+Map<K, V, C, Cs ...>::end() noexcept
 { return nullptr; }
 
-template <typename K, typename V>
-typename Map<K, V>::const_iterator
-Map<K, V>::end() const noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_iterator<N>
+Map<K, V, C, Cs ...>::end() const noexcept
+{ return const_cast<Map*>(this)->end<N>(); }
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template reverse_iterator<N>
+Map<K, V, C, Cs ...>::rbegin() noexcept
+{ return mRoot[N] ? mRoot[N]->template rightMost<N>() : nullptr; }
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_reverse_iterator<N>
+Map<K, V, C, Cs ...>::rbegin() const noexcept
+{ return const_cast<Map*>(this)->rbegin<N>(); }
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template reverse_iterator<N>
+Map<K, V, C, Cs ...>::rend() noexcept
 { return nullptr; }
 
-template <typename K, typename V>
-typename Map<K, V>::reverse_iterator
-Map<K, V>::rbegin() noexcept
-{ return last(); }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_reverse_iterator<N>
+Map<K, V, C, Cs ...>::rend() const noexcept
+{ return const_cast<Map*>(this)->rend<N>(); }
 
-template <typename K, typename V>
-typename Map<K, V>::const_reverse_iterator
-Map<K, V>::rbegin() const noexcept
-{ return last(); }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_iterator<N>
+Map<K, V, C, Cs ...>::cbegin() const noexcept
+{ return begin<N>(); }
 
-template <typename K, typename V>
-typename Map<K, V>::reverse_iterator
-Map<K, V>::rend() noexcept
-{ return nullptr; }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_iterator<N>
+Map<K, V, C, Cs ...>::cend() const noexcept
+{ return end<N>(); }
 
-template <typename K, typename V>
-typename Map<K, V>::const_reverse_iterator
-Map<K, V>::rend() const noexcept
-{ return nullptr; }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_reverse_iterator<N>
+Map<K, V, C, Cs ...>::crbegin() const noexcept
+{ return rbegin<N>(); }
 
-template <typename K, typename V>
-typename Map<K, V>::const_iterator
-Map<K, V>::cbegin() const noexcept
-{ return first(); }
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+typename Map<K, V, C, Cs ...>::template const_reverse_iterator<N>
+Map<K, V, C, Cs ...>::crend() const noexcept
+{ return rend<N>(); }
 
-template <typename K, typename V>
-typename Map<K, V>::const_iterator
-Map<K, V>::cend() const noexcept
-{ return nullptr; }
-
-template <typename K, typename V>
-typename Map<K, V>::const_reverse_iterator
-Map<K, V>::crbegin() const noexcept
-{ return last(); }
-
-template <typename K, typename V>
-typename Map<K, V>::const_reverse_iterator
-Map<K, V>::crend() const noexcept
-{ return nullptr; }
-
-template <typename K, typename V>
-MNode<K, V>*
-Map<K, V>::first() const noexcept
-{
-	MNode<K, V>* t;
-	if (t = mRoot)
-		while (t->state.hasLeft)
-			t = t->left;
-	return t;
-}
-
-template <typename K, typename V>
-MNode<K, V>*
-Map<K, V>::last() const noexcept
-{
-	MNode<K, V>* t;
-	if (t = mRoot)
-		while (t->state.hasRight)
-			t = t->right;
-	return t;
-}
-
-template <typename K, typename V>
-template <Direction d, Constness c>
-Map<K, V>::Iterator<d, c>::Iterator(MNode<K, V>* pos) noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::Iterator(TNode<sizeof...(Cs) + 1>* pos) noexcept
 		: pos(pos)
 {}
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-template <Direction od, Constness oc>
-Map<K, V>::Iterator<d, c>::Iterator(Iterator<od, oc> const& other) noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+template <Direction od, Constness oc, std::size_t on>
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::Iterator(Iterator<od, oc, on> const& other) noexcept
 requires ConstCompat<c, oc>
 		: pos(other.pos)
 {}
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-template <Direction od, Constness oc>
-class Map<K, V>::Iterator<d, c>&
-Map<K, V>::Iterator<d, c>::operator=(Iterator<od, oc> const& other) noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+template <Direction od, Constness oc, std::size_t on>
+class Map<K, V, C, Cs ...>::Iterator<d, c, n>&
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator=(Iterator<od, oc, on> const& other) noexcept
 requires ConstCompat<c, oc>
 {
 	pos = other.pos;
 	return *this;
 }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
 bool
-Map<K, V>::Iterator<d, c>::hasValue() const noexcept
-{ return pos->state.hasValue; }
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::hasValue() const noexcept
+{ return reinterpret_cast<MNode<K, V, C, Cs ...>*>(pos)->d[0].hasValue; }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
 void
-Map<K, V>::Iterator<d, c>::unset() const noexcept
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::unset() const noexcept
 requires (c == Constness::NCONST)
-{ pos->unset(); }
+{ reinterpret_cast<MNode<K, V, C, Cs ...>*>(pos)->unset(); }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
 template <typename ... VArgs>
 V&
-Map<K, V>::Iterator<d, c>::set(VArgs&& ... vArgs) const
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::set(VArgs&& ... vArgs) const
 requires (c == Constness::NCONST)
-{ return pos->set(std::forward<VArgs>(vArgs) ...); }
+{ return reinterpret_cast<MNode<K, V, C, Cs ...>*>(pos)->set(std::forward<VArgs>(vArgs) ...); }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
 template <Derived<V> DV, typename ... DVArgs>
 DV&
-Map<K, V>::Iterator<d, c>::set(DVArgs&& ... dvArgs) const
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::set(DVArgs&& ... dvArgs) const
 requires (c == Constness::NCONST)
-{ return reinterpret_cast<MNode<K, DV>*>(pos)->set(std::forward<DVArgs>(dvArgs) ...); }
+{ return reinterpret_cast<MNode<K, DV, C, Cs ...>*>(pos)->set(std::forward<DVArgs>(dvArgs) ...); }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
 template <typename ... VCIArgs, typename ... VCArgs>
 V&
-Map<K, V>::Iterator<d, c>::set(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, VCArgs&& ... vcArgs) const
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::set(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, VCArgs&& ... vcArgs) const
 requires (c == Constness::NCONST)
-{ return pos->set(vCreateInfo.create, std::forward<VCArgs>(vcArgs) ...); }
+{ return reinterpret_cast<MNode<K, V, C, Cs ...>*>(pos)->set(vCreateInfo.create, std::forward<VCArgs>(vcArgs) ...); }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator<d, c>&
-Map<K, V>::Iterator<d, c>::inc() noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+class Map<K, V, C, Cs ...>::Iterator<d, c, n>&
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator++() noexcept
 {
-	if (pos->state.hasRight) {
-		pos = pos->right;
-		while (pos->state.hasLeft)
-			pos = pos->left;
-	} else
-		pos = pos->right;
+	pos = (d == Direction::FORWARD ? pos->template next<n>() : pos->template prev<n>());
 	return *this;
 }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator<d, c>&
-Map<K, V>::Iterator<d, c>::dec() noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+class Map<K, V, C, Cs ...>::Iterator<d, c, n>
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator++(int) noexcept
 {
-	if (pos->state.hasLeft) {
-		pos = pos->left;
-		while (pos->state.hasRight)
-			pos = pos->right;
-	} else
-		pos = pos->left;
+	auto* r = pos;
+	pos = (d == Direction::FORWARD ? pos->template next<n>() : pos->template prev<n>());
+	return r;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+class Map<K, V, C, Cs ...>::Iterator<d, c, n>&
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator--() noexcept
+{
+	pos = (d == Direction::FORWARD ? pos->template prev<n>() : pos->template next<n>());
 	return *this;
 }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator<d, c>&
-Map<K, V>::Iterator<d, c>::operator++() noexcept
-{ return d == Direction::FORWARD ? inc() : dec(); }
-
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator<d, c>
-Map<K, V>::Iterator<d, c>::operator++(int) noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+class Map<K, V, C, Cs ...>::Iterator<d, c, n>
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator--(int) noexcept
 {
 	auto* r = pos;
-	this->operator++();
+	pos = (d == Direction::FORWARD ? pos->template prev<n>() : pos->template next<n>());
 	return r;
 }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator<d, c>&
-Map<K, V>::Iterator<d, c>::operator--() noexcept
-{ return d == Direction::FORWARD ? dec() : inc(); }
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+std::pair<K const, TConstness<V, c>>&
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator*() const noexcept
+{ return reinterpret_cast<std::pair<K const, TConstness<V, c>>&>(reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::Iterator<d, c>
-Map<K, V>::Iterator<d, c>::operator--(int) noexcept
-{
-	auto* r = pos;
-	this->operator--();
-	return r;
-}
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+std::pair<K const, TConstness<V, c>>*
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator->() const noexcept
+{ return reinterpret_cast<std::pair<K const, TConstness<V, c>>*>(&reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::template Entry<c>&
-Map<K, V>::Iterator<d, c>::operator*() const noexcept
-{ return reinterpret_cast<Entry<c>&>(pos->state); }
-
-template <typename K, typename V>
-template <Direction d, Constness c>
-class Map<K, V>::template Entry<c>*
-Map<K, V>::Iterator<d, c>::operator->() const noexcept
-{ return reinterpret_cast<Entry<c>*>(&pos->state); }
-
-template <typename K, typename V>
-template <Direction d, Constness c>
-template <Direction od, Constness oc>
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+template <Direction od, Constness oc, std::size_t on>
 bool
-Map<K, V>::Iterator<d, c>::operator==(Iterator<od, oc> const& other) const noexcept
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator==(Iterator<od, oc, on> const& other) const noexcept
 { return pos == other.pos; }
 
-template <typename K, typename V>
-template <Direction d, Constness c>
-Map<K, V>::Iterator<d, c>::operator bool() const noexcept
+template <typename K, typename V, typename C, typename ... Cs>
+template <Direction d, Constness c, std::size_t n>
+Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator bool() const noexcept
 { return pos; }
 
 }//namespace DS
