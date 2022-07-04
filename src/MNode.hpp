@@ -250,7 +250,7 @@ struct MNode : SNode<K, Cs ...> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::Serializable<K, Stream::Format::StringOutput&>
+	requires Stream::Serializable<V, Stream::Format::StringOutput&>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, MNode>()->template toDot<N>(dotOutput);
