@@ -74,6 +74,7 @@ template <typename K, typename C, typename... Cs>
 template <std::size_t N>
 Stream::Format::DotOutput&
 Set<K, C, Cs...>::toDot(Stream::Format::DotOutput& dotOutput) const
+requires Stream::Serializable<K, Stream::Format::StringOutput&>
 {
 	mRoot[N]->template toDot<N>(dotOutput);
 	reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
@@ -85,7 +86,7 @@ Set<K, C, Cs...>::toDot(Stream::Format::DotOutput& dotOutput) const
 template <typename K, typename C, typename ... Cs>
 Stream::Format::DotOutput&
 operator<<(Stream::Format::DotOutput& dotOutput, Set<K, C, Cs ...> const& set)
-requires Stream::Serializable<K, Stream::Format::DotOutput&>
+requires Stream::Serializable<K, Stream::Format::StringOutput&>
 {
 
 	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";

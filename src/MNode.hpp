@@ -250,15 +250,14 @@ struct MNode : SNode<K, Cs ...> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
+	requires Stream::Serializable<K, Stream::Format::StringOutput&>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, MNode>()->template toDot<N>(dotOutput);
 		if (this->d[N].hasRight)
 			this->template right<N, MNode>()->template toDot<N>(dotOutput);
-		if (this->d[0].hasValue) {
-			dotOutput << N << this << "[tooltip=\"";
-			dotOutput << static_cast<V const&>(val) << "\"]\n";
-		}
+		if (this->d[0].hasValue)
+			dotOutput << N << this << "[tooltip=\"" << static_cast<V const&>(val) << "\"]\n";
 		return dotOutput;
 	}
 };//struct MNode<K, V, Cs ...>

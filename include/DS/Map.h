@@ -36,7 +36,8 @@ class Map : public Container {
 
 	template <std::size_t N = 0>
 	Stream::Format::DotOutput&
-	toDot(Stream::Format::DotOutput& dotOutput) const;
+	toDot(Stream::Format::DotOutput& dotOutput) const
+	requires Stream::Serializable<K, Stream::Format::StringOutput&> && Stream::Serializable<V, Stream::Format::StringOutput&>;
 
 public:
 	template <Direction, Constness, std::size_t N = 0>
@@ -94,7 +95,7 @@ public:
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, Map<k, v, c, cs ...> const& map)
-	requires Stream::Serializable<k, Stream::Format::DotOutput&> && Stream::Serializable<v, Stream::Format::DotOutput&>;
+	requires Stream::Serializable<k, Stream::Format::StringOutput&> && Stream::Serializable<v, Stream::Format::StringOutput&>;
 
 	~Map();
 

@@ -35,7 +35,8 @@ class Set : public Container {
 
 	template <std::size_t N = 0>
 	Stream::Format::DotOutput&
-	toDot(Stream::Format::DotOutput& dotOutput) const;
+	toDot(Stream::Format::DotOutput& dotOutput) const
+	requires Stream::Serializable<K, Stream::Format::StringOutput&>;
 
 public:
 	template <Direction, std::size_t N = 0>
@@ -79,7 +80,7 @@ public:
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, Set<k, c, cs ...> const& set)
-	requires Stream::Serializable<k, Stream::Format::DotOutput&>;
+	requires Stream::Serializable<k, Stream::Format::StringOutput&>;
 
 	~Set();
 

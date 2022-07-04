@@ -100,6 +100,7 @@ template <typename K, typename V, typename C, typename ... Cs>
 template <std::size_t N>
 Stream::Format::DotOutput&
 Map<K, V, C, Cs ...>::toDot(Stream::Format::DotOutput& dotOutput) const
+requires Stream::Serializable<K, Stream::Format::StringOutput&> && Stream::Serializable<V, Stream::Format::StringOutput&>
 {
 	mRoot[N]->template toDot<N>(dotOutput);
 	reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
@@ -112,7 +113,7 @@ Map<K, V, C, Cs ...>::toDot(Stream::Format::DotOutput& dotOutput) const
 template <typename K, typename V, typename C, typename ... Cs>
 Stream::Format::DotOutput&
 operator<<(Stream::Format::DotOutput& dotOutput, Map<K, V, C, Cs ...> const& map)
-requires Stream::Serializable<K, Stream::Format::DotOutput&> && Stream::Serializable<V, Stream::Format::DotOutput&>
+requires Stream::Serializable<K, Stream::Format::StringOutput&> && Stream::Serializable<V, Stream::Format::StringOutput&>
 {
 	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";
 	if (map.mRoot[0])

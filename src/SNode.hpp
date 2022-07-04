@@ -264,13 +264,13 @@ struct SNode : TNode<sizeof...(Cs)> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
+	requires Stream::Serializable<K, Stream::Format::StringOutput&>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, SNode>()->template toDot<N>(dotOutput);
 		if (this->d[N].hasRight)
 			this->template right<N, SNode>()->template toDot<N>(dotOutput);
-		dotOutput << N << this << "[label=\"";
-		dotOutput << static_cast<K const&>(key) << "\"]\n";
+		dotOutput << N << this << "[label=\"" << static_cast<K const&>(key) << "\"]\n";
 		return dotOutput;
 	}
 };//struct SNode<K, Cs ...>
