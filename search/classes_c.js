@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['registrar_0',['Registrar',['../../DP/d7/d9a/classDP_1_1Factory_1_1Registrar.html',1,'DP::Factory']]]
+  ['pipe_0',['Pipe',['../../Stream/d3/de2/classStream_1_1Pipe.html',1,'Stream']]],
+  ['pipeinput_1',['PipeInput',['../../Stream/df/d21/classStream_1_1PipeInput.html',1,'Stream']]],
+  ['pipeoutput_2',['PipeOutput',['../../Stream/df/dc1/classStream_1_1PipeOutput.html',1,'Stream']]]
 ];

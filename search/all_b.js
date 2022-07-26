@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['pipe_0',['Pipe',['../../Stream/d3/de2/classStream_1_1Pipe.html',1,'Stream']]],
-  ['pipeinput_1',['PipeInput',['../../Stream/df/d21/classStream_1_1PipeInput.html',1,'Stream']]],
-  ['pipeoutput_2',['PipeOutput',['../../Stream/df/dc1/classStream_1_1PipeOutput.html',1,'Stream']]]
+  ['operator_20bool_0',['operator bool',['../d2/da8/classDS_1_1Container.html#a1c5ae9c8156d1faad04b2f9ded320720',1,'DS::Container']]],
+  ['operator_3e_3e_1',['operator&gt;&gt;',['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::Buffer::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::BufferInput::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::File::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::FileInput::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::Input::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::InputFilter::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::Pipe::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::PipeInput::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::Socket::operator&gt;&gt;()'],['../../Stream/d7/d83/classStream_1_1Input.html#a0a8cb2f45caeb5a945eb15ea27244f31',1,'Stream::SocketInput::operator&gt;&gt;()']]],
+  ['output_2',['Output',['../../Stream/df/dc2/classStream_1_1Output.html',1,'Stream']]],
+  ['outputfilter_3',['OutputFilter',['../../Stream/d0/d57/classStream_1_1OutputFilter.html',1,'Stream']]]
 ];

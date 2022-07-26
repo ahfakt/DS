@@ -1,7 +1,9 @@
 <map id="DS::Container" name="DS::Container">
-<area shape="rect" id="node1" title="Base class for data structures." alt="" coords="1188,5,1443,127"/>
-<area shape="rect" id="node2" href="$d9/d41/classDS_1_1List.html" title="Doubly linked list implementation." alt="" coords="5,175,495,399"/>
-<area shape="rect" id="node3" href="$d5/db6/classDS_1_1Map.html" title="Balanced search tree implementation." alt="" coords="519,175,1381,399"/>
-<area shape="rect" id="node4" href="$db/d3d/classDS_1_1Set.html" title="Balanced search tree implementation." alt="" coords="1405,175,1959,399"/>
-<area shape="rect" id="node5" href="$d6/d04/classDS_1_1Vector.html" title=" " alt="" coords="1983,175,2488,399"/>
+<area shape="rect" id="node1" title="Base class for data structures." alt="" coords="1819,5,2073,127"/>
+<area shape="rect" id="node2" href="$d9/d41/classDS_1_1List.html" title=" " alt="" coords="5,175,655,399"/>
+<area shape="rect" id="node3" href="$d9/d41/classDS_1_1List.html" title=" " alt="" coords="679,175,1328,399"/>
+<area shape="rect" id="node4" href="$d9/d41/classDS_1_1List.html" title="Doubly linked list implementation." alt="" coords="1352,175,1841,399"/>
+<area shape="rect" id="node5" href="$d5/db6/classDS_1_1Map.html" title="Balanced search tree implementation." alt="" coords="1866,175,2727,399"/>
+<area shape="rect" id="node6" href="$db/d3d/classDS_1_1Set.html" title="Balanced search tree implementation." alt="" coords="2751,175,3293,399"/>
+<area shape="rect" id="node7" href="$d6/d04/classDS_1_1Vector.html" title=" " alt="" coords="3316,175,3821,399"/>
 </map>

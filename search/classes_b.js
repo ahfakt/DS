@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['pipe_0',['Pipe',['../../Stream/d3/de2/classStream_1_1Pipe.html',1,'Stream']]],
-  ['pipeinput_1',['PipeInput',['../../Stream/df/d21/classStream_1_1PipeInput.html',1,'Stream']]],
-  ['pipeoutput_2',['PipeOutput',['../../Stream/df/dc1/classStream_1_1PipeOutput.html',1,'Stream']]]
+  ['output_0',['Output',['../../Stream/df/dc2/classStream_1_1Output.html',1,'Stream']]],
+  ['outputfilter_1',['OutputFilter',['../../Stream/d0/d57/classStream_1_1OutputFilter.html',1,'Stream']]]
 ];
