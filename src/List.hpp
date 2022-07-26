@@ -45,17 +45,16 @@ List<T>::operator=(List value) noexcept
 }
 
 template <typename T>
-template <typename ... TArgs>
-List<T>::List(Stream::Input& input, TArgs&& ... tArgs)
-requires Deserializable<T, Stream::Input&, TArgs ...>
+List<T>::List(Stream::Input& input, auto&& ... tArgs)
+requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		(mTail = mHead = ::new LNode<T>(input, std::forward<TArgs>(tArgs) ...))->prev = nullptr;
+		(mTail = mHead = ::new LNode<T>(input, std::forward<decltype(tArgs)>(tArgs) ...))->prev = nullptr;
 		std::uint64_t size = mSize;
 		while (--size) {
 			try {
-				mTail->next = ::new LNode<T>(input, std::forward<TArgs>(tArgs) ...);
+				mTail->next = ::new LNode<T>(input, std::forward<decltype(tArgs)>(tArgs) ...);
 			} catch (...) {
 				this->~List();
 				throw;
@@ -96,7 +95,7 @@ List<T>::List(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const&)
 template <typename T>
 Stream::Output&
 operator<<(Stream::Output& output, List<T> const& list)
-requires Stream::Serializable<T, Stream::Output&>
+requires Stream::InsertableTo<T, Stream::Output>
 {
 	output << list.mSize;
 	for (LNode<T> const* l = list.mHead; l; l = l->next)
@@ -104,30 +103,27 @@ requires Stream::Serializable<T, Stream::Output&>
 	return output;
 }
 
-/*
 template <typename T>
-Stream::DotOutput&
-operator<<(Stream::DotOutput& dotOutput, List<T> const& list) requires DotSerializable<T>
+Stream::Format::DotOutput&
+operator<<(Stream::Format::DotOutput& dotOutput, List<T> const& list)
+requires Stream::InsertableTo<T, Stream::Format::StringOutput>
 {
-	dotOutput << "digraph G {\n\trankdir=\"LR\";\n";
+	dotOutput << "digraph G {\n";
 	if (list.mHead) {
 		LNode<T>* l = list.mHead;
-		dotOutput << "\t";
 		do {
-			dotOutput << l->val << (l->next ? " -> " : "\n");
+			dotOutput << l->val << (l->next ? "->" : "\n");
 		} while (l = l->next);
 		if (list.mTail != list.mHead) {
 			l = list.mTail;
-			dotOutput << "\t";
 			do {
-				dotOutput << l->val << (l->prev ? " -> " : "\n");
+				dotOutput << l->val << (l->prev ? "->" : "\n");
 			} while (l = l->prev);
 		}
 	}
 	dotOutput << "}\n";
 	return dotOutput;
 }
- */
 
 template <typename T>
 List<T>::~List()
@@ -166,22 +162,21 @@ List<T>::pushFront(List value) noexcept
 }
 
 template <typename T>
-template <typename ... TArgs>
 typename List<T>::iterator
-List<T>::pushFront(TArgs&& ... tArgs)
-{ return pushFront(::new LNode<T>(std::forward<TArgs>(tArgs) ...)); }
+List<T>::pushFront(auto&& ... tArgs)
+{ return pushFront(::new LNode<T>(std::forward<decltype(tArgs)>(tArgs) ...)); }
 
 template <typename T>
-template <Derived<T> DT, typename ... DTArgs>
+template <Derived<T> DT>
 typename List<T>::iterator
-List<T>::pushFront(DTArgs&& ... dtArgs)
-{ return pushFront(reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<DTArgs>(dtArgs) ...))); }
+List<T>::pushFront(auto&& ... dtArgs)
+{ return pushFront(reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...))); }
 
 template <typename T>
-template <typename ... CIArgs, typename ... CArgs>
+template <typename ... CIArgs>
 typename List<T>::iterator
-List<T>::pushFront(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
-{ return pushFront(new(createInfo.size) LNode<T>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
+List<T>::pushFront(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs)
+{ return pushFront(new(createInfo.size) LNode<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...)); }
 
 template <typename T>
 LNode<T>*
@@ -212,22 +207,21 @@ List<T>::pushBack(List value) noexcept
 }
 
 template <typename T>
-template <typename ... TArgs>
 typename List<T>::iterator
-List<T>::pushBack(TArgs&& ... tArgs)
-{ return pushBack(::new LNode<T>(std::forward<TArgs>(tArgs) ...)); }
+List<T>::pushBack(auto&& ... tArgs)
+{ return pushBack(::new LNode<T>(std::forward<decltype(tArgs)>(tArgs) ...)); }
 
 template <typename T>
-template <Derived<T> DT, typename ... DTArgs>
+template <Derived<T> DT>
 typename List<T>::iterator
-List<T>::pushBack(DTArgs&& ... dtArgs)
-{ return pushBack(reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<DTArgs>(dtArgs) ...))); }
+List<T>::pushBack(auto&& ... dtArgs)
+{ return pushBack(reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...))); }
 
 template <typename T>
-template <typename ... CIArgs, typename ... CArgs>
+template <typename ... CIArgs>
 typename List<T>::iterator
-List<T>::pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
-{ return pushBack(new(createInfo.size) LNode<T>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
+List<T>::pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs)
+{ return pushBack(new(createInfo.size) LNode<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...)); }
 
 template <typename T>
 LNode<T>*
@@ -243,22 +237,22 @@ List<T>::insertBefore(LNode<T>* p, LNode<T>* l) noexcept
 }
 
 template <typename T>
-template <typename ... TArgs, Direction d, Constness c>
+template <Direction d, Constness c>
 typename List<T>::iterator
-List<T>::insertBefore(Iterator<d, c> at, TArgs&& ... tArgs)
-{ return insertBefore(at.pos, ::new LNode<T>(std::forward<TArgs>(tArgs) ...)); }
+List<T>::insertBefore(Iterator<d, c> at, auto&& ... tArgs)
+{ return insertBefore(at.pos, ::new LNode<T>(std::forward<decltype(tArgs)>(tArgs) ...)); }
 
 template <typename T>
-template <Derived<T> DT, typename ... DTArgs, Direction d, Constness c>
+template <Derived<T> DT, Direction d, Constness c>
 typename List<T>::iterator
-List<T>::insertBefore(Iterator<d, c> at, DTArgs&& ... dtArgs)
-{ return insertBefore(at.pos, reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<DTArgs>(dtArgs) ...))); }
+List<T>::insertBefore(Iterator<d, c> at, auto&& ... dtArgs)
+{ return insertBefore(at.pos, reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...))); }
 
 template <typename T>
-template <typename ... CIArgs, typename ... CArgs, Direction d, Constness c>
+template <typename ... CIArgs, Direction d, Constness c>
 typename List<T>::iterator
-List<T>::insertBefore(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
-{ return insertBefore(at.pos, new(createInfo.size) LNode<T>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
+List<T>::insertBefore(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs)
+{ return insertBefore(at.pos, new(createInfo.size) LNode<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...)); }
 
 template <typename T>
 LNode<T>*
@@ -274,22 +268,22 @@ List<T>::insertAfter(LNode<T>* p, LNode<T>* l) noexcept
 }
 
 template <typename T>
-template <typename ... TArgs, Direction d, Constness c>
+template <Direction d, Constness c>
 typename List<T>::iterator
-List<T>::insertAfter(Iterator<d, c> at, TArgs&& ... tArgs)
-{ return insertAfter(at.pos, ::new LNode<T>(std::forward<TArgs>(tArgs) ...)); }
+List<T>::insertAfter(Iterator<d, c> at, auto&& ... tArgs)
+{ return insertAfter(at.pos, ::new LNode<T>(std::forward<decltype(tArgs)>(tArgs) ...)); }
 
 template <typename T>
-template <Derived<T> DT, typename ... DTArgs, Direction d, Constness c>
+template <Derived<T> DT, Direction d, Constness c>
 typename List<T>::iterator
-List<T>::insertAfter(Iterator<d, c> at, DTArgs&& ... dtArgs)
-{ return insertAfter(at.pos, reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<DTArgs>(dtArgs) ...))); }
+List<T>::insertAfter(Iterator<d, c> at, auto&& ... dtArgs)
+{ return insertAfter(at.pos, reinterpret_cast<LNode<T>*>(::new LNode<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...))); }
 
 template <typename T>
-template <typename ... CIArgs, typename ... CArgs, Direction d, Constness c>
+template <typename ... CIArgs, Direction d, Constness c>
 typename List<T>::iterator
-List<T>::insertAfter(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
-{ return insertAfter(at.pos, new(createInfo.size) LNode<T>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
+List<T>::insertAfter(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs)
+{ return insertAfter(at.pos, new(createInfo.size) LNode<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...)); }
 
 template <typename T>
 template <Direction d, Constness c>

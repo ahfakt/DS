@@ -1,10 +1,10 @@
 #ifndef DS_MAP_H
 #define DS_MAP_H
 
-#include "DS/Container.h"
-#include "DP/Factory.h"
-#include "../src/MNode.hpp"
-#include "StreamFormat/Dot.h"
+#include "Container.h"
+#include "../../src/MNode.hpp"
+#include <DP/Factory.h>
+#include <StreamFormat/Dot.h>
 
 namespace DS {
 
@@ -37,7 +37,7 @@ class Map : public Container {
 	template <std::size_t N = 0>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::Serializable<K, Stream::Format::StringOutput&> && Stream::Serializable<V, Stream::Format::StringOutput&>;
+	requires Stream::InsertableTo<K, Stream::Format::StringOutput> && Stream::InsertableTo<V, Stream::Format::StringOutput>;
 
 public:
 	template <Direction, Constness, std::size_t N = 0>
@@ -72,17 +72,16 @@ public:
 	Map&
 	operator=(Map value) noexcept;
 
-	template <typename ... KArgs, typename ... VArgs>
-	explicit Map(KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<K, Stream::Input&, KArgs ...> && Deserializable<V, Stream::Input&, VArgs ...>;
+	explicit Map(auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
+	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...> && Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
 
-	template <typename ... KArgs, typename VIDType, typename ... VFArgs>
-	Map(KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-	requires Deserializable<K, Stream::Input&, KArgs ...>;
+	template <typename VIDType, typename ... VFArgs>
+	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>;
 
-	template <typename KIDType, typename ... KFArgs, typename ... VArgs>
-	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<V, Stream::Input&, VArgs ...>;
+	template <typename KIDType, typename ... KFArgs>
+	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
+	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
 
 	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
 	Map(DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
@@ -90,64 +89,63 @@ public:
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Map<k, v, c, cs ...> const& map)
-	requires Stream::Serializable<k, Stream::Output&> && Stream::Serializable<v, Stream::Output&>;
+	requires Stream::InsertableTo<k, Stream::Output> && Stream::InsertableTo<v, Stream::Output>;
 
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, Map<k, v, c, cs ...> const& map)
-	requires Stream::Serializable<k, Stream::Format::StringOutput&> && Stream::Serializable<v, Stream::Format::StringOutput&>;
+	requires Stream::InsertableTo<k, Stream::Format::StringOutput> && Stream::InsertableTo<v, Stream::Format::StringOutput>;
 
 	~Map();
 
-	template <typename ... KArgs>
 	iterator<>
-	put(KArgs&& ... kArgs);
+	put(auto&& ... kArgs);
 
-	template <typename ... KArgs, Derived<V> DV>
+	template <Derived<V> DV>
 	iterator<>
-	put(KArgs&& ... kArgs);
+	put(auto&& ... kArgs);
 
-	template <typename ... KArgs, typename ... VCIArgs>
+	template <typename ... VCIArgs>
 	iterator<>
-	put(KArgs&& ... kArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
+	put(auto&& ... kArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
 
 
-	template <EqDerived<K> DK, typename ... DKArgs>
+	template <EqDerived<K> DK>
 	iterator<>
-	put(DKArgs&& ... dkArgs);
+	put(auto&& ... dkArgs);
 
-	template <EqDerived<K> DK, typename ... DKArgs, Derived<V> DV>
+	template <EqDerived<K> DK, Derived<V> DV>
 	iterator<>
-	put(DKArgs&& ... dkArgs);
+	put(auto&& ... dkArgs);
 
-	template <EqDerived<K> DK, typename ... DKArgs, typename ... VCIArgs>
+	template <EqDerived<K> DK, typename ... VCIArgs>
 	iterator<>
-	put(DKArgs&& ... dkArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
+	put(auto&& ... dkArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
 
 
-	template <typename ... KCIArgs, typename ... KCArgs>
+	template <typename ... KCIArgs>
 	iterator<>
-	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs);
+	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, auto&& ... kcArgs);
 
-	template <typename ... KCIArgs, typename ... KCArgs, Derived<V> DV>
+	template <typename ... KCIArgs, Derived<V> DV>
 	iterator<>
-	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs);
+	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, auto&& ... kcArgs);
 
-	template <typename ... KCIArgs, typename ... KCArgs, typename ... VCIArgs>
+	template <typename ... KCIArgs, typename ... VCIArgs>
 	iterator<>
-	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, KCArgs&& ... kcArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
+	put(DP::CreateInfo<K, KCIArgs ...> const& kCreateInfo, auto&& ... kcArgs, DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo);
 
-	template <typename T, std::size_t N = 0>
+	template <std::size_t N = 0>
 	bool
-	remove(T&& k) noexcept;
+	remove(auto&& ... args) noexcept;
 
-	template <typename T, std::size_t N = 0>
+	template <std::size_t N = 0>
 	iterator<N>
-	get(T&& k) noexcept;
+	get(auto&& ... args) noexcept;
 
-	template <typename T, std::size_t N = 0>
+	template <std::size_t N = 0>
 	const_iterator<N>
-	get(T&& k) const noexcept;
+	get(auto&& ... args) const noexcept;
 
 	template <std::size_t N = 0>
 	iterator<N>
@@ -233,19 +231,18 @@ public:
 	unset() const noexcept
 	requires (c == Constness::NCONST);
 
-	template <typename ... VArgs>
 	V&
-	set(VArgs&& ... vArgs) const
+	set(auto&& ... vArgs) const
 	requires (c == Constness::NCONST);
 
-	template <Derived<V> DV, typename ... DVArgs>
+	template <Derived<V> DV>
 	DV&
-	set(DVArgs&& ... dvArgs) const
+	set(auto&& ... dvArgs) const
 	requires (c == Constness::NCONST);
 
-	template <typename ... VCIArgs, typename ... VCArgs>
+	template <typename ... VCIArgs>
 	V&
-	set(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, VCArgs&& ... vcArgs) const
+	set(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, auto&& ... vcArgs) const
 	requires (c == Constness::NCONST);
 
 	Iterator&
@@ -275,6 +272,6 @@ public:
 
 }//namespace DS
 
-#include "../src/Map.hpp"
+#include "../../src/Map.hpp"
 
 #endif //DS_MAP_H

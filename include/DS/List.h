@@ -1,9 +1,10 @@
 #ifndef DS_LIST_H
 #define DS_LIST_H
 
-#include "DS/Container.h"
-#include "DP/Factory.h"
-#include "../src/LNode.hpp"
+#include "Container.h"
+#include "../../src/LNode.hpp"
+#include <DP/Factory.h>
+#include <StreamFormat/Dot.h>
 
 namespace DS {
 
@@ -61,9 +62,8 @@ public:
 	List&
 	operator=(List value) noexcept;
 
-	template <typename ... TArgs>
-	explicit List(Stream::Input& input, TArgs&& ... tArgs)
-	requires Deserializable<T, Stream::Input&, TArgs ...>;
+	explicit List(Stream::Input& input, auto&& ... tArgs)
+	requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>;
 
 	template <typename IDType, typename ... FArgs>
 	List(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const& factory);
@@ -71,70 +71,66 @@ public:
 	template <typename t>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, List<t> const& list)
-	requires Stream::Serializable<t, Stream::Output&>;
+	requires Stream::InsertableTo<t, Stream::Output>;
 
-	/**
 	template <typename t>
-	friend Stream::DotOutput&
-	operator<<(Stream::DotOutput& dotOutput, List<t> const& list)
-	requires DotSerializable<t>;
-	 */
+	friend Stream::Format::DotOutput&
+	operator<<(Stream::Format::DotOutput& dotOutput, List<t> const& list)
+	requires Stream::InsertableTo<t, Stream::Format::StringOutput>;
 
 	~List();
 
 	List&
 	pushFront(List value) noexcept;
 
-	template <typename ... TArgs>
 	iterator
-	pushFront(TArgs&& ... tArgs);
+	pushFront(auto&& ... tArgs);
 
-	template <Derived<T> DT, typename ... DTArgs>
+	template <Derived<T> DT>
 	iterator
-	pushFront(DTArgs&& ... dtArgs);
+	pushFront(auto&& ... dtArgs);
 
-	template <typename ... CIArgs, typename ... CArgs>
+	template <typename ... CIArgs>
 	iterator
-	pushFront(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs);
+	pushFront(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs);
 
 	List&
 	pushBack(List value) noexcept;
 
-	template <typename ... TArgs>
 	iterator
-	pushBack(TArgs&& ... tArgs);
+	pushBack(auto&& ... tArgs);
 
-	template <Derived<T> DT, typename ... DTArgs>
+	template <Derived<T> DT>
 	iterator
-	pushBack(DTArgs&& ... dtArgs);
+	pushBack(auto&& ... dtArgs);
 
-	template <typename ... CIArgs, typename ... CArgs>
+	template <typename ... CIArgs>
 	iterator
-	pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs);
+	pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs);
 
-	template <typename ... TArgs, Direction d, Constness c>
+	template <Direction d, Constness c>
 	iterator
-	insertBefore(Iterator<d, c> at, TArgs&& ... tArgs);
+	insertBefore(Iterator<d, c> at, auto&& ... tArgs);
 
-	template <Derived<T> DT, typename ... DTArgs, Direction d, Constness c>
+	template <Derived<T> DT, Direction d, Constness c>
 	iterator
-	insertBefore(Iterator<d, c> at, DTArgs&& ... dtArgs);
+	insertBefore(Iterator<d, c> at, auto&& ... dtArgs);
 
-	template <typename ... CIArgs, typename ... CArgs, Direction d, Constness c>
+	template <typename ... CIArgs, Direction d, Constness c>
 	iterator
-	insertBefore(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs);
+	insertBefore(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs);
 
-	template <typename ... TArgs, Direction d, Constness c>
+	template <Direction d, Constness c>
 	iterator
-	insertAfter(Iterator<d, c> at, TArgs&& ... tArgs);
+	insertAfter(Iterator<d, c> at, auto&& ... tArgs);
 
-	template <Derived<T> DT, typename ... DTArgs, Direction d, Constness c>
+	template <Derived<T> DT, Direction d, Constness c>
 	iterator
-	insertAfter(Iterator<d, c> at, DTArgs&& ... dtArgs);
+	insertAfter(Iterator<d, c> at, auto&& ... dtArgs);
 
-	template <typename ... CIArgs, typename ... CArgs, Direction d, Constness c>
+	template <typename ... CIArgs, Direction d, Constness c>
 	iterator
-	insertAfter(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs);
+	insertAfter(Iterator<d, c> at, DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs);
 
 	template <Direction d, Constness c>
 	void
@@ -233,6 +229,6 @@ public:
 
 }//namespace DS
 
-#include "../src/List.hpp"
+#include "../../src/List.hpp"
 
 #endif //DS_LIST_H

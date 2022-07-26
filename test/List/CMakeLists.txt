@@ -8,6 +8,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin/${CMAKE_SYSTEM_PR
 set(INC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+add_executable(${PROJECT_NAME}_Holder)
+target_include_directories(${PROJECT_NAME}_Holder PRIVATE include)
+target_link_libraries(${PROJECT_NAME}_Holder PRIVATE DS)
+target_sources(${PROJECT_NAME}_Holder
+		PRIVATE
+		${SRC_ROOT}/Holder.cpp)
+add_test(NAME ${PROJECT_NAME}_Holder COMMAND ${PROJECT_NAME}_Holder)
+
 add_executable(${PROJECT_NAME}_DefaultConstructor)
 target_include_directories(${PROJECT_NAME}_DefaultConstructor PRIVATE include)
 target_link_libraries(${PROJECT_NAME}_DefaultConstructor PRIVATE DS)

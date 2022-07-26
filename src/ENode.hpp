@@ -26,9 +26,8 @@ struct ENode {
 	operator delete(void* ptr)
 	{ ::operator delete(ptr); }
 
-	template <typename ... Args>
-	explicit ENode(Args&& ... args)
-			: val(std::forward<Args>(args) ...)
+	explicit ENode(auto&& ... args)
+			: val(std::forward<decltype(args)>(args) ...)
 	{}
 
 	~ENode()

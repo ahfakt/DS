@@ -52,14 +52,13 @@ Vector<T>::operator=(Vector value) noexcept
 }
 
 template <typename T>
-template <typename ... TArgs>
-Vector<T>::Vector(Stream::Input& input, TArgs&& ... tArgs)
-requires Deserializable<T, Stream::Input&, TArgs ...>
+Vector<T>::Vector(Stream::Input& input, auto&& ... tArgs)
+requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>
 		: Vector(Stream::Get<std::uint64_t>(input))
 {
 	while (mSize < mCapacity) {
 		try {
-			::new(static_cast<void*>(mHead + mSize)) Holder<T>(input, std::forward<TArgs>(tArgs) ...);
+			::new(static_cast<void*>(mHead + mSize)) Holder<T>(input, std::forward<decltype(tArgs)>(tArgs) ...);
 		} catch (...) {
 			this->~Vector();
 			throw;
@@ -90,7 +89,7 @@ Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const&
 template <typename T>
 Stream::Output&
 operator<<(Stream::Output& output, Vector<T> const& vector)
-requires Stream::Serializable<T, Stream::Output&>
+requires Stream::InsertableTo<T, Stream::Output>
 {
 	output << vector.mSize;
 	Holder<T> const* beg = vector.mHead;
@@ -109,16 +108,15 @@ Vector<T>::~Vector()
 }
 
 template <typename T>
-template <typename ... TArgs>
 typename Vector<T>::iterator
-Vector<T>::pushBack(TArgs&& ... tArgs)
+Vector<T>::pushBack(auto&& ... tArgs)
 {
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<T>(std::forward<TArgs>(tArgs) ...);
+		::new(static_cast<void*>(mHead + mSize)) Holder<T>(std::forward<decltype(tArgs)>(tArgs) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
-	::new(static_cast<void*>(v.mHead + mSize)) Holder<T>(std::forward<TArgs>(tArgs) ...);
+	::new(static_cast<void*>(v.mHead + mSize)) Holder<T>(std::forward<decltype(tArgs)>(tArgs) ...);
 	try {
 		for (std::uint64_t i = 0; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
@@ -132,16 +130,16 @@ Vector<T>::pushBack(TArgs&& ... tArgs)
 }
 
 template <typename T>
-template <EqDerived<T> DT, typename ... DTArgs>
+template <EqDerived<T> DT>
 typename Vector<T>::iterator
-Vector<T>::pushBack(DTArgs&& ... dtArgs)
+Vector<T>::pushBack(auto&& ... dtArgs)
 {
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<DT>(std::forward<DTArgs>(dtArgs) ...);
+		::new(static_cast<void*>(mHead + mSize)) Holder<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
-	::new(static_cast<void*>(v.mHead + mSize)) Holder<DT>(std::forward<DTArgs>(dtArgs) ...);
+	::new(static_cast<void*>(v.mHead + mSize)) Holder<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...);
 	try {
 		for (std::uint64_t i = 0; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
@@ -155,19 +153,19 @@ Vector<T>::pushBack(DTArgs&& ... dtArgs)
 }
 
 template <typename T>
-template <typename ... CIArgs, typename ... CArgs>
+template <typename ... CIArgs>
 typename Vector<T>::iterator
-Vector<T>::pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
+Vector<T>::pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs)
 {
 	if (createInfo.size > sizeof(T))
 		throw Exception("createInfo.size is greater than the size of T.");
 
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.create, std::forward<CArgs>(cArgs) ...);
+		::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? mCapacity * 1.5 : 2);
-	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo.create, std::forward<CArgs>(cArgs) ...);
+	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...);
 	try {
 		for (std::uint64_t i = 0; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));

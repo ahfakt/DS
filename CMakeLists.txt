@@ -29,8 +29,11 @@ set(SRC_LIST
 		${SRC_ROOT}/VNode.hpp)
 
 add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}OBJ INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE include)
+target_include_directories(${PROJECT_NAME}OBJ INTERFACE include)
 target_sources(${PROJECT_NAME} INTERFACE ${INC_LIST} PRIVATE ${SRC_LIST})
+target_sources(${PROJECT_NAME}OBJ INTERFACE ${INC_LIST} PRIVATE ${SRC_LIST})
 
 foreach (T IN LISTS DEPENDENCIES)
 	if (NOT TARGET ${T})
@@ -38,6 +41,8 @@ foreach (T IN LISTS DEPENDENCIES)
 	endif ()
 endforeach ()
 target_link_libraries(${PROJECT_NAME} INTERFACE ${DEPENDENCIES})
+list(TRANSFORM DEPENDENCIES APPEND OBJ)
+target_link_libraries(${PROJECT_NAME}OBJ INTERFACE ${DEPENDENCIES})
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)

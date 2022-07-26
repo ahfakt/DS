@@ -19,6 +19,7 @@ GENERATOR="Unix Makefiles"
 git clone https://github.com/ahfakt/DP.git
 git clone https://github.com/ahfakt/IO.git
 git clone https://github.com/ahfakt/Stream.git
+git clone https://github.com/ahfakt/StreamFormat.git
 git clone https://github.com/ahfakt/DS.git
 
 # Generate
@@ -33,11 +34,11 @@ cmake \
     -G "${GENERATOR}"
 
 # Build
-# DPDoc
+# DP | DPOBJ | DPDoc
 # IO | IOOBJ | IODoc
 # Stream | StreamOBJ | StreamDoc
-# DSDoc
-# DSTest_Digraph_00 | DSTest_List_00 | DSTest_Map_00 | DSTest_Set_00 | DSTest_Vector_00
+# StreamFormat | StreamFormatOBJ | StreamFormatDoc
+# DS | DSOBJ | DSDoc
 cmake \
     --build ../build/DS/${SYSTEM_PROCESSOR}/${BUILD_TYPE} \
     --target DSDoc \

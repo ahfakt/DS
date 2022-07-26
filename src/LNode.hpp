@@ -22,9 +22,8 @@ struct LNode {
 	operator delete(void* ptr)
 	{ ::operator delete(ptr); }
 
-	template <typename ... Args>
-	explicit LNode(Args&& ... args)
-			: val(std::forward<Args>(args) ...)
+	explicit LNode(auto&& ... args)
+			: val(std::forward<decltype(args)>(args) ...)
 	{}
 
 	~LNode()

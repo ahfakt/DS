@@ -35,13 +35,12 @@ Set<K, C, Cs ...>::operator=(Set value) noexcept
 }
 
 template <typename K, typename C, typename ... Cs>
-template <typename ... KArgs>
-Set<K, C, Cs ...>::Set(Stream::Input& input, KArgs&& ... kArgs)
-requires Deserializable<K, Stream::Input&, KArgs ...>
+Set<K, C, Cs ...>::Set(Stream::Input& input, auto&& ... kArgs)
+requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, input, std::forward<KArgs>(kArgs) ...);
+		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, input, std::forward<decltype(kArgs)>(kArgs) ...);
 		if constexpr(sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<SNode<K, C, Cs ...>, Exception>(mRoot);
 	}
@@ -62,7 +61,7 @@ Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, IDType, FArgs ...> c
 template <typename K, typename C, typename ... Cs>
 Stream::Output&
 operator<<(Stream::Output& output, Set<K, C, Cs ...> const& set)
-requires Stream::Serializable<K, Stream::Output&>
+requires Stream::InsertableTo<K, Stream::Output>
 {
 	output << set.mSize;
 	if (set.mRoot[0])
@@ -74,7 +73,7 @@ template <typename K, typename C, typename... Cs>
 template <std::size_t N>
 Stream::Format::DotOutput&
 Set<K, C, Cs...>::toDot(Stream::Format::DotOutput& dotOutput) const
-requires Stream::Serializable<K, Stream::Format::StringOutput&>
+requires Stream::InsertableTo<K, Stream::Format::StringOutput>
 {
 	mRoot[N]->template toDot<N>(dotOutput);
 	reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
@@ -86,7 +85,7 @@ requires Stream::Serializable<K, Stream::Format::StringOutput&>
 template <typename K, typename C, typename ... Cs>
 Stream::Format::DotOutput&
 operator<<(Stream::Format::DotOutput& dotOutput, Set<K, C, Cs ...> const& set)
-requires Stream::Serializable<K, Stream::Format::StringOutput&>
+requires Stream::InsertableTo<K, Stream::Format::StringOutput>
 {
 
 	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";
@@ -151,22 +150,21 @@ Set<K, C, Cs ...>::put(SNode<K, C, Cs ...>* created) noexcept
 
 
 template <typename K, typename C, typename ... Cs>
-template <typename ... KArgs>
 typename Set<K, C, Cs ...>::template const_iterator<>
-Set<K, C, Cs ...>::put(KArgs&& ... kArgs)
-{ return put(::new SNode<K, C, Cs ...>(std::forward<KArgs>(kArgs) ...)); }
+Set<K, C, Cs ...>::put(auto&& ... kArgs)
+{ return put(::new SNode<K, C, Cs ...>(std::forward<decltype(kArgs)>(kArgs) ...)); }
 
 template <typename K, typename C, typename ... Cs>
-template <Derived<K> DK, typename ... DKArgs>
+template <Derived<K> DK>
 typename Set<K, C, Cs ...>::template const_iterator<>
-Set<K, C, Cs ...>::put(DKArgs&& ... dkArgs)
-{ return put(reinterpret_cast<SNode<K, C, Cs ...>*>(::new SNode<DK>(std::forward<DKArgs>(dkArgs) ...))); }
+Set<K, C, Cs ...>::put(auto&& ... dkArgs)
+{ return put(reinterpret_cast<SNode<K, C, Cs ...>*>(::new SNode<DK>(std::forward<decltype(dkArgs)>(dkArgs) ...))); }
 
 template <typename K, typename C, typename ... Cs>
-template <typename ... CIArgs, typename ... CArgs>
+template <typename ... CIArgs>
 typename Set<K, C, Cs ...>::template const_iterator<>
-Set<K, C, Cs ...>::put(DP::CreateInfo<K, CIArgs ...> const& createInfo, CArgs&& ... cArgs)
-{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo.create, std::forward<CArgs>(cArgs) ...)); }
+Set<K, C, Cs ...>::put(DP::CreateInfo<K, CIArgs ...> const& createInfo, auto&& ... cArgs)
+{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...)); }
 
 
 template <typename K, typename C, typename ... Cs>
@@ -202,22 +200,22 @@ Set<K, C, Cs ...>::remove(SNode<K, C, Cs ...>* toDel) noexcept
 }
 
 template <typename K, typename C, typename ... Cs>
-template <std::size_t N, typename T>
+template <std::size_t N>
 bool
-Set<K, C, Cs ...>::remove(T&& k) noexcept
+Set<K, C, Cs ...>::remove(auto&& ... args) noexcept
 {
 	if (mRoot[N]) {
-		if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<T>(k)))
+		if (auto* t = reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<decltype(args)>(args) ...))
 			return t == remove(reinterpret_cast<SNode<K, C, Cs ...>*>(t));
 	}
 	return false;
 }
 
 template <typename K, typename C, typename ... Cs>
-template <std::size_t N, typename T>
+template <std::size_t N>
 typename Set<K, C, Cs ...>::template const_iterator<N>
-Set<K, C, Cs ...>::get(T&& k) const noexcept
-{ return mRoot[N] ? reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<T>(k)) : nullptr; }
+Set<K, C, Cs ...>::get(auto&& ... args) const noexcept
+{ return mRoot[N] ? reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template get<N>(std::forward<decltype(args)>(args) ...) : nullptr; }
 
 template <typename K, typename C, typename ... Cs>
 template <std::size_t N>
@@ -352,13 +350,13 @@ template <typename K, typename C, typename ... Cs>
 template <Direction d, std::size_t n>
 K const&
 Set<K, C, Cs ...>::Iterator<d, n>::operator*() const noexcept
-{ return static_cast<K const&>(reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
+{ return reinterpret_cast<K const&>(reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
 
 template <typename K, typename C, typename ... Cs>
 template <Direction d, std::size_t n>
 K const*
 Set<K, C, Cs ...>::Iterator<d, n>::operator->() const noexcept
-{ return static_cast<K const*>(&reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
+{ return reinterpret_cast<K const*>(&reinterpret_cast<SNode<K, C, Cs ...>*>(pos)->key); }
 
 template <typename K, typename C, typename ... Cs>
 template <Direction d, std::size_t n>

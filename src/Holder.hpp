@@ -1,8 +1,8 @@
 #ifndef DS_HOLDER_HPP
 #define DS_HOLDER_HPP
 
-#include "DP/CreateInfo.h"
-#include "Stream/InOut.h"
+#include <DP/CreateInfo.h>
+#include <Stream/InOut.h>
 
 namespace DS {
 
@@ -34,11 +34,8 @@ enum class Order : bool {
 	POSTORDER	= true
 };
 
-template <typename T, typename InputRef, typename ... Args>
-concept Deserializable = Stream::Constructible<T, InputRef, Args ...> || Stream::Extractable<T, InputRef, Args ...>;
-
 template <typename D, typename T>
-concept Derived = std::is_base_of_v<T, D>;
+concept Derived = std::derived_from<D, T>;
 
 template <typename D, typename T>
 concept EqDerived = sizeof(D) == sizeof(T) && Derived<D, T>;
@@ -56,31 +53,20 @@ class alignas(T) Holder {
 public:
 	Holder() noexcept = default;
 
-	Holder(T const& other)
-	{ ::new(reinterpret_cast<void*>(raw)) T(other); }
+	Holder(auto&& ... args)
+	{ ::new(reinterpret_cast<void*>(raw)) T{std::forward<decltype(args)>(args) ...}; }
 
-	template <typename ... Args>
-	Holder(Args&& ... args)
-	requires std::constructible_from<T, Args ...>
-	{ ::new(reinterpret_cast<void*>(raw)) T(std::forward<Args>(args) ...); }
+	Holder(Stream::ExtractableTo<T> auto& input, auto&& ... args)
+	requires (!Stream::ConstructibleFrom<T, decltype(input), decltype(args) ...>)
+	{ input >> *::new(reinterpret_cast<void*>(raw)) T{std::forward<decltype(args)>(args) ...}; }
 
-	template <typename ... CFArgs, typename ... CArgs>
-	Holder(DP::CreateFunc<T, CFArgs ...> const& createFunc, CArgs&& ... cArgs)
-	{ createFunc(reinterpret_cast<void*>(raw), std::forward<CArgs>(cArgs) ...); }
-
-	template <typename ... Args>
-	Holder(Stream::In auto& input, Args&& ... args)
-	requires std::constructible_from<T, decltype(input), Args ...>
-	{ ::new(reinterpret_cast<void*>(raw)) T(input, std::forward<Args>(args) ...); }
-
-	template <typename ... Args>
-	Holder(Stream::In auto& input, Args&& ... args)
-	requires std::constructible_from<T, Args ...> && Stream::Deserializable<T, decltype(input)>
-	{ input >> *new(reinterpret_cast<void*>(raw)) T(std::forward<Args>(args) ...); }
-
-	Holder(Stream::In auto& input)
-	requires std::is_trivially_default_constructible_v<T> && Stream::Deserializable<T, decltype(input)>
+	Holder(Stream::TriviallyExtractableTo<T> auto& input)
+	requires (!Stream::ConstructibleFrom<T, decltype(input)>)
 	{ input >> *reinterpret_cast<T*>(raw); }
+
+	template <typename ... CFArgs>
+	Holder(DP::CreateFunc<T, CFArgs ...> const& createFunc, auto&& ... cArgs)
+	{ createFunc(reinterpret_cast<void*>(raw), std::forward<decltype(cArgs)>(cArgs) ...); }
 
 	T*
 	operator->() noexcept
@@ -123,7 +109,7 @@ Offset(U T::* m)
 { return reinterpret_cast<std::byte*>(&(reinterpret_cast<T*>(0)->*m)) - reinterpret_cast<std::byte*>(0); }
 
 template <typename Node, typename T>
-Node*
+auto*
 ValToNode(T* val, Holder<T> Node::* m)
 { return reinterpret_cast<Node*>(reinterpret_cast<std::byte*>(val) - reinterpret_cast<std::byte*>(&(reinterpret_cast<Node*>(0)->*m))); }
 

@@ -33,9 +33,8 @@ struct VNode {
 	operator delete(void* ptr)
 	{ ::operator delete(ptr); }
 
-	template <typename ... Args>
-	explicit VNode(Args&& ... args)
-			: val(std::forward<Args>(args) ...)
+	explicit VNode(auto&& ... args)
+			: val(std::forward<decltype(args)>(args) ...)
 	{}
 
 	~VNode()

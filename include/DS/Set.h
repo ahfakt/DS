@@ -1,10 +1,9 @@
 #ifndef DS_SET_H
 #define DS_SET_H
 
-#include "DS/Container.h"
-#include "DP/Factory.h"
-#include "../src/SNode.hpp"
-#include "StreamFormat/Dot.h"
+#include "Container.h"
+#include "../../src/SNode.hpp"
+#include <StreamFormat/Dot.h>
 
 namespace DS {
 
@@ -36,7 +35,7 @@ class Set : public Container {
 	template <std::size_t N = 0>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::Serializable<K, Stream::Format::StringOutput&>;
+	requires Stream::InsertableTo<K, Stream::Format::StringOutput>;
 
 public:
 	template <Direction, std::size_t N = 0>
@@ -65,9 +64,8 @@ public:
 	Set&
 	operator=(Set value) noexcept;
 
-	template <typename ... KArgs>
-	explicit Set(Stream::Input& input, KArgs&& ... kArgs)
-	requires Deserializable<K, Stream::Input&, KArgs ...>;
+	explicit Set(Stream::Input& input, auto&& ... kArgs)
+	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>;
 
 	template <typename IDType, typename ... FArgs>
 	Set(Stream::Input& input, DP::Factory<K, IDType, FArgs ...> const& factory);
@@ -75,34 +73,33 @@ public:
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Set<k, c, cs ...> const& set)
-	requires Stream::Serializable<k, Stream::Output&>;
+	requires Stream::InsertableTo<k, Stream::Output>;
 
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, Set<k, c, cs ...> const& set)
-	requires Stream::Serializable<k, Stream::Format::StringOutput&>;
+	requires Stream::InsertableTo<k, Stream::Format::StringOutput>;
 
 	~Set();
 
-	template <typename ... KArgs>
 	const_iterator<>
-	put(KArgs&& ... kArgs);
+	put(auto&& ... kArgs);
 
-	template <Derived<K> DK, typename ... DKArgs>
+	template <Derived<K> DK>
 	const_iterator<>
-	put(DKArgs&& ... dkArgs);
+	put(auto&& ... dkArgs);
 
-	template <typename ... CIArgs, typename ... CArgs>
+	template <typename ... CIArgs>
 	const_iterator<>
-	put(DP::CreateInfo<K, CIArgs ...> const& createInfo, CArgs&& ... cArgs);
+	put(DP::CreateInfo<K, CIArgs ...> const& createInfo, auto&& ... cArgs);
 
-	template <std::size_t N = 0, typename T>
+	template <std::size_t N = 0>
 	bool
-	remove(T&& k) noexcept;
+	remove(auto&& ... args) noexcept;
 
-	template <std::size_t N = 0, typename T>
+	template <std::size_t N = 0>
 	const_iterator<N>
-	get(T&& k) const noexcept;
+	get(auto&& ... args) const noexcept;
 
 	template <std::size_t N = 0>
 	const_iterator<N>
@@ -186,6 +183,6 @@ public:
 
 }//namespace DS
 
-#include "../src/Set.hpp"
+#include "../../src/Set.hpp"
 
 #endif //DS_SET_H

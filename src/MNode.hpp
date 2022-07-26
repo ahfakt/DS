@@ -11,6 +11,35 @@ struct MException {
 	};
 };//struct MException
 
+std::error_code
+make_error_code(MException::Code e) noexcept;
+
+}//namespace DS
+
+namespace std {
+
+template<>
+struct is_error_code_enum<DS::MException::Code> : true_type {};
+
+}//namespace std
+
+namespace DS {
+
+inline std::error_code
+make_error_code(MException::Code e) noexcept
+{
+	static struct : std::error_category {
+		[[nodiscard]] char const*
+		name() const noexcept override
+		{ return "DS::MNode"; }
+
+		[[nodiscard]] std::string
+		message(int e) const noexcept override
+		{ return e == 1 ? "Larger Key" : "Unknown Error"; }
+	} instance;
+	return {static_cast<int>(e), instance};
+}
+
 template <typename K, typename V, typename ... Cs>
 struct MNode : SNode<K, Cs ...> {
 	Holder<V> val;
@@ -23,9 +52,8 @@ struct MNode : SNode<K, Cs ...> {
 	operator delete(void* ptr)
 	{ ::operator delete(ptr); }
 
-	template <typename ... KArgs>
-	explicit MNode(KArgs&& ... kArgs)
-			: SNode<K, Cs ...>(std::forward<KArgs>(kArgs) ...)
+	explicit MNode(auto&& ... kArgs)
+			: SNode<K, Cs ...>(std::forward<decltype(kArgs)>(kArgs) ...)
 	{}
 
 	~MNode()
@@ -52,11 +80,10 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename ... KArgs, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			KArgs&& ... kArgs, Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<K, Stream::Input&, KArgs ...> && Deserializable<V, Stream::Input&, VArgs ...>
+			auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
+	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...> && Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
@@ -64,10 +91,10 @@ struct MNode : SNode<K, Cs ...> {
 
 		try {
 			if (state & 0x20) {
-				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<VArgs>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			}
-			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<KArgs>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<decltype(kArgs)>(kArgs) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -76,8 +103,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<KArgs>(kArgs) ..., input, std::forward<VArgs>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -86,11 +113,11 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename ... KArgs, typename VIDType, typename ... VFArgs>
+	template <typename VIDType, typename ... VFArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			KArgs&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
-	requires Deserializable<K, Stream::Input&, KArgs ...>
+			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
@@ -112,7 +139,7 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<KArgs>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<decltype(kArgs)>(kArgs) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -121,8 +148,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<KArgs>(kArgs) ..., input, vFactory) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<KArgs>(kArgs) ..., input, vFactory) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, vFactory) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, vFactory) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -131,11 +158,11 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KIDType, typename ... KFArgs, typename ... VArgs>
+	template <typename KIDType, typename ... KFArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<V, Stream::Input&, VArgs ...>
+			DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
+	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
@@ -143,7 +170,7 @@ struct MNode : SNode<K, Cs ...> {
 
 		try {
 			if (state & 0x20) {
-				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<VArgs>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			}
 			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
@@ -159,8 +186,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, kFactory, input, std::forward<VArgs>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, kFactory, input, std::forward<VArgs>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, kFactory, input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, kFactory, input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -224,18 +251,17 @@ struct MNode : SNode<K, Cs ...> {
 		this->d[0].hasValue = false;
 	}
 
-	template <typename ... Args>
 	V&
-	set(Args&& ... args)
+	set(auto&& ... args)
 	{
-		::new(static_cast<void*>(val)) Holder<V>(std::forward<Args>(args) ...);
+		::new(static_cast<void*>(val)) Holder<V>(std::forward<decltype(args)>(args) ...);
 		this->d[0].hasValue = true;
 		return *val;
 	}
 
 	void
 	serialize(Stream::Output& output) const
-	requires Stream::Serializable<K, Stream::Output&> && Stream::Serializable<V, Stream::Output&>
+	requires Stream::InsertableTo<K, Stream::Output> && Stream::InsertableTo<V, Stream::Output>
 	{
 		output << this->state();
 		if (this->d[0].hasValue)
@@ -250,7 +276,7 @@ struct MNode : SNode<K, Cs ...> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::Serializable<V, Stream::Format::StringOutput&>
+	requires Stream::InsertableTo<V, Stream::Format::StringOutput>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, MNode>()->template toDot<N>(dotOutput);
@@ -262,28 +288,6 @@ struct MNode : SNode<K, Cs ...> {
 	}
 };//struct MNode<K, V, Cs ...>
 
-std::error_code
-make_error_code(MException::Code e) noexcept
-{
-	static struct : std::error_category {
-		[[nodiscard]] char const*
-		name() const noexcept override
-		{ return "DS::MNode"; }
-
-		[[nodiscard]] std::string
-		message(int e) const noexcept override
-		{ return e == 1 ? "Larger Key" : "Unknown Error"; }
-	} instance;
-	return {static_cast<int>(e), instance};
-}
-
 }//namespace DS
-
-namespace std {
-
-template<>
-struct is_error_code_enum<DS::MException::Code> : true_type {};
-
-}//namespace std
 
 #endif //DS_MNODE_HPP

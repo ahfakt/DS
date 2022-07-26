@@ -13,7 +13,7 @@ int main()
 
 	Set<int> set1D;
 	auto* containerSize1D = reinterpret_cast<std::byte*>(&set1D);
-	auto** rootNode1D = reinterpret_cast<TNode<1>**>(containerSize1D + sizeof(std::size_t));
+	auto** rootNode1D = reinterpret_cast<TNode<1>**>(containerSize1D + sizeof(std::uint64_t));
 	for (int i = 0; i < 1024; ++i)
 		set1D.put(distrib(gen));
 	for (int i = 0; i < set1D.size(); ++i) {
@@ -24,7 +24,7 @@ int main()
 	//
 	Set<int, std::less<>, std::greater<>> set2D;
 	auto* containerSize2D = reinterpret_cast<std::byte*>(&set2D);
-	auto** rootNode2D = reinterpret_cast<TNode<2>**>(containerSize2D + sizeof(std::size_t));
+	auto** rootNode2D = reinterpret_cast<TNode<2>**>(containerSize2D + sizeof(std::uint64_t));
 	for (int i = 0; i < 1024; ++i)
 		set2D.put(distrib(gen));
 	for (int i = 0; i < set2D.size(); ++i) {

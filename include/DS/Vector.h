@@ -1,9 +1,9 @@
 #ifndef DS_VECTOR_H
 #define DS_VECTOR_H
 
-#include "DS/Container.h"
-#include "DP/Factory.h"
+#include "Container.h"
 #include "../../src/Holder.hpp"
+#include <DP/Factory.h>
 
 namespace DS {
 
@@ -39,9 +39,8 @@ public:
 	Vector&
 	operator=(Vector value) noexcept;
 
-	template <typename ... TArgs>
-	explicit Vector(Stream::Input& input, TArgs&& ... tArgs)
-	requires Deserializable<T, Stream::Input&, TArgs ...>;
+	explicit Vector(Stream::Input& input, auto&& ... tArgs)
+	requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>;
 
 	template <typename IDType, typename ... FArgs>
 	Vector(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const& factory);
@@ -49,21 +48,20 @@ public:
 	template <typename t>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Vector<t> const& vector)
-	requires Stream::Serializable<t, Stream::Output&>;
+	requires Stream::InsertableTo<t, Stream::Output>;
 
 	~Vector();
 
-	template <typename ... TArgs>
 	iterator
-	pushBack(TArgs&& ... tArgs);
+	pushBack(auto&& ... tArgs);
 
-	template <EqDerived<T> DT, typename ... DTArgs>
+	template <EqDerived<T> DT>
 	iterator
-	pushBack(DTArgs&& ... dtArgs);
+	pushBack(auto&& ... dtArgs);
 
-	template <typename ... CIArgs, typename ... CArgs>
+	template <typename ... CIArgs>
 	iterator
-	pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, CArgs&& ... cArgs);
+	pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs);
 
 	[[nodiscard]] std::uint64_t
 	capacity() const noexcept;
@@ -181,6 +179,6 @@ public:
 
 }//namespace DS
 
-#include "../src/Vector.hpp"
+#include "../../src/Vector.hpp"
 
 #endif //DS_VECTOR_H

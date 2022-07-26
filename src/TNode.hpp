@@ -1,8 +1,8 @@
 #ifndef DS_TNODE_HPP
 #define DS_TNODE_HPP
 
-#include <StreamFormat/Dot.h>
 #include "Holder.hpp"
+#include <StreamFormat/Dot.h>
 
 namespace DS {
 

@@ -1,10 +1,10 @@
 #ifndef DS_DIGRAPH_H
 #define DS_DIGRAPH_H
 
-#include "DS/List.h"
-#include "DS/Map.h"
-#include "DS/Vector.h"
-#include "../src/VNode.hpp"
+#include "List.h"
+#include "Map.h"
+#include "Vector.h"
+#include "../../src/VNode.hpp"
 
 namespace DS {
 
@@ -30,19 +30,17 @@ class Digraph {
 	LNode<VNode<V, E>>* mVPivot = nullptr;
 	LNode<ENode<V, E>>* mEPivot = nullptr;
 
-	template <typename ... VArgs>
 	Vector<VNode<V, E>*>
-	deserializeVertices(Stream::Input& input, VArgs&& ... vArgs)
-	requires Deserializable<V, Stream::Input&, VArgs ...>;
+	deserializeVertices(Stream::Input& input, auto&& ... vArgs)
+	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
 
 	template <typename VIDType, typename ... VFArgs>
 	Vector<VNode<V, E>*>
 	deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
 
-	template <typename ... EArgs>
 	void
-	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, EArgs&& ... eArgs)
-	requires Deserializable<E, Stream::Input&, EArgs ...>;
+	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
+	requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
 
 	template <typename EIDType, typename ... EFArgs>
 	void
@@ -90,17 +88,16 @@ public:
 	Digraph&
 	operator=(Digraph value) noexcept;
 
-	template <typename ... VArgs, typename ... EArgs>
-	Digraph(VArgs&& ... vArgs, Stream::Input& input, EArgs&& ... eArgs)
-	requires Deserializable<V, Stream::Input&, VArgs ...> && Deserializable<E, Stream::Input&, EArgs ...>;
+	explicit Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
+	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...> && Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
 
-	template <typename ... VArgs, typename EIDType, typename ... EFArgs>
-	Digraph(VArgs&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
-	requires Deserializable<V, Stream::Input&, VArgs ...>;
+	template <typename EIDType, typename ... EFArgs>
+	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
+	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
 
-	template <typename VIDType, typename ... VFArgs, typename ... EArgs>
-	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, EArgs&& ... eArgs)
-	requires Deserializable<E, Stream::Input&, EArgs ...>;
+	template <typename VIDType, typename ... VFArgs>
+	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, auto&& ... eArgs)
+	requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
 
 	template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
 	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
@@ -108,33 +105,31 @@ public:
 	template <typename v, typename e>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Digraph<v, e> const& digraph)
-	requires Stream::Serializable<v, Stream::Output&> && Stream::Serializable<e, Stream::Output&>;
+	requires Stream::InsertableTo<v, Stream::Output> && Stream::InsertableTo<e, Stream::Output>;
 
 	~Digraph();
 
-	template <typename ... VArgs>
 	vertex
-	addVertex(VArgs&& ... vArgs);
+	addVertex(auto&& ... vArgs);
 
-	template <Derived<V> DV, typename ... DVArgs>
+	template <Derived<V> DV>
 	vertex
-	addVertex(DVArgs&& ... dvArgs);
+	addVertex(auto&& ... dvArgs);
 
-	template <typename ... VCIArgs, typename ... VCArgs>
+	template <typename ... VCIArgs>
 	vertex
-	addVertex(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, VCArgs&& ... cArgs);
+	addVertex(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, auto&& ... vcArgs);
 
-	template <typename ... EArgs>
 	edge
-	addEdge(EArgs&& ... eArgs);
+	addEdge(auto&& ... eArgs);
 
-	template <Derived<E> DE, typename ... DEArgs>
+	template <Derived<E> DE>
 	edge
-	addEdge(DEArgs&& ... deArgs);
+	addEdge(auto&& ... deArgs);
 
-	template <typename ... ECIArgs, typename ... ECArgs>
+	template <typename ... ECIArgs>
 	edge
-	addEdge(DP::CreateInfo<E, ECIArgs ...> const& eCreateInfo, ECArgs&& ... ecArgs);
+	addEdge(DP::CreateInfo<E, ECIArgs ...> const& eCreateInfo, auto&& ... ecArgs);
 
 	template <Constness c>
 	Digraph&
@@ -565,6 +560,6 @@ public:
 
 }//namespace DS
 
-#include "../src/Digraph.hpp"
+#include "../../src/Digraph.hpp"
 
 #endif //DS_DIGRAPH_H

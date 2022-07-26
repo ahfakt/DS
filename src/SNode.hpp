@@ -3,6 +3,7 @@
 
 #include "TNode.hpp"
 #include "Holder.hpp"
+#include <DP/Factory.h>
 
 namespace DS {
 
@@ -11,6 +12,32 @@ struct SException {
 		KeyCollision = 1
 	};
 };//struct SException
+
+}//namespace DS
+
+namespace std {
+
+template<>
+struct is_error_code_enum<DS::SException::Code> : true_type {};
+
+}//namespace std
+
+namespace DS {
+
+inline std::error_code
+make_error_code(SException::Code e) noexcept
+{
+	static struct : std::error_category {
+		[[nodiscard]] char const*
+		name() const noexcept override
+		{ return "DS::SNode"; }
+
+		[[nodiscard]] std::string
+		message(int e) const noexcept override
+		{ return e == 1 ? "Key Collision" : "Unknown Error"; }
+	} instance;
+	return {static_cast<int>(e), instance};
+}
 
 template <typename K, typename ... Cs>
 struct SNode : TNode<sizeof...(Cs)> {
@@ -24,9 +51,8 @@ struct SNode : TNode<sizeof...(Cs)> {
 	operator delete(void* ptr)
 	{ ::operator delete(ptr); }
 
-	template <typename ... Args>
-	explicit SNode(Args&& ... args)
-			: key(std::forward<Args>(args) ...)
+	explicit SNode(auto&& ... args)
+			: key(std::forward<decltype(args)>(args) ...)
 	{}
 
 	~SNode()
@@ -48,17 +74,16 @@ struct SNode : TNode<sizeof...(Cs)> {
 		}
 	}
 
-	template <typename ... KArgs>
 	static TNode<sizeof...(Cs)>*
 	Create(TNode<sizeof...(Cs)>* P, TNode<sizeof...(Cs)>* S,
-			Stream::Input& input, KArgs&& ... kArgs)
-	requires Deserializable<K, Stream::Input&, KArgs ...>
+			Stream::Input& input, auto&& ... kArgs)
+	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
-		auto* t = ::new SNode(input, std::forward<KArgs>(kArgs) ...);
+		auto* t = ::new SNode(input, std::forward<decltype(kArgs)>(kArgs) ...);
 		try {
-			t->left(state & 0x40 ? SNode::Create(P, t, input, std::forward<KArgs>(kArgs) ...) : P);
-			t->right(state & 0x10 ? SNode::Create(t, S, input, std::forward<KArgs>(kArgs) ...) : S);
+			t->left(state & 0x40 ? SNode::Create(P, t, input, std::forward<decltype(kArgs)>(kArgs) ...) : P);
+			t->right(state & 0x10 ? SNode::Create(t, S, input, std::forward<decltype(kArgs)>(kArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -119,20 +144,21 @@ struct SNode : TNode<sizeof...(Cs)> {
 			BuildTree<Node, Exception, N + 1>(root);
 	}
 
-	template <std::size_t N, typename T>
+	template <std::size_t N>
 	TNode<sizeof...(Cs)>*
-	get(T&& k)
+	get(auto&& ... args)
 	{
 		auto* t = this;
+		typename nth<N, Cs ...>::type cmp;
 		while(true) {
-			if (typename nth<N, Cs ...>::type{}(k, static_cast<K const&>(t->key))) {
+			if (cmp(std::forward<decltype(args)>(args) ..., static_cast<K const&>(t->key))) {
 				if (t->d[N].hasLeft) {
 					t = t->template left<N, SNode>();
 					continue;
 				}
 				return nullptr;
 			}
-			if (typename nth<N, Cs ...>::type{}(static_cast<K const&>(t->key), k)) {
+			if (cmp(static_cast<K const&>(t->key), std::forward<decltype(args)>(args) ...)) {
 				if (t->d[N].hasRight) {
 					t = t->template right<N, SNode>();
 					continue;
@@ -252,7 +278,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 
 	void
 	serialize(Stream::Output& output) const
-	requires Stream::Serializable<K, Stream::Output&>
+	requires Stream::InsertableTo<K, Stream::Output>
 	{
 		output << this->state() << static_cast<K const&>(key);
 		if (this->d[0].hasLeft)
@@ -264,7 +290,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::Serializable<K, Stream::Format::StringOutput&>
+	requires Stream::InsertableTo<K, Stream::Format::StringOutput>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, SNode>()->template toDot<N>(dotOutput);
@@ -275,28 +301,6 @@ struct SNode : TNode<sizeof...(Cs)> {
 	}
 };//struct SNode<K, Cs ...>
 
-std::error_code
-make_error_code(SException::Code e) noexcept
-{
-	static struct : std::error_category {
-		[[nodiscard]] char const*
-		name() const noexcept override
-		{ return "DS::SNode"; }
-
-		[[nodiscard]] std::string
-		message(int e) const noexcept override
-		{ return e == 1 ? "Key Collision" : "Unknown Error"; }
-	} instance;
-	return {static_cast<int>(e), instance};
-}
-
 }//namespace DS
-
-namespace std {
-
-template<>
-struct is_error_code_enum<DS::SException::Code> : true_type {};
-
-}//namespace std
 
 #endif //DS_SNODE_HPP
