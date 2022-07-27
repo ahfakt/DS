@@ -110,7 +110,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
 class DS::Holder&lt; T &gt;</div>
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00050">50</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00011">11</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5dc5ee1d4f2df809828dc57111565add" name="a5dc5ee1d4f2df809828dc57111565add"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5dc5ee1d4f2df809828dc57111565add">&#9670;&nbsp;</a></span>Holder() <span class="overload">[1/4]</span></h2>
@@ -138,8 +138,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00056">56</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>    { ::new(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(raw)) T{std::forward&lt;decltype(args)&gt;(args) ...}; }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00017">17</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   18</span>    { ::new(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(raw)) T{std::forward&lt;decltype(args)&gt;(args) ...}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -179,8 +179,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00059">59</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>    { input &gt;&gt; *::new(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(raw)) T{std::forward&lt;decltype(args)&gt;(args) ...}; }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00020">20</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   22</span>    { input &gt;&gt; *::new(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(raw)) T{std::forward&lt;decltype(args)&gt;(args) ...}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -210,8 +210,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00063">63</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>    { input &gt;&gt; *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00024">24</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   26</span>    { input &gt;&gt; *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -253,8 +253,8 @@ template&lt;typename ... CFArgs&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00068">68</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>    { createFunc(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(raw), std::forward&lt;<span class="keyword">decltype</span>(cArgs)&gt;(cArgs) ...); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00029">29</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   30</span>    { createFunc(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(raw), std::forward&lt;<span class="keyword">decltype</span>(cArgs)&gt;(cArgs) ...); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -284,8 +284,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00072">72</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   73</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00033">33</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   34</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -314,8 +314,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00076">76</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   77</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00037">37</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -344,8 +344,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00080">80</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   81</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00041">41</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   42</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -374,8 +374,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00084">84</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   85</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00045">45</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -404,8 +404,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00087">87</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   88</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00048">48</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -434,8 +434,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00090">90</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   91</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00051">51</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>    { <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -464,8 +464,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00093">93</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   94</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00054">54</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   55</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -494,8 +494,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00096">96</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   97</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00057">57</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>    { <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T const*<span class="keyword">&gt;</span>(raw); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -524,8 +524,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00099">99</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  100</span>    { <span class="keywordflow">return</span> raw; }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00060">60</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>    { <span class="keywordflow">return</span> raw; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -554,8 +554,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00102">102</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  103</span>    { <span class="keywordflow">return</span> raw; }</div>
+<p class="definition">Definition at line <a class="el" href="../../d8/d98/Holder_8hpp_source.html#l00063">63</a> of file <a class="el" href="../../d8/d98/Holder_8hpp_source.html">Holder.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   64</span>    { <span class="keywordflow">return</span> raw; }</div>
 </div><!-- fragment -->
 </div>
 </div>
