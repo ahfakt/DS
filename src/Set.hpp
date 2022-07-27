@@ -370,4 +370,155 @@ template <Direction d, std::size_t n>
 Set<K, C, Cs ...>::Iterator<d, n>::operator bool() const noexcept
 { return pos; }
 
+template <typename K, typename C, typename... Cs>
+template <std::size_t N>
+Set<K, C, Cs...>
+Set<K, C, Cs...>::Difference<N>::operator()(Set const& a, Set const& b) const
+{
+	Set set;
+	if (a) {
+		if (b) {
+			nth_t<N, C, Cs ...> cmp;
+			auto* i = a.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
+			auto* j = b.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
+
+			do {
+				if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+					set.put(static_cast<K const&>(i->key));
+					i = i->template next<N, SNode<K, C, Cs...>>();
+					continue;
+				}
+				if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+					j = j->template next<N, SNode<K, C, Cs...>>();
+					continue;
+				}
+				i = i->template next<N, SNode<K, C, Cs...>>();
+				j = j->template next<N, SNode<K, C, Cs...>>();
+			} while (i && j);
+
+			while (i) {
+				set.put(static_cast<K const&>(i->key));
+				i = i->template next<N, SNode<K, C, Cs...>>();
+			}
+		} else
+			set = a;
+	}
+	return set;
+}
+
+template <typename K, typename C, typename... Cs>
+template <typename S, std::size_t N>
+Set<K, C, Cs...>
+Set<K, C, Cs...>::Intersection<S, N>::operator()(Set const& a, Set const& b, auto&& ... args) const
+requires Selector<S, K, decltype(args) ...>
+{
+	Set set;
+	if (a && b) {
+		nth_t<N, C, Cs ...> cmp;
+		S selector;
+		auto* i = a.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
+		auto* j = b.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
+
+		do {
+			if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+				i = i->template next<N, SNode<K, C, Cs...>>();
+				continue;
+			}
+			if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+				j = j->template next<N, SNode<K, C, Cs...>>();
+				continue;
+			}
+			set.put(selector(static_cast<K const&>(i->key), static_cast<K const&>(j->key), std::forward<decltype(args)>(args) ...));
+			i = i->template next<N, SNode<K, C, Cs...>>();
+			j = j->template next<N, SNode<K, C, Cs...>>();
+		} while (i && j);
+	}
+	return set;
+}
+
+template <typename K, typename C, typename... Cs>
+template <typename S, std::size_t N>
+Set<K, C, Cs...>
+Set<K, C, Cs...>::LeftJoin<S, N>::operator()(Set const& a, Set const& b, auto&& ... args) const
+requires Selector<S, K, decltype(args) ...>
+{
+	Set set;
+	if (a) {
+		if (b) {
+			nth_t<N, C, Cs ...> cmp;
+			S selector;
+			auto* i = a.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
+			auto* j = b.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
+
+			do {
+				if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+					set.put(static_cast<K const&>(i->key));
+					i = i->template next<N, SNode < K, C, Cs...>>();
+					continue;
+				}
+				if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+					j = j->template next<N, SNode < K, C, Cs...>>();
+					continue;
+				}
+				set.put(selector(static_cast<K const&>(i->key), static_cast<K const&>(j->key), std::forward<decltype(args)>(args) ...));
+				i = i->template next<N, SNode < K, C, Cs...>>();
+				j = j->template next<N, SNode < K, C, Cs...>>();
+			} while (i && j);
+
+			while (i) {
+				set.put(static_cast<K const&>(i->key));
+				i = i->template next<N, SNode < K, C, Cs...>>();
+			}
+		} else
+			set = a;
+	}
+	return set;
+}
+
+template <typename K, typename C, typename... Cs>
+template <typename S, std::size_t N>
+Set<K, C, Cs...>
+Set<K, C, Cs...>::Union<S, N>::operator()(Set const& a, Set const& b, auto&& ... args) const
+requires Selector<S, K, decltype(args) ...>
+{
+	Set set;
+	if (a) {
+		if (b) {
+			nth_t<N, C, Cs ...> cmp;
+			S selector;
+			auto* i = a.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
+			auto* j = b.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
+
+			do {
+				if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+					set.put(static_cast<K const&>(i->key));
+					i = i->template next<N, SNode < K, C, Cs...>>();
+					continue;
+				}
+				if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+					set.put(static_cast<K const&>(j->key));
+					j = j->template next<N, SNode < K, C, Cs...>>();
+					continue;
+				}
+				set.put(selector(static_cast<K const&>(i->key), static_cast<K const&>(j->key), std::forward<decltype(args)>(args) ...));
+				i = i->template next<N, SNode < K, C, Cs...>>();
+				j = j->template next<N, SNode < K, C, Cs...>>();
+			} while (i && j);
+
+			while (i) {
+				set.put(static_cast<K const&>(i->key));
+				i = i->template next<N, SNode < K, C, Cs...>>();
+			}
+
+			while (j) {
+				set.put(static_cast<K const&>(j->key));
+				j = j->template next<N, SNode < K, C, Cs...>>();
+			}
+		} else
+			set = a;
+	} else if (b)
+		set = b;
+	return set;
+}
+
 }//namespace DS

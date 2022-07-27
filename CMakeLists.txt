@@ -28,12 +28,12 @@ set(SRC_LIST
 		${SRC_ROOT}/Vector.hpp
 		${SRC_ROOT}/VNode.hpp)
 
-add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME}OBJ INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE include)
+add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME}OBJ INTERFACE include)
-target_sources(${PROJECT_NAME} INTERFACE ${INC_LIST} PRIVATE ${SRC_LIST})
+target_include_directories(${PROJECT_NAME} INTERFACE include)
 target_sources(${PROJECT_NAME}OBJ INTERFACE ${INC_LIST} PRIVATE ${SRC_LIST})
+target_sources(${PROJECT_NAME} INTERFACE ${INC_LIST} PRIVATE ${SRC_LIST})
 
 foreach (T IN LISTS DEPENDENCIES)
 	if (NOT TARGET ${T})

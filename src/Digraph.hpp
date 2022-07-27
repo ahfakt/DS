@@ -349,11 +349,11 @@ Digraph<V, E>&
 Digraph<V, E>::prepareTraverse(VDescriptor<c> v) noexcept
 {
 	if (v.pos->isWhite) {
-		moveBack(ValToNode(v.pos, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+		moveBack(ToParent(v.pos, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 		v.pos->color = 2; // mark as gray
 	}
 	if (!mVPivot)
-		mVPivot = ValToNode(v.pos, &LNode<VNode<V, E>>::val);
+		mVPivot = ToParent(v.pos, &LNode<VNode<V, E>>::val);
 	return *this;
 }
 
@@ -369,13 +369,13 @@ Digraph<V, E>::prepareTraverse() noexcept
 				if constexpr (d == Direction::FORWARD) {
 					for (auto* e = lv->val->outHead; e; e = e->up)
 						if (e->out && e->out->isWhite) {
-							moveBack(ValToNode(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+							moveBack(ToParent(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 							e->out->color = 2; // Gray
 						}
 				} else {
 					for (auto* e = lv->val->inHead; e; e = e->right)
 						if (e->in && e->in->isWhite) {
-							moveBack(ValToNode(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+							moveBack(ToParent(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 							e->in->color = 2; // Gray
 						}
 				}
@@ -383,13 +383,13 @@ Digraph<V, E>::prepareTraverse() noexcept
 				if constexpr (d == Direction::FORWARD) {
 					for (auto* e = lv->val->outTail; e; e = e->down)
 						if (e->out && !e->out->isBlack) {
-							moveAfter(lv, ValToNode(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+							moveAfter(lv, ToParent(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 							e->out->color = 2; // Gray
 						}
 				} else {
 					for (auto* e = lv->val->inTail; e; e = e->left)
 						if (e->in && !e->in->isBlack) {
-							moveAfter(lv, ValToNode(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+							moveAfter(lv, ToParent(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 							e->in->color = 2; // Gray
 						}
 				}
@@ -413,13 +413,13 @@ Digraph<V, E>::prepareTraverse() noexcept
 						if constexpr (d == Direction::FORWARD) {
 							for (auto* e = lv->val->outHead; e; e = e->up)
 								if (e->out && e->out->isWhite) {
-									moveBefore(head, ValToNode(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+									moveBefore(head, ToParent(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 									e->out->color = 2; // Gray
 								}
 						} else {
 							for (auto* e = lv->val->inHead; e; e = e->right)
 								if (e->in && e->in->isWhite) {
-									moveBefore(head, ValToNode(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+									moveBefore(head, ToParent(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 									e->in->color = 2; // Gray
 								}
 						}
@@ -435,13 +435,13 @@ Digraph<V, E>::prepareTraverse() noexcept
 						if constexpr (d == Direction::FORWARD) {
 							for (auto* e = lv->val->outTail; e; e = e->down)
 								if (e->out && !e->out->isBlack) {
-									moveAfter(mVPivot, ValToNode(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+									moveAfter(mVPivot, ToParent(e->out, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 									e->out->color = 2; // Gray
 								}
 						} else {
 							for (auto* e = lv->val->inTail; e; e = e->left)
 								if (e->in && !e->in->isBlack) {
-									moveAfter(mVPivot, ValToNode(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
+									moveAfter(mVPivot, ToParent(e->in, &LNode<VNode<V, E>>::val), mVHead, mVTail);
 									e->in->color = 2; // Gray
 								}
 						}
@@ -810,8 +810,8 @@ class Digraph<V, E>::VView<vvc>::Iterator<d, c>&
 Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator++() noexcept
 {
 	auto* lv = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<VNode<V, E>>::val)->next
-		: ValToNode(this->pos, &LNode<VNode<V, E>>::val)->prev;
+		? ToParent(this->pos, &LNode<VNode<V, E>>::val)->next
+		: ToParent(this->pos, &LNode<VNode<V, E>>::val)->prev;
 	this->pos = lv ? static_cast<VNode<V, E>*>(lv->val) : nullptr;
 	return *this;
 }
@@ -824,8 +824,8 @@ Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator++(int) noexcept
 {
 	auto* r = this->pos;
 	auto* lv = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<VNode<V, E>>::val)->next
-		: ValToNode(this->pos, &LNode<VNode<V, E>>::val)->prev;
+		? ToParent(this->pos, &LNode<VNode<V, E>>::val)->next
+		: ToParent(this->pos, &LNode<VNode<V, E>>::val)->prev;
 	this->pos = lv ? static_cast<VNode<V, E>*>(lv->val) : nullptr;
 	return r;
 }
@@ -837,8 +837,8 @@ class Digraph<V, E>::VView<vvc>::Iterator<d, c>&
 Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator--() noexcept
 {
 	auto* lv = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<VNode<V, E>>::val)->prev
-		: ValToNode(this->pos, &LNode<VNode<V, E>>::val)->next;
+		? ToParent(this->pos, &LNode<VNode<V, E>>::val)->prev
+		: ToParent(this->pos, &LNode<VNode<V, E>>::val)->next;
 	this->pos = lv ? static_cast<VNode<V, E>*>(lv->val) : nullptr;
 	return *this;
 }
@@ -851,8 +851,8 @@ Digraph<V, E>::VView<vvc>::Iterator<d, c>::operator--(int) noexcept
 {
 	auto* r = this->pos;
 	auto* lv = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<VNode<V, E>>::val)->prev
-		: ValToNode(this->pos, &LNode<VNode<V, E>>::val)->next;
+		? ToParent(this->pos, &LNode<VNode<V, E>>::val)->prev
+		: ToParent(this->pos, &LNode<VNode<V, E>>::val)->next;
 	this->pos = lv ? static_cast<VNode<V, E>*>(lv->val) : nullptr;
 	return r;
 }
@@ -973,8 +973,8 @@ class Digraph<V, E>::EView<evc>::Iterator<d, c>&
 Digraph<V, E>::EView<evc>::Iterator<d, c>::operator++() noexcept
 {
 	auto* le = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<ENode<V, E>>::val)->next
-		: ValToNode(this->pos, &LNode<ENode<V, E>>::val)->prev;
+		? ToParent(this->pos, &LNode<ENode<V, E>>::val)->next
+		: ToParent(this->pos, &LNode<ENode<V, E>>::val)->prev;
 	this->pos = le ? static_cast<ENode<V, E>*>(le->val) : nullptr;
 	return *this;
 }
@@ -987,8 +987,8 @@ Digraph<V, E>::EView<evc>::Iterator<d, c>::operator++(int) noexcept
 {
 	auto* r = this->pos;
 	auto* le = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<ENode<V, E>>::val)->next
-		: ValToNode(this->pos, &LNode<ENode<V, E>>::val)->prev;
+		? ToParent(this->pos, &LNode<ENode<V, E>>::val)->next
+		: ToParent(this->pos, &LNode<ENode<V, E>>::val)->prev;
 	this->pos = le ? static_cast<ENode<V, E>*>(le->val) : nullptr;
 	return r;
 }
@@ -1000,8 +1000,8 @@ class Digraph<V, E>::EView<evc>::Iterator<d, c>&
 Digraph<V, E>::EView<evc>::Iterator<d, c>::operator--() noexcept
 {
 	auto* le = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<ENode<V, E>>::val)->prev
-		: ValToNode(this->pos, &LNode<ENode<V, E>>::val)->next;
+		? ToParent(this->pos, &LNode<ENode<V, E>>::val)->prev
+		: ToParent(this->pos, &LNode<ENode<V, E>>::val)->next;
 	this->pos = le ? static_cast<ENode<V, E>*>(le->val) : nullptr;
 	return *this;
 }
@@ -1014,8 +1014,8 @@ Digraph<V, E>::EView<evc>::Iterator<d, c>::operator--(int) noexcept
 {
 	auto* r = this->pos;
 	auto* le = d == Direction::FORWARD
-		? ValToNode(this->pos, &LNode<ENode<V, E>>::val)->prev
-		: ValToNode(this->pos, &LNode<ENode<V, E>>::val)->next;
+		? ToParent(this->pos, &LNode<ENode<V, E>>::val)->prev
+		: ToParent(this->pos, &LNode<ENode<V, E>>::val)->next;
 	this->pos = le ? static_cast<ENode<V, E>*>(le->val) : nullptr;
 	return r;
 }

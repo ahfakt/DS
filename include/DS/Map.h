@@ -58,6 +58,33 @@ public:
 	struct Exception : std::system_error
 	{ using std::system_error::system_error; };
 
+	template <std::size_t N = 0>
+	struct Difference {
+		Map
+		operator()(Map const& a, Map const& b) const;
+	};
+
+	template <typename S, std::size_t N = 0>
+	struct Intersection {
+		Map
+		operator()(Map const& a, Map const& b, auto&& ... args) const
+		requires Selector<S, K, decltype(args) ...>;
+	};
+
+	template <typename S, std::size_t N = 0>
+	struct LeftJoin {
+		Map
+		operator()(Map const& a, Map const& b, auto&& ... args) const
+		requires Selector<S, K, decltype(args) ...>;
+	};
+
+	template <typename S, std::size_t N = 0>
+	struct Union {
+		Map
+		operator()(Map const& a, Map const& b, auto&& ... args) const
+		requires Selector<S, K, decltype(args) ...>;
+	};
+
 	Map() noexcept = default;
 
 	Map(Map const& other)

@@ -50,6 +50,33 @@ public:
 	struct Exception : std::system_error
 	{ using std::system_error::system_error; };
 
+	template <std::size_t N = 0>
+	struct Difference {
+		Set
+		operator()(Set const& a, Set const& b) const;
+	};
+
+	template <typename S, std::size_t N = 0>
+	struct Intersection {
+		Set
+		operator()(Set const& a, Set const& b, auto&& ... args) const
+		requires Selector<S, K, decltype(args) ...>;
+	};
+
+	template <typename S, std::size_t N = 0>
+	struct LeftJoin {
+		Set
+		operator()(Set const& a, Set const& b, auto&& ... args) const
+		requires Selector<S, K, decltype(args) ...>;
+	};
+
+	template <typename S, std::size_t N = 0>
+	struct Union {
+		Set
+		operator()(Set const& a, Set const& b, auto&& ... args) const
+		requires Selector<S, K, decltype(args) ...>;
+	};
+
 	Set() noexcept = default;
 
 	Set(Set const& other)

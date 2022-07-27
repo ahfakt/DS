@@ -520,4 +520,183 @@ template <Direction d, Constness c, std::size_t n>
 Map<K, V, C, Cs ...>::Iterator<d, c, n>::operator bool() const noexcept
 { return pos; }
 
+template <typename K, typename V, typename C, typename ... Cs>
+template <std::size_t N>
+Map<K, V, C, Cs ...>
+Map<K, V, C, Cs ...>::Difference<N>::operator()(Map const& a, Map const& b) const
+{
+	Map map;
+	if (a) {
+		if (b) {
+			nth_t<N, C, Cs ...> cmp;
+			auto* i = a.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+			auto* j = b.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+
+			do {
+				if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+					auto c = map.put(static_cast<K const&>(i->key));
+					if (i->d[N].hasValue)
+						c.set(static_cast<V const&>(i->val));
+					i = i->template next<N, MNode<K, V, C, Cs...>>();
+					continue;
+				}
+				if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+					j = j->template next<N, MNode<K, V, C, Cs...>>();
+					continue;
+				}
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+				j = j->template next<N, MNode<K, V, C, Cs...>>();
+			} while (i && j);
+
+			while (i) {
+				auto c = map.put(static_cast<K const&>(i->key));
+				if (i->d[N].hasValue)
+					c.set(static_cast<V const&>(i->val));
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+			}
+		} else
+			map = a;
+	}
+	return map;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename S, std::size_t N>
+Map<K, V, C, Cs ...>
+Map<K, V, C, Cs ...>::Intersection<S, N>::operator()(Map const& a, Map const& b, auto&& ... args) const
+requires Selector<S, K, decltype(args) ...>
+{
+	Map map;
+	if (a && b) {
+		nth_t<N, C, Cs ...> cmp;
+		S selector;
+		auto* i = a.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+		auto* j = b.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+
+		do {
+			if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+				continue;
+			}
+			if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+				j = j->template next<N, MNode<K, V, C, Cs...>>();
+				continue;
+			}
+			K const& key = selector(static_cast<K const&>(i->key), static_cast<K const&>(j->key), std::forward<decltype(args)>(args) ...);
+			auto c = map.put(key);
+			auto* m = ToParent(&key, &MNode<K, V, C, Cs ...>::key);
+			if (m->d[N].hasValue)
+				c.set(static_cast<V const&>(m->val));
+			i = i->template next<N, MNode<K, V, C, Cs...>>();
+			j = j->template next<N, MNode<K, V, C, Cs...>>();
+		} while (i && j);
+	}
+	return map;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename S, std::size_t N>
+Map<K, V, C, Cs ...>
+Map<K, V, C, Cs ...>::LeftJoin<S, N>::operator()(Map const& a, Map const& b, auto&& ... args) const
+requires Selector<S, K, decltype(args) ...>
+{
+	Map map;
+	if (a) {
+		if (b) {
+			nth_t<N, C, Cs ...> cmp;
+			S selector;
+			auto* i = a.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+			auto* j = b.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+
+			do {
+				if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+					auto c = map.put(static_cast<K const&>(i->key));
+					if (i->d[N].hasValue)
+						c.set(static_cast<V const&>(i->val));
+					i = i->template next<N, MNode<K, V, C, Cs...>>();
+					continue;
+				}
+				if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+					j = j->template next<N, MNode<K, V, C, Cs...>>();
+					continue;
+				}
+				K const& key = selector(static_cast<K const&>(i->key), static_cast<K const&>(j->key), std::forward<decltype(args)>(args) ...);
+				auto c = map.put(key);
+				auto* m = ToParent(&key, &MNode<K, V, C, Cs ...>::key);
+				if (m->d[N].hasValue)
+					c.set(static_cast<V const&>(m->val));
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+				j = j->template next<N, MNode<K, V, C, Cs...>>();
+			} while (i && j);
+
+			while (i) {
+				auto c = map.put(static_cast<K const&>(i->key));
+				if (i->d[N].hasValue)
+					c.set(static_cast<V const&>(i->val));
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+			}
+		} else
+			map = a;
+	}
+	return map;
+}
+
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename S, std::size_t N>
+Map<K, V, C, Cs ...>
+Map<K, V, C, Cs ...>::Union<S, N>::operator()(Map const& a, Map const& b, auto&& ... args) const
+requires Selector<S, K, decltype(args) ...>
+{
+	Map map;
+	if (a) {
+		if (b) {
+			nth_t<N, C, Cs ...> cmp;
+			S selector;
+			auto* i = a.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+			auto* j = b.mRoot[N]->template leftMost<N, MNode<K, V, C, Cs...>>();
+
+			do {
+				if (cmp(static_cast<K const&>(i->key), static_cast<K const&>(j->key))) {
+					auto c = map.put(static_cast<K const&>(i->key));
+					if (i->d[N].hasValue)
+						c.set(static_cast<V const&>(i->val));
+					i = i->template next<N, MNode<K, V, C, Cs...>>();
+					continue;
+				}
+				if (cmp(static_cast<K const&>(j->key), static_cast<K const&>(i->key))) {
+					auto c = map.put(static_cast<K const&>(j->key));
+					if (j->d[N].hasValue)
+						c.set(static_cast<V const&>(j->val));
+					j = j->template next<N, MNode<K, V, C, Cs...>>();
+					continue;
+				}
+				K const& key = selector(static_cast<K const&>(i->key), static_cast<K const&>(j->key), std::forward<decltype(args)>(args) ...);
+				auto c = map.put(key);
+				auto* m = ToParent(&key, &MNode<K, V, C, Cs ...>::key);
+				if (m->d[N].hasValue)
+					c.set(static_cast<V const&>(m->val));
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+				j = j->template next<N, MNode<K, V, C, Cs...>>();
+			} while (i && j);
+
+			while (i) {
+				auto c = map.put(static_cast<K const&>(i->key));
+				if (i->d[N].hasValue)
+					c.set(static_cast<V const&>(i->val));
+				i = i->template next<N, MNode<K, V, C, Cs...>>();
+			}
+
+			while (j) {
+				auto c = map.put(static_cast<K const&>(j->key));
+				if (j->d[N].hasValue)
+					c.set(static_cast<V const&>(j->val));
+				j = j->template next<N, MNode<K, V, C, Cs...>>();
+			}
+		} else
+			map = a;
+	} else if (b)
+		map = b;
+	return map;
+}
+
 }//namespace DS

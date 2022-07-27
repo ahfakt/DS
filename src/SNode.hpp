@@ -149,7 +149,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	get(auto&& ... args)
 	{
 		auto* t = this;
-		typename nth<N, Cs ...>::type cmp;
+		nth_t<N, Cs ...> cmp;
 		while(true) {
 			if (cmp(std::forward<decltype(args)>(args) ..., static_cast<K const&>(t->key))) {
 				if (t->d[N].hasLeft) {
@@ -173,12 +173,12 @@ struct SNode : TNode<sizeof...(Cs)> {
 	TNode<sizeof...(Cs)>*
 	attach(TNode<sizeof...(Cs)>** created) noexcept
 	{
-		if (typename nth<N, Cs ...>::type{}(static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key), static_cast<K const&>(key)))
+		if (nth_t<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key), static_cast<K const&>(key)))
 			return this->d[N].hasLeft
 				? this->template attachedToLeft<N>(this->template left<N, SNode>()->template attach<N>(created))
 				: this->template attachToLeft<N>(*created);
 
-		if (typename nth<N, Cs ...>::type{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key)))
+		if (nth_t<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key)))
 			return this->d[N].hasRight
 				? this->template attachedToRight<N>(this->template right<N, SNode>()->template attach<N>(created))
 				: this->template attachToRight<N>(*created);
@@ -253,9 +253,9 @@ struct SNode : TNode<sizeof...(Cs)> {
 	TNode<sizeof...(Cs)>*
 	detach(TNode<sizeof...(Cs)>** toDel) noexcept
 	{
-		if (typename nth<N, Cs ...>::type{}(static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key), static_cast<K const&>(key)))
+		if (nth_t<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key), static_cast<K const&>(key)))
 			return detachFromLeft<N>(toDel);
-		if (typename nth<N, Cs ...>::type{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key)))
+		if (nth_t<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key)))
 			return detachFromRight<N>(toDel);
 		if (this != *toDel)
 			return *toDel = nullptr;
