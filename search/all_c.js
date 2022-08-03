@@ -1,6 +1,20 @@
 var searchData=
 [
-  ['pipe_0',['Pipe',['../../Stream/d3/de2/classStream_1_1Pipe.html',1,'Stream']]],
-  ['pipeinput_1',['PipeInput',['../../Stream/df/d21/classStream_1_1PipeInput.html',1,'Stream']]],
-  ['pipeoutput_2',['PipeOutput',['../../Stream/df/dc1/classStream_1_1PipeOutput.html',1,'Stream']]]
+  ['fileinput_0',['FileInput',['../../Stream/d6/de1/structStream_1_1FileInput_1_1Exception.html',1,'Stream']]],
+  ['fileoutput_1',['FileOutput',['../../Stream/d3/d8a/structStream_1_1FileOutput_1_1Exception.html',1,'Stream']]],
+  ['format_2',['Format',['../../StreamFormat/d6/da6/classStream_1_1Format_1_1Base.html',1,'Stream']]],
+  ['input_3',['Input',['../../Stream/d2/d85/structStream_1_1Input_1_1Exception.html',1,'Stream']]],
+  ['output_4',['Output',['../../Stream/d5/d2d/structStream_1_1Output_1_1Exception.html',1,'Stream']]],
+  ['pipeinput_5',['PipeInput',['../../Stream/dd/d2e/structStream_1_1PipeInput_1_1Exception.html',1,'Stream']]],
+  ['pipeoutput_6',['PipeOutput',['../../Stream/d5/d3a/structStream_1_1PipeOutput_1_1Exception.html',1,'Stream']]],
+  ['set_7',['Set',['../db/d3d/classDS_1_1Set.html',1,'DS']]],
+  ['size_8',['size',['../d2/da8/classDS_1_1Container.html#a195c1cc50e0b03c948761b1442bcc91e',1,'DS::Container::size()'],['../../DP/db/d02/structDP_1_1CreateInfo.html#af6731ec9050543deafbae5e5ad356a3e',1,'DP::CreateInfo::size()']]],
+  ['socket_9',['Socket',['../../Stream/d1/db1/classStream_1_1Socket.html',1,'Stream']]],
+  ['socketinput_10',['SocketInput',['../../Stream/da/d8a/structStream_1_1SocketInput_1_1Exception.html',1,'Stream::SocketInput'],['../../Stream/dc/d10/classStream_1_1SocketInput.html',1,'Stream::SocketInput']]],
+  ['socketoutput_11',['SocketOutput',['../../Stream/d5/d52/classStream_1_1SocketOutput.html',1,'Stream::SocketOutput'],['../../Stream/dc/def/structStream_1_1SocketOutput_1_1Exception.html',1,'Stream::SocketOutput']]],
+  ['std_12',['std',['../../Stream/d5/dba/structstd_1_1is__error__code__enum_3_01Stream_1_1Buffer_1_1Exception_1_1Code_01_4.html',1,'']]],
+  ['stream_13',['Stream',['../../Stream/d0/d04/classStream_1_1Buffer.html',1,'']]],
+  ['string_14',['String',['../../StreamFormat/de/de1/structStream_1_1Format_1_1String_1_1Exception.html',1,'Stream::Format::String'],['../../StreamFormat/dd/d7a/classStream_1_1Format_1_1String.html',1,'Stream::Format::String']]],
+  ['stringinput_15',['StringInput',['../../StreamFormat/db/d74/structStream_1_1Format_1_1StringInput_1_1Exception.html',1,'Stream::Format::StringInput'],['../../StreamFormat/d1/d9f/classStream_1_1Format_1_1StringInput.html',1,'Stream::Format::StringInput']]],
+  ['stringoutput_16',['StringOutput',['../../StreamFormat/d5/d2c/structStream_1_1Format_1_1StringOutput_1_1Exception.html',1,'Stream::Format::StringOutput'],['../../StreamFormat/d8/d50/classStream_1_1Format_1_1StringOutput.html',1,'Stream::Format::StringOutput']]]
 ];

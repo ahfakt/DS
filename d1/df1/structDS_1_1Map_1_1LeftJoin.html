@@ -25,7 +25,7 @@
 						<td id="projectalign" style="padding-left: 0.5em;">
 							<div id="projectname">DS
 							</div>
-							<div id="projectbrief">Template Data Structures Library</div>
+							<div id="projectbrief">Data Structures Template Library</div>
 						</td>
 					</tr>
 				</tbody>
@@ -77,99 +77,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a572fc3bed96140b6368a20a2d43d1c3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/df1/structDS_1_1Map_1_1LeftJoin.html#a572fc3bed96140b6368a20a2d43d1c3a">operator()</a> (<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;a, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;b, auto &amp;&amp;... args) const</td></tr>
-<tr class="separator:a572fc3bed96140b6368a20a2d43d1c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a039d404af949e877a3ee0775228cccda"><td class="memItemLeft" align="right" valign="top"><a id="a039d404af949e877a3ee0775228cccda" name="a039d404af949e877a3ee0775228cccda"></a>
+<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;a, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;b, auto &amp;&amp;... args) const</td></tr>
+<tr class="separator:a039d404af949e877a3ee0775228cccda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename K, typename V, typename C = std::less&lt;&gt;, typename ... Cs&gt;<br />
 template&lt;typename S, std::size_t N = 0&gt;<br />
 struct DS::Map&lt; K, V, C, Cs &gt;::LeftJoin&lt; S, N &gt;</div>
-<p class="definition">Definition at line <a class="el" href="../../df/d79/Map_8h_source.html#l00075">75</a> of file <a class="el" href="../../df/d79/Map_8h_source.html">Map.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a572fc3bed96140b6368a20a2d43d1c3a" name="a572fc3bed96140b6368a20a2d43d1c3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a572fc3bed96140b6368a20a2d43d1c3a">&#9670;&nbsp;</a></span>operator()()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename K , typename V , typename C , typename ... Cs&gt; <br />
-requires Selector&lt;S, K, decltype(args) ...&gt;</div>
-<div class="memtemplate">
-template&lt;typename S , std::size_t N&gt; <br />
-requires Selector&lt;S, K, decltype(args) ...&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; K, V, C, Cs ... &gt; <a class="el" href="../../d5/db6/classDS_1_1Map.html">DS::Map</a>&lt; K, V, C, Cs &gt;::LeftJoin&lt; S, N &gt;::operator() </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;&#160;</td>
-          <td class="paramname"><em>b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">auto &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00600">600</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  602</span>{</div>
-<div class="line"><span class="lineno">  603</span>    Map map;</div>
-<div class="line"><span class="lineno">  604</span>    <span class="keywordflow">if</span> (a) {</div>
-<div class="line"><span class="lineno">  605</span>        <span class="keywordflow">if</span> (b) {</div>
-<div class="line"><span class="lineno">  606</span>            nth_t&lt;N, C, Cs ...&gt; cmp;</div>
-<div class="line"><span class="lineno">  607</span>            S selector;</div>
-<div class="line"><span class="lineno">  608</span>            <span class="keyword">auto</span>* i = a.mRoot[N]-&gt;template leftMost&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  609</span>            <span class="keyword">auto</span>* j = b.mRoot[N]-&gt;template leftMost&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  610</span> </div>
-<div class="line"><span class="lineno">  611</span>            <span class="keywordflow">do</span> {</div>
-<div class="line"><span class="lineno">  612</span>                <span class="keywordflow">if</span> (cmp(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key))) {</div>
-<div class="line"><span class="lineno">  613</span>                    <span class="keyword">auto</span> c = map.put(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key));</div>
-<div class="line"><span class="lineno">  614</span>                    <span class="keywordflow">if</span> (i-&gt;d[N].hasValue)</div>
-<div class="line"><span class="lineno">  615</span>                        c.set(<span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(i-&gt;val));</div>
-<div class="line"><span class="lineno">  616</span>                    i = i-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  617</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  618</span>                }</div>
-<div class="line"><span class="lineno">  619</span>                <span class="keywordflow">if</span> (cmp(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key))) {</div>
-<div class="line"><span class="lineno">  620</span>                    j = j-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  621</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  622</span>                }</div>
-<div class="line"><span class="lineno">  623</span>                K <span class="keyword">const</span>&amp; key = selector(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key), std::forward&lt;<span class="keyword">decltype</span>(args)&gt;(args) ...);</div>
-<div class="line"><span class="lineno">  624</span>                <span class="keyword">auto</span> c = map.put(key);</div>
-<div class="line"><span class="lineno">  625</span>                <span class="keyword">auto</span>* m = ToParent(&amp;key, &amp;MNode&lt;K, V, C, Cs ...&gt;::key);</div>
-<div class="line"><span class="lineno">  626</span>                <span class="keywordflow">if</span> (m-&gt;d[N].hasValue)</div>
-<div class="line"><span class="lineno">  627</span>                    c.set(<span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(m-&gt;val));</div>
-<div class="line"><span class="lineno">  628</span>                i = i-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  629</span>                j = j-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  630</span>            } <span class="keywordflow">while</span> (i &amp;&amp; j);</div>
-<div class="line"><span class="lineno">  631</span> </div>
-<div class="line"><span class="lineno">  632</span>            <span class="keywordflow">while</span> (i) {</div>
-<div class="line"><span class="lineno">  633</span>                <span class="keyword">auto</span> c = map.put(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key));</div>
-<div class="line"><span class="lineno">  634</span>                <span class="keywordflow">if</span> (i-&gt;d[N].hasValue)</div>
-<div class="line"><span class="lineno">  635</span>                    c.set(<span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(i-&gt;val));</div>
-<div class="line"><span class="lineno">  636</span>                i = i-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  637</span>            }</div>
-<div class="line"><span class="lineno">  638</span>        } <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  639</span>            map = a;</div>
-<div class="line"><span class="lineno">  640</span>    }</div>
-<div class="line"><span class="lineno">  641</span>    <span class="keywordflow">return</span> map;</div>
-<div class="line"><span class="lineno">  642</span>}</div>
-</div><!-- fragment -->
-</div>
-</div>
-</div><!-- contents -->
+<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00075">75</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 		<script src="../../custom.js"></script>
 	</body>

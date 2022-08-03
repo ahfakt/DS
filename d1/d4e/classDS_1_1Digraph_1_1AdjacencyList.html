@@ -25,7 +25,7 @@
 						<td id="projectalign" style="padding-left: 0.5em;">
 							<div id="projectname">DS
 							</div>
-							<div id="projectbrief">Template Data Structures Library</div>
+							<div id="projectbrief">Data Structures Template Library</div>
 						</td>
 					</tr>
 				</tbody>
@@ -69,22 +69,275 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
+<a href="../../d5/d84/classDS_1_1Digraph_1_1AdjacencyList-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">DS::Digraph&lt; V, E &gt;::AdjacencyList&lt; d, c &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for DS::Digraph&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../db/d21/classDS_1_1Digraph_1_1AdjacencyList__inherit__graph.png" border="0" usemap="#aDS_1_1Digraph_3_01V_00_01E_01_4_1_1AdjacencyList_3_01d_00_01c_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="aDS_1_1Digraph_3_01V_00_01E_01_4_1_1AdjacencyList_3_01d_00_01c_01_4_inherit__map" id="aDS_1_1Digraph_3_01V_00_01E_01_4_1_1AdjacencyList_3_01d_00_01c_01_4_inherit__map">
+<area shape="rect" title=" " alt="" coords="5,321,443,575"/>
+<area shape="rect" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html" title=" " alt="" coords="11,5,437,273"/>
+</map>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a75058fe8922f89316c2ae52cc0a4841b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html#a75058fe8922f89316c2ae52cc0a4841b">iterator</a> = <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt; Direction::FORWARD, Constness::NCONST &gt;</td></tr>
+<tr class="separator:a75058fe8922f89316c2ae52cc0a4841b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a983d84127694f8096d29a443fdf21346"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html#a983d84127694f8096d29a443fdf21346">reverse_iterator</a> = <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt; Direction::BACKWARD, Constness::NCONST &gt;</td></tr>
+<tr class="separator:a983d84127694f8096d29a443fdf21346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6124b96f5a890525c4aa009fab651b86"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html#a6124b96f5a890525c4aa009fab651b86">const_iterator</a> = <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt; Direction::FORWARD, Constness::CONST &gt;</td></tr>
+<tr class="separator:a6124b96f5a890525c4aa009fab651b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0b7e8829fc8f11c927e4da7bf0083bc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html#ad0b7e8829fc8f11c927e4da7bf0083bc">const_reverse_iterator</a> = <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt; Direction::BACKWARD, Constness::CONST &gt;</td></tr>
+<tr class="separator:ad0b7e8829fc8f11c927e4da7bf0083bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2e129e37e7ed69ae85cc787de63f5b5f"><td class="memTemplParams" colspan="2"><a id="a2e129e37e7ed69ae85cc787de63f5b5f" name="a2e129e37e7ed69ae85cc787de63f5b5f"></a>
+template&lt;Constness oc&gt; <br />
+requires ConstCompat&lt;c, oc&gt;</td></tr>
+<tr class="memitem:a2e129e37e7ed69ae85cc787de63f5b5f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html">AdjacencyList</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html">VDescriptor</a>&lt; oc &gt; const &amp;other) noexcept</td></tr>
+<tr class="separator:a2e129e37e7ed69ae85cc787de63f5b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18bfd7ae20e1399b1b67f08ca74d36e3"><td class="memItemLeft" align="right" valign="top"><a id="a18bfd7ae20e1399b1b67f08ca74d36e3" name="a18bfd7ae20e1399b1b67f08ca74d36e3"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () noexcept</td></tr>
+<tr class="separator:a18bfd7ae20e1399b1b67f08ca74d36e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0a66220dbb65c857588d731b54cd75"><td class="memItemLeft" align="right" valign="top"><a id="add0a66220dbb65c857588d731b54cd75" name="add0a66220dbb65c857588d731b54cd75"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const noexcept</td></tr>
+<tr class="separator:add0a66220dbb65c857588d731b54cd75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5bd78dcf3f06d460410fa28af2ca917"><td class="memItemLeft" align="right" valign="top"><a id="ae5bd78dcf3f06d460410fa28af2ca917" name="ae5bd78dcf3f06d460410fa28af2ca917"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () noexcept</td></tr>
+<tr class="separator:ae5bd78dcf3f06d460410fa28af2ca917"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd6eded2dd664d7794efeadde9801107"><td class="memItemLeft" align="right" valign="top"><a id="abd6eded2dd664d7794efeadde9801107" name="abd6eded2dd664d7794efeadde9801107"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const noexcept</td></tr>
+<tr class="separator:abd6eded2dd664d7794efeadde9801107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab61b3d23d064fae00677ec8dc6011d94"><td class="memItemLeft" align="right" valign="top"><a id="ab61b3d23d064fae00677ec8dc6011d94" name="ab61b3d23d064fae00677ec8dc6011d94"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin</b> () noexcept</td></tr>
+<tr class="separator:ab61b3d23d064fae00677ec8dc6011d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0508f5993712aed15231bad25a3fc84b"><td class="memItemLeft" align="right" valign="top"><a id="a0508f5993712aed15231bad25a3fc84b" name="a0508f5993712aed15231bad25a3fc84b"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin</b> () const noexcept</td></tr>
+<tr class="separator:a0508f5993712aed15231bad25a3fc84b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d4081f639e6ef0ffde9d1918e89c5e0"><td class="memItemLeft" align="right" valign="top"><a id="a6d4081f639e6ef0ffde9d1918e89c5e0" name="a6d4081f639e6ef0ffde9d1918e89c5e0"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend</b> () noexcept</td></tr>
+<tr class="separator:a6d4081f639e6ef0ffde9d1918e89c5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e1e2efdeefb66240fe3ea6534c4ac61"><td class="memItemLeft" align="right" valign="top"><a id="a2e1e2efdeefb66240fe3ea6534c4ac61" name="a2e1e2efdeefb66240fe3ea6534c4ac61"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend</b> () const noexcept</td></tr>
+<tr class="separator:a2e1e2efdeefb66240fe3ea6534c4ac61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31a63035877be55ccfdb9de5de2395af"><td class="memItemLeft" align="right" valign="top"><a id="a31a63035877be55ccfdb9de5de2395af" name="a31a63035877be55ccfdb9de5de2395af"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin</b> () const noexcept</td></tr>
+<tr class="separator:a31a63035877be55ccfdb9de5de2395af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6884247c31299a096ccf7800d6d74dd0"><td class="memItemLeft" align="right" valign="top"><a id="a6884247c31299a096ccf7800d6d74dd0" name="a6884247c31299a096ccf7800d6d74dd0"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cend</b> () const noexcept</td></tr>
+<tr class="separator:a6884247c31299a096ccf7800d6d74dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1776c3507f3b09045a9e6c677388af51"><td class="memItemLeft" align="right" valign="top"><a id="a1776c3507f3b09045a9e6c677388af51" name="a1776c3507f3b09045a9e6c677388af51"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>crbegin</b> () const noexcept</td></tr>
+<tr class="separator:a1776c3507f3b09045a9e6c677388af51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01e45ba5559d9871ff10c20295f7113b"><td class="memItemLeft" align="right" valign="top"><a id="a01e45ba5559d9871ff10c20295f7113b" name="a01e45ba5559d9871ff10c20295f7113b"></a>
+<a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>crend</b> () const noexcept</td></tr>
+<tr class="separator:a01e45ba5559d9871ff10c20295f7113b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1016e0c608f26c866c2fe7e26f6563ea"><td class="memItemLeft" align="right" valign="top"><a id="a1016e0c608f26c866c2fe7e26f6563ea" name="a1016e0c608f26c866c2fe7e26f6563ea"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasIn</b> () const noexcept</td></tr>
+<tr class="separator:a1016e0c608f26c866c2fe7e26f6563ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0261da026a751c9c8cf3068cac78e86"><td class="memItemLeft" align="right" valign="top"><a id="ac0261da026a751c9c8cf3068cac78e86" name="ac0261da026a751c9c8cf3068cac78e86"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasOut</b> () const noexcept</td></tr>
+<tr class="separator:ac0261da026a751c9c8cf3068cac78e86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a763fba426010788939e67438d6cf62e7"><td class="memItemLeft" align="right" valign="top"><a id="a763fba426010788939e67438d6cf62e7" name="a763fba426010788939e67438d6cf62e7"></a>
+std::uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>getInDegree</b> () const noexcept</td></tr>
+<tr class="separator:a763fba426010788939e67438d6cf62e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cf24722b4e3fbc8f81e3c290cef3b55"><td class="memItemLeft" align="right" valign="top"><a id="a9cf24722b4e3fbc8f81e3c290cef3b55" name="a9cf24722b4e3fbc8f81e3c290cef3b55"></a>
+std::uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>getOutDegree</b> () const noexcept</td></tr>
+<tr class="separator:a9cf24722b4e3fbc8f81e3c290cef3b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d805beae0d54ff6f689a4b960f7ef0c"><td class="memTemplParams" colspan="2"><a id="a9d805beae0d54ff6f689a4b960f7ef0c" name="a9d805beae0d54ff6f689a4b960f7ef0c"></a>
+template&lt;Direction d&gt; </td></tr>
+<tr class="memitem:a9d805beae0d54ff6f689a4b960f7ef0c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html">AdjacencyList</a>&lt; d, c &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getAdjacencyList</b> () const noexcept</td></tr>
+<tr class="separator:a9d805beae0d54ff6f689a4b960f7ef0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3c12b8a0d881c5459b49670bf2a7613"><td class="memItemLeft" align="right" valign="top"><a id="af3c12b8a0d881c5459b49670bf2a7613" name="af3c12b8a0d881c5459b49670bf2a7613"></a>
+<a class="el" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html">VDescriptor</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>unsetIn</b> () const noexcept</td></tr>
+<tr class="separator:af3c12b8a0d881c5459b49670bf2a7613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad822bc408cc3021eb2f6460ae6c8eab2"><td class="memItemLeft" align="right" valign="top"><a id="ad822bc408cc3021eb2f6460ae6c8eab2" name="ad822bc408cc3021eb2f6460ae6c8eab2"></a>
+<a class="el" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html">VDescriptor</a> const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>unsetOut</b> () const noexcept</td></tr>
+<tr class="separator:ad822bc408cc3021eb2f6460ae6c8eab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad331892d6ba5b4a9c4cb0d8d9e729069"><td class="memItemLeft" align="right" valign="top"><a id="ad331892d6ba5b4a9c4cb0d8d9e729069" name="ad331892d6ba5b4a9c4cb0d8d9e729069"></a>
+TConstness&lt; V, c &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const noexcept</td></tr>
+<tr class="separator:ad331892d6ba5b4a9c4cb0d8d9e729069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae37e5a0c2364fed9ac35108572420a99"><td class="memItemLeft" align="right" valign="top"><a id="ae37e5a0c2364fed9ac35108572420a99" name="ae37e5a0c2364fed9ac35108572420a99"></a>
+TConstness&lt; V, c &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const noexcept</td></tr>
+<tr class="separator:ae37e5a0c2364fed9ac35108572420a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e52c10344dcf1b5370f22d939d0c38"><td class="memTemplParams" colspan="2"><a id="a25e52c10344dcf1b5370f22d939d0c38" name="a25e52c10344dcf1b5370f22d939d0c38"></a>
+template&lt;Constness oc&gt; </td></tr>
+<tr class="memitem:a25e52c10344dcf1b5370f22d939d0c38"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (<a class="el" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html">VDescriptor</a>&lt; oc &gt; const &amp;other) const noexcept</td></tr>
+<tr class="separator:a25e52c10344dcf1b5370f22d939d0c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa210e36d30f58c7f9f01eed7b8635289"><td class="memItemLeft" align="right" valign="top"><a id="aa210e36d30f58c7f9f01eed7b8635289" name="aa210e36d30f58c7f9f01eed7b8635289"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const noexcept</td></tr>
+<tr class="separator:aa210e36d30f58c7f9f01eed7b8635289"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a8330ae902faf4c29a5078cdadf1239de"><td class="memItemLeft" align="right" valign="top">VNode&lt; V, E &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html#a8330ae902faf4c29a5078cdadf1239de">pos</a></td></tr>
+<tr class="separator:a8330ae902faf4c29a5078cdadf1239de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a0a412e94e670f4f1915abee51ea1694d"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d4e/classDS_1_1Digraph_1_1AdjacencyList.html#a0a412e94e670f4f1915abee51ea1694d">VDescriptor&lt; c &gt;</a></td></tr>
+<tr class="separator:a0a412e94e670f4f1915abee51ea1694d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename V, typename E&gt;<br />
 template&lt;Direction d, Constness c&gt;<br />
 class DS::Digraph&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;</div>
-<p class="definition">Definition at line <a class="el" href="../../d3/dd2/Digraph_8h_source.html#l00468">468</a> of file <a class="el" href="../../d3/dd2/Digraph_8h_source.html">Digraph.h</a>.</p>
-</div></div><!-- contents -->
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00468">468</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a75058fe8922f89316c2ae52cc0a4841b" name="a75058fe8922f89316c2ae52cc0a4841b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75058fe8922f89316c2ae52cc0a4841b">&#9670;&nbsp;</a></span>iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V , typename E &gt; </div>
+<div class="memtemplate">
+template&lt;Direction d, Constness c&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">DS::Digraph</a>&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;::iterator =  <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt;Direction::FORWARD, Constness::NCONST&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00482">482</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a983d84127694f8096d29a443fdf21346" name="a983d84127694f8096d29a443fdf21346"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a983d84127694f8096d29a443fdf21346">&#9670;&nbsp;</a></span>reverse_iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V , typename E &gt; </div>
+<div class="memtemplate">
+template&lt;Direction d, Constness c&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">DS::Digraph</a>&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;::reverse_iterator =  <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt;Direction::BACKWARD, Constness::NCONST&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00483">483</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6124b96f5a890525c4aa009fab651b86" name="a6124b96f5a890525c4aa009fab651b86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6124b96f5a890525c4aa009fab651b86">&#9670;&nbsp;</a></span>const_iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V , typename E &gt; </div>
+<div class="memtemplate">
+template&lt;Direction d, Constness c&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">DS::Digraph</a>&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;::const_iterator =  <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt;Direction::FORWARD, Constness::CONST&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00484">484</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad0b7e8829fc8f11c927e4da7bf0083bc" name="ad0b7e8829fc8f11c927e4da7bf0083bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0b7e8829fc8f11c927e4da7bf0083bc">&#9670;&nbsp;</a></span>const_reverse_iterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V , typename E &gt; </div>
+<div class="memtemplate">
+template&lt;Direction d, Constness c&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">DS::Digraph</a>&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;::const_reverse_iterator =  <a class="el" href="../../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html">Iterator</a>&lt;Direction::BACKWARD, Constness::CONST&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00485">485</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="a0a412e94e670f4f1915abee51ea1694d" name="a0a412e94e670f4f1915abee51ea1694d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a412e94e670f4f1915abee51ea1694d">&#9670;&nbsp;</a></span>VDescriptor&lt; c &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V , typename E &gt; </div>
+<div class="memtemplate">
+template&lt;Direction d, Constness c&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="../../d0/deb/classDS_1_1Digraph_1_1VDescriptor.html">VDescriptor</a>&lt; c &gt;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00463">463</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a8330ae902faf4c29a5078cdadf1239de" name="a8330ae902faf4c29a5078cdadf1239de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8330ae902faf4c29a5078cdadf1239de">&#9670;&nbsp;</a></span>pos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V , typename E &gt; </div>
+<div class="memtemplate">
+template&lt;Constness c&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">VNode&lt;V, E&gt;* <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">DS::Digraph</a>&lt; V, E &gt;::VDescriptor&lt; c &gt;::pos</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../db/d46/Digraph_8hpp_source.html#l00166">166</a> of file <a class="el" href="../../db/d46/Digraph_8hpp_source.html">Digraph.hpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 		<script src="../../custom.js"></script>
 	</body>

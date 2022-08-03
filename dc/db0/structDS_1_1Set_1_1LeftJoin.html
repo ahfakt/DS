@@ -25,7 +25,7 @@
 						<td id="projectalign" style="padding-left: 0.5em;">
 							<div id="projectname">DS
 							</div>
-							<div id="projectbrief">Template Data Structures Library</div>
+							<div id="projectbrief">Data Structures Template Library</div>
 						</td>
 					</tr>
 				</tbody>
@@ -77,91 +77,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5cc35a984513ad5552a9326e550fbd4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/db0/structDS_1_1Set_1_1LeftJoin.html#a5cc35a984513ad5552a9326e550fbd4a">operator()</a> (<a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a> const &amp;a, <a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a> const &amp;b, auto &amp;&amp;... args) const</td></tr>
-<tr class="separator:a5cc35a984513ad5552a9326e550fbd4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71cb719aa6e9a7491bb5b91184bbe762"><td class="memItemLeft" align="right" valign="top"><a id="a71cb719aa6e9a7491bb5b91184bbe762" name="a71cb719aa6e9a7491bb5b91184bbe762"></a>
+<a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a> const &amp;a, <a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a> const &amp;b, auto &amp;&amp;... args) const</td></tr>
+<tr class="separator:a71cb719aa6e9a7491bb5b91184bbe762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename K, typename C = std::less&lt;&gt;, typename ... Cs&gt;<br />
 template&lt;typename S, std::size_t N = 0&gt;<br />
 struct DS::Set&lt; K, C, Cs &gt;::LeftJoin&lt; S, N &gt;</div>
-<p class="definition">Definition at line <a class="el" href="../../d4/d45/Set_8h_source.html#l00067">67</a> of file <a class="el" href="../../d4/d45/Set_8h_source.html">Set.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5cc35a984513ad5552a9326e550fbd4a" name="a5cc35a984513ad5552a9326e550fbd4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cc35a984513ad5552a9326e550fbd4a">&#9670;&nbsp;</a></span>operator()()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename K , typename C , typename... Cs&gt; <br />
-requires Selector&lt;S, K, decltype(args) ...&gt;</div>
-<div class="memtemplate">
-template&lt;typename S , std::size_t N&gt; <br />
-requires Selector&lt;S, K, decltype(args) ...&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a>&lt; K, C, Cs... &gt; <a class="el" href="../../db/d3d/classDS_1_1Set.html">DS::Set</a>&lt; K, C, Cs &gt;::LeftJoin&lt; S, N &gt;::operator() </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a> const &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../db/d3d/classDS_1_1Set.html">Set</a> const &amp;&#160;</td>
-          <td class="paramname"><em>b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">auto &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../d2/d42/Set_8hpp_source.html#l00442">442</a> of file <a class="el" href="../../d2/d42/Set_8hpp_source.html">Set.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  444</span>{</div>
-<div class="line"><span class="lineno">  445</span>    Set set;</div>
-<div class="line"><span class="lineno">  446</span>    <span class="keywordflow">if</span> (a) {</div>
-<div class="line"><span class="lineno">  447</span>        <span class="keywordflow">if</span> (b) {</div>
-<div class="line"><span class="lineno">  448</span>            nth_t&lt;N, C, Cs ...&gt; cmp;</div>
-<div class="line"><span class="lineno">  449</span>            S selector;</div>
-<div class="line"><span class="lineno">  450</span>            <span class="keyword">auto</span>* i = a.mRoot[N]-&gt;template leftMost&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  451</span>            <span class="keyword">auto</span>* j = b.mRoot[N]-&gt;template leftMost&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  452</span> </div>
-<div class="line"><span class="lineno">  453</span>            <span class="keywordflow">do</span> {</div>
-<div class="line"><span class="lineno">  454</span>                <span class="keywordflow">if</span> (cmp(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key))) {</div>
-<div class="line"><span class="lineno">  455</span>                    set.put(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key));</div>
-<div class="line"><span class="lineno">  456</span>                    i = i-&gt;template next&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  457</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  458</span>                }</div>
-<div class="line"><span class="lineno">  459</span>                <span class="keywordflow">if</span> (cmp(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key))) {</div>
-<div class="line"><span class="lineno">  460</span>                    j = j-&gt;template next&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  461</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  462</span>                }</div>
-<div class="line"><span class="lineno">  463</span>                set.put(selector(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key), std::forward&lt;<span class="keyword">decltype</span>(args)&gt;(args) ...));</div>
-<div class="line"><span class="lineno">  464</span>                i = i-&gt;template next&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  465</span>                j = j-&gt;template next&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  466</span>            } <span class="keywordflow">while</span> (i &amp;&amp; j);</div>
-<div class="line"><span class="lineno">  467</span> </div>
-<div class="line"><span class="lineno">  468</span>            <span class="keywordflow">while</span> (i) {</div>
-<div class="line"><span class="lineno">  469</span>                set.put(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key));</div>
-<div class="line"><span class="lineno">  470</span>                i = i-&gt;template next&lt;N, SNode &lt; K, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  471</span>            }</div>
-<div class="line"><span class="lineno">  472</span>        } <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  473</span>            set = a;</div>
-<div class="line"><span class="lineno">  474</span>    }</div>
-<div class="line"><span class="lineno">  475</span>    <span class="keywordflow">return</span> set;</div>
-<div class="line"><span class="lineno">  476</span>}</div>
-</div><!-- fragment -->
-</div>
-</div>
-</div><!-- contents -->
+<p class="definition">Definition at line <a class="el" href="../../d2/d42/Set_8hpp_source.html#l00067">67</a> of file <a class="el" href="../../d2/d42/Set_8hpp_source.html">Set.hpp</a>.</p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 		<script src="../../custom.js"></script>
 	</body>

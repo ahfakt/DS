@@ -25,7 +25,7 @@
 						<td id="projectalign" style="padding-left: 0.5em;">
 							<div id="projectname">DS
 							</div>
-							<div id="projectbrief">Template Data Structures Library</div>
+							<div id="projectbrief">Data Structures Template Library</div>
 						</td>
 					</tr>
 				</tbody>
@@ -77,85 +77,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0777cae71cdd77e1c1fa5dd46db1081f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d39/structDS_1_1Map_1_1Difference.html#a0777cae71cdd77e1c1fa5dd46db1081f">operator()</a> (<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;a, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;b) const</td></tr>
-<tr class="separator:a0777cae71cdd77e1c1fa5dd46db1081f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50bb2c6a29ae22d7464e02c0fe98d3c1"><td class="memItemLeft" align="right" valign="top"><a id="a50bb2c6a29ae22d7464e02c0fe98d3c1" name="a50bb2c6a29ae22d7464e02c0fe98d3c1"></a>
+<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;a, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;b) const</td></tr>
+<tr class="separator:a50bb2c6a29ae22d7464e02c0fe98d3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename K, typename V, typename C = std::less&lt;&gt;, typename ... Cs&gt;<br />
 template&lt;std::size_t N = 0&gt;<br />
 struct DS::Map&lt; K, V, C, Cs &gt;::Difference&lt; N &gt;</div>
-<p class="definition">Definition at line <a class="el" href="../../df/d79/Map_8h_source.html#l00062">62</a> of file <a class="el" href="../../df/d79/Map_8h_source.html">Map.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0777cae71cdd77e1c1fa5dd46db1081f" name="a0777cae71cdd77e1c1fa5dd46db1081f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0777cae71cdd77e1c1fa5dd46db1081f">&#9670;&nbsp;</a></span>operator()()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename K , typename V , typename C , typename ... Cs&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; K, V, C, Cs ... &gt; <a class="el" href="../../d5/db6/classDS_1_1Map.html">DS::Map</a>&lt; K, V, C, Cs &gt;::Difference&lt; N &gt;::operator() </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> const &amp;&#160;</td>
-          <td class="paramname"><em>b</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00526">526</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  527</span>{</div>
-<div class="line"><span class="lineno">  528</span>    Map map;</div>
-<div class="line"><span class="lineno">  529</span>    <span class="keywordflow">if</span> (a) {</div>
-<div class="line"><span class="lineno">  530</span>        <span class="keywordflow">if</span> (b) {</div>
-<div class="line"><span class="lineno">  531</span>            nth_t&lt;N, C, Cs ...&gt; cmp;</div>
-<div class="line"><span class="lineno">  532</span>            <span class="keyword">auto</span>* i = a.mRoot[N]-&gt;template leftMost&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  533</span>            <span class="keyword">auto</span>* j = b.mRoot[N]-&gt;template leftMost&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  534</span> </div>
-<div class="line"><span class="lineno">  535</span>            <span class="keywordflow">do</span> {</div>
-<div class="line"><span class="lineno">  536</span>                <span class="keywordflow">if</span> (cmp(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key))) {</div>
-<div class="line"><span class="lineno">  537</span>                    <span class="keyword">auto</span> c = map.put(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key));</div>
-<div class="line"><span class="lineno">  538</span>                    <span class="keywordflow">if</span> (i-&gt;d[N].hasValue)</div>
-<div class="line"><span class="lineno">  539</span>                        c.set(<span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(i-&gt;val));</div>
-<div class="line"><span class="lineno">  540</span>                    i = i-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  541</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  542</span>                }</div>
-<div class="line"><span class="lineno">  543</span>                <span class="keywordflow">if</span> (cmp(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(j-&gt;key), <span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key))) {</div>
-<div class="line"><span class="lineno">  544</span>                    j = j-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  545</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  546</span>                }</div>
-<div class="line"><span class="lineno">  547</span>                i = i-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  548</span>                j = j-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  549</span>            } <span class="keywordflow">while</span> (i &amp;&amp; j);</div>
-<div class="line"><span class="lineno">  550</span> </div>
-<div class="line"><span class="lineno">  551</span>            <span class="keywordflow">while</span> (i) {</div>
-<div class="line"><span class="lineno">  552</span>                <span class="keyword">auto</span> c = map.put(<span class="keyword">static_cast&lt;</span>K const&amp;<span class="keyword">&gt;</span>(i-&gt;key));</div>
-<div class="line"><span class="lineno">  553</span>                <span class="keywordflow">if</span> (i-&gt;d[N].hasValue)</div>
-<div class="line"><span class="lineno">  554</span>                    c.set(<span class="keyword">static_cast&lt;</span>V const&amp;<span class="keyword">&gt;</span>(i-&gt;val));</div>
-<div class="line"><span class="lineno">  555</span>                i = i-&gt;template next&lt;N, MNode&lt;K, V, C, Cs...&gt;&gt;();</div>
-<div class="line"><span class="lineno">  556</span>            }</div>
-<div class="line"><span class="lineno">  557</span>        } <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  558</span>            map = a;</div>
-<div class="line"><span class="lineno">  559</span>    }</div>
-<div class="line"><span class="lineno">  560</span>    <span class="keywordflow">return</span> map;</div>
-<div class="line"><span class="lineno">  561</span>}</div>
-</div><!-- fragment -->
-</div>
-</div>
-</div><!-- contents -->
+<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 		<script src="../../custom.js"></script>
 	</body>

@@ -25,7 +25,7 @@
 						<td id="projectalign" style="padding-left: 0.5em;">
 							<div id="projectname">DS
 							</div>
-							<div id="projectbrief">Template Data Structures Library</div>
+							<div id="projectbrief">Data Structures Template Library</div>
 						</td>
 					</tr>
 				</tbody>
@@ -82,14 +82,14 @@ $(function() {
 <p>Doubly linked list implementation.  
  <a href="../../d9/d41/classDS_1_1List.html#details">More...</a></p>
 
-<p><code>#include &quot;<a class="el" href="../../de/d88/List_8h_source.html">DS/List.h</a>&quot;</code></p>
+<p><code>#include &quot;<a class="el" href="../../d2/d37/List_8hpp_source.html">DS/List.hpp</a>&quot;</code></p>
 <div class="dynheader">
 Inheritance diagram for DS::List&lt; T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d9/dec/classDS_1_1List__inherit__graph.png" border="0" usemap="#aDS_1_1List_3_01T_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="aDS_1_1List_3_01T_01_4_inherit__map" id="aDS_1_1List_3_01T_01_4_inherit__map">
-<area shape="rect" title="Doubly linked list implementation." alt="" coords="5,175,495,399"/>
-<area shape="rect" href="../../d2/da8/classDS_1_1Container.html" title="Base class for data structures." alt="" coords="123,5,377,127"/>
+<area shape="rect" title="Doubly linked list implementation." alt="" coords="5,175,487,399"/>
+<area shape="rect" href="../../d2/da8/classDS_1_1Container.html" title="Base class for data structures." alt="" coords="119,5,373,127"/>
 </map>
 </div>
 <table class="memberdecls">
@@ -124,10 +124,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8b73180ea71597811b63eac8c69b5a55"><td class="memItemLeft" align="right" valign="top"><a id="a8b73180ea71597811b63eac8c69b5a55" name="a8b73180ea71597811b63eac8c69b5a55"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>List</b> (<a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... tArgs)</td></tr>
 <tr class="separator:a8b73180ea71597811b63eac8c69b5a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a144170769908038faa370bb5cdded4ba"><td class="memTemplParams" colspan="2"><a id="a144170769908038faa370bb5cdded4ba" name="a144170769908038faa370bb5cdded4ba"></a>
-template&lt;typename IDType , typename ... FArgs&gt; </td></tr>
-<tr class="memitem:a144170769908038faa370bb5cdded4ba"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>List</b> (<a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; T, IDType, FArgs ... &gt; const &amp;factory)</td></tr>
-<tr class="separator:a144170769908038faa370bb5cdded4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebdb346e77814cf7cfcfef740e953fce"><td class="memTemplParams" colspan="2"><a id="aebdb346e77814cf7cfcfef740e953fce" name="aebdb346e77814cf7cfcfef740e953fce"></a>
+template&lt;typename IDType , typename ... Args&gt; </td></tr>
+<tr class="memitem:aebdb346e77814cf7cfcfef740e953fce"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>List</b> (<a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; T, IDType, Args ... &gt; const &amp;factory)</td></tr>
+<tr class="separator:aebdb346e77814cf7cfcfef740e953fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb9f1c04c8bc2539a087564f518df39e"><td class="memItemLeft" align="right" valign="top"><a id="aeb9f1c04c8bc2539a087564f518df39e" name="aeb9f1c04c8bc2539a087564f518df39e"></a>
 <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pushFront</b> (<a class="el" href="../../d9/d41/classDS_1_1List.html">List</a> value) noexcept</td></tr>
 <tr class="separator:aeb9f1c04c8bc2539a087564f518df39e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,10 +138,10 @@ template&lt;typename IDType , typename ... FArgs&gt; </td></tr>
 template&lt;Derived&lt; T &gt; DT&gt; </td></tr>
 <tr class="memitem:a508cb1a4719f7b9b1087415a4b8b0a61"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pushFront</b> (auto &amp;&amp;... dtArgs)</td></tr>
 <tr class="separator:a508cb1a4719f7b9b1087415a4b8b0a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0db47fc72ba889b1fc1debfa568cef99"><td class="memTemplParams" colspan="2"><a id="a0db47fc72ba889b1fc1debfa568cef99" name="a0db47fc72ba889b1fc1debfa568cef99"></a>
-template&lt;typename ... CIArgs&gt; </td></tr>
-<tr class="memitem:a0db47fc72ba889b1fc1debfa568cef99"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pushFront</b> (<a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, CIArgs ... &gt; const &amp;createInfo, auto &amp;&amp;... cArgs)</td></tr>
-<tr class="separator:a0db47fc72ba889b1fc1debfa568cef99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9431b5f440b830287b007968ba0bf848"><td class="memTemplParams" colspan="2"><a id="a9431b5f440b830287b007968ba0bf848" name="a9431b5f440b830287b007968ba0bf848"></a>
+template&lt;typename ... Args&gt; </td></tr>
+<tr class="memitem:a9431b5f440b830287b007968ba0bf848"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pushFront</b> (<a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, Args ... &gt; const &amp;createInfo, auto &amp;&amp;... args)</td></tr>
+<tr class="separator:a9431b5f440b830287b007968ba0bf848"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac784ed307accb9fdb53493902b8888dd"><td class="memItemLeft" align="right" valign="top"><a id="ac784ed307accb9fdb53493902b8888dd" name="ac784ed307accb9fdb53493902b8888dd"></a>
 <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pushBack</b> (<a class="el" href="../../d9/d41/classDS_1_1List.html">List</a> value) noexcept</td></tr>
 <tr class="separator:ac784ed307accb9fdb53493902b8888dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,10 +152,10 @@ template&lt;typename ... CIArgs&gt; </td></tr>
 template&lt;Derived&lt; T &gt; DT&gt; </td></tr>
 <tr class="memitem:a93bd36cbdf9fb956e6fb1adc00bc4060"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pushBack</b> (auto &amp;&amp;... dtArgs)</td></tr>
 <tr class="separator:a93bd36cbdf9fb956e6fb1adc00bc4060"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40a81d72f0d08b04fd12cca91da88ef0"><td class="memTemplParams" colspan="2"><a id="a40a81d72f0d08b04fd12cca91da88ef0" name="a40a81d72f0d08b04fd12cca91da88ef0"></a>
-template&lt;typename ... CIArgs&gt; </td></tr>
-<tr class="memitem:a40a81d72f0d08b04fd12cca91da88ef0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pushBack</b> (<a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, CIArgs ... &gt; const &amp;createInfo, auto &amp;&amp;... cArgs)</td></tr>
-<tr class="separator:a40a81d72f0d08b04fd12cca91da88ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa124e992a4050cc8efb617bb4259a628"><td class="memTemplParams" colspan="2"><a id="aa124e992a4050cc8efb617bb4259a628" name="aa124e992a4050cc8efb617bb4259a628"></a>
+template&lt;typename ... Args&gt; </td></tr>
+<tr class="memitem:aa124e992a4050cc8efb617bb4259a628"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pushBack</b> (<a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, Args ... &gt; const &amp;createInfo, auto &amp;&amp;... args)</td></tr>
+<tr class="separator:aa124e992a4050cc8efb617bb4259a628"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0010a67909ae76ecbddda37ad8dfe68d"><td class="memTemplParams" colspan="2"><a id="a0010a67909ae76ecbddda37ad8dfe68d" name="a0010a67909ae76ecbddda37ad8dfe68d"></a>
 template&lt;Direction d, Constness c&gt; </td></tr>
 <tr class="memitem:a0010a67909ae76ecbddda37ad8dfe68d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertBefore</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, auto &amp;&amp;... tArgs)</td></tr>
@@ -164,10 +164,10 @@ template&lt;Direction d, Constness c&gt; </td></tr>
 template&lt;Derived&lt; T &gt; DT, Direction d, Constness c&gt; </td></tr>
 <tr class="memitem:a340dc4b3ac4f8ef8d6ca4d2c5c72f2f3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertBefore</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, auto &amp;&amp;... dtArgs)</td></tr>
 <tr class="separator:a340dc4b3ac4f8ef8d6ca4d2c5c72f2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac6f3ab6cbe2eb228c4279c7ce317d2b"><td class="memTemplParams" colspan="2"><a id="aac6f3ab6cbe2eb228c4279c7ce317d2b" name="aac6f3ab6cbe2eb228c4279c7ce317d2b"></a>
-template&lt;typename ... CIArgs, Direction d, Constness c&gt; </td></tr>
-<tr class="memitem:aac6f3ab6cbe2eb228c4279c7ce317d2b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertBefore</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, <a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, CIArgs ... &gt; const &amp;createInfo, auto &amp;&amp;... cArgs)</td></tr>
-<tr class="separator:aac6f3ab6cbe2eb228c4279c7ce317d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bda16358048ffdd21136c1172987a56"><td class="memTemplParams" colspan="2"><a id="a4bda16358048ffdd21136c1172987a56" name="a4bda16358048ffdd21136c1172987a56"></a>
+template&lt;typename ... Args, Direction d, Constness c&gt; </td></tr>
+<tr class="memitem:a4bda16358048ffdd21136c1172987a56"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertBefore</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, <a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, Args ... &gt; const &amp;createInfo, auto &amp;&amp;... args)</td></tr>
+<tr class="separator:a4bda16358048ffdd21136c1172987a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ef081c47fdbd26135dd5340d5a6c534"><td class="memTemplParams" colspan="2"><a id="a0ef081c47fdbd26135dd5340d5a6c534" name="a0ef081c47fdbd26135dd5340d5a6c534"></a>
 template&lt;Direction d, Constness c&gt; </td></tr>
 <tr class="memitem:a0ef081c47fdbd26135dd5340d5a6c534"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertAfter</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, auto &amp;&amp;... tArgs)</td></tr>
@@ -176,10 +176,10 @@ template&lt;Direction d, Constness c&gt; </td></tr>
 template&lt;Derived&lt; T &gt; DT, Direction d, Constness c&gt; </td></tr>
 <tr class="memitem:abde1971eccb6e2fe50cd2b438e2c2369"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertAfter</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, auto &amp;&amp;... dtArgs)</td></tr>
 <tr class="separator:abde1971eccb6e2fe50cd2b438e2c2369"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a185a9b969529a465fb3e46f1261b514f"><td class="memTemplParams" colspan="2"><a id="a185a9b969529a465fb3e46f1261b514f" name="a185a9b969529a465fb3e46f1261b514f"></a>
-template&lt;typename ... CIArgs, Direction d, Constness c&gt; </td></tr>
-<tr class="memitem:a185a9b969529a465fb3e46f1261b514f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertAfter</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, <a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, CIArgs ... &gt; const &amp;createInfo, auto &amp;&amp;... cArgs)</td></tr>
-<tr class="separator:a185a9b969529a465fb3e46f1261b514f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8efdefeb95691fd29c6f7c095b3bc10c"><td class="memTemplParams" colspan="2"><a id="a8efdefeb95691fd29c6f7c095b3bc10c" name="a8efdefeb95691fd29c6f7c095b3bc10c"></a>
+template&lt;typename ... Args, Direction d, Constness c&gt; </td></tr>
+<tr class="memitem:a8efdefeb95691fd29c6f7c095b3bc10c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insertAfter</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at, <a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; T, Args ... &gt; const &amp;createInfo, auto &amp;&amp;... args)</td></tr>
+<tr class="separator:a8efdefeb95691fd29c6f7c095b3bc10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed4d212faa7e203f7870f1d7c8a3a26b"><td class="memTemplParams" colspan="2"><a id="aed4d212faa7e203f7870f1d7c8a3a26b" name="aed4d212faa7e203f7870f1d7c8a3a26b"></a>
 template&lt;Direction d, Constness c&gt; </td></tr>
 <tr class="memitem:aed4d212faa7e203f7870f1d7c8a3a26b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>remove</b> (<a class="el" href="../../d0/d6c/classDS_1_1List_1_1Iterator.html">Iterator</a>&lt; d, c &gt; at) noexcept</td></tr>
@@ -256,8 +256,8 @@ requires Stream::InsertableTo&lt;t, <a class="elRef" href="../../../Stream/df/dc
 <tr class="separator:a9543b14f14a5afde528b449e244f92ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49d1acb8c20999603406093276fc24ff"><td class="memTemplParams" colspan="2"><a id="a49d1acb8c20999603406093276fc24ff" name="a49d1acb8c20999603406093276fc24ff"></a>
 template&lt;typename t &gt; <br />
-requires Stream::InsertableTo&lt;t, Stream::Format::StringOutput&gt;</td></tr>
-<tr class="memitem:a49d1acb8c20999603406093276fc24ff"><td class="memTemplItemLeft" align="right" valign="top">Stream::Format::DotOutput &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (Stream::Format::DotOutput &amp;dotOutput, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; const &amp;list)</td></tr>
+requires Stream::InsertableTo&lt;t, <a class="elRef" href="../../../StreamFormat/d8/d50/classStream_1_1Format_1_1StringOutput.html">Stream::Format::StringOutput</a>&gt;</td></tr>
+<tr class="memitem:a49d1acb8c20999603406093276fc24ff"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;dotOutput, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; const &amp;list)</td></tr>
 <tr class="separator:a49d1acb8c20999603406093276fc24ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -270,7 +270,7 @@ class DS::List&lt; T &gt;</div><p >Doubly linked list implementation. </p>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../de/d88/List_8h_source.html#l00017">17</a> of file <a class="el" href="../../de/d88/List_8h_source.html">List.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d37/List_8hpp_source.html#l00017">17</a> of file <a class="el" href="../../d2/d37/List_8hpp_source.html">List.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a37242cfbccd7a6329f23a7582c903a5b" name="a37242cfbccd7a6329f23a7582c903a5b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a37242cfbccd7a6329f23a7582c903a5b">&#9670;&nbsp;</a></span>iterator</h2>
@@ -286,7 +286,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../de/d88/List_8h_source.html#l00046">46</a> of file <a class="el" href="../../de/d88/List_8h_source.html">List.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d37/List_8hpp_source.html#l00046">46</a> of file <a class="el" href="../../d2/d37/List_8hpp_source.html">List.hpp</a>.</p>
 
 </div>
 </div>
@@ -304,7 +304,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../de/d88/List_8h_source.html#l00047">47</a> of file <a class="el" href="../../de/d88/List_8h_source.html">List.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d37/List_8hpp_source.html#l00047">47</a> of file <a class="el" href="../../d2/d37/List_8hpp_source.html">List.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +322,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../de/d88/List_8h_source.html#l00048">48</a> of file <a class="el" href="../../de/d88/List_8h_source.html">List.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d37/List_8hpp_source.html#l00048">48</a> of file <a class="el" href="../../d2/d37/List_8hpp_source.html">List.hpp</a>.</p>
 
 </div>
 </div>
@@ -340,7 +340,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../de/d88/List_8h_source.html#l00049">49</a> of file <a class="el" href="../../de/d88/List_8h_source.html">List.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d37/List_8hpp_source.html#l00049">49</a> of file <a class="el" href="../../d2/d37/List_8hpp_source.html">List.hpp</a>.</p>
 
 </div>
 </div>
@@ -369,7 +369,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>The number of elements stored in the <a class="el" href="../../d2/da8/classDS_1_1Container.html" title="Base class for data structures.">Container</a> object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d65/Container_8h_source.html#l00027">27</a> of file <a class="el" href="../../db/d65/Container_8h_source.html">Container.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/db6/Container_8hpp_source.html#l00027">27</a> of file <a class="el" href="../../dc/db6/Container_8hpp_source.html">Container.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   28</span>    { <span class="keywordflow">return</span> mSize; }</div>
 </div><!-- fragment -->
 </div>
@@ -400,7 +400,7 @@ template&lt;typename T &gt; </div>
 <p>bool conversion operator. </p>
 <dl class="section return"><dt>Returns</dt><dd>false, if no element is stored in the <a class="el" href="../../d2/da8/classDS_1_1Container.html" title="Base class for data structures.">Container</a> object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d65/Container_8h_source.html#l00034">34</a> of file <a class="el" href="../../db/d65/Container_8h_source.html">Container.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/db6/Container_8hpp_source.html#l00034">34</a> of file <a class="el" href="../../dc/db6/Container_8hpp_source.html">Container.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   35</span>    { <span class="keywordflow">return</span> mSize; }</div>
 </div><!-- fragment -->
 </div>
@@ -430,7 +430,7 @@ template&lt;typename v , typename e &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../de/d88/List_8h_source.html#l00019">19</a> of file <a class="el" href="../../de/d88/List_8h_source.html">List.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d37/List_8hpp_source.html#l00019">19</a> of file <a class="el" href="../../d2/d37/List_8hpp_source.html">List.hpp</a>.</p>
 
 </div>
 </div>
@@ -455,7 +455,7 @@ template&lt;typename v , typename e &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../db/d65/Container_8h_source.html#l00014">14</a> of file <a class="el" href="../../db/d65/Container_8h_source.html">Container.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/db6/Container_8hpp_source.html#l00014">14</a> of file <a class="el" href="../../dc/db6/Container_8hpp_source.html">Container.hpp</a>.</p>
 
 </div>
 </div>
