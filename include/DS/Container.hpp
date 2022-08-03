@@ -7,7 +7,7 @@ namespace DS {
 
 /**
  * @brief	Base class for data structures.
- * @class	Container Container.h "DS/Container.h"
+ * @class	Container Container.hpp "DS/Container.hpp"
  */
 class Container {
 protected:
@@ -33,7 +33,7 @@ public:
 	 */
 	explicit operator bool() const noexcept
 	{ return mSize; }
-};//class Container
+};//class DS::Container
 
 }//namespace DS
 

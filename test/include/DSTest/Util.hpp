@@ -1,9 +1,9 @@
-#ifndef DSTEST_UTIL_H
-#define DSTEST_UTIL_H
+#ifndef DSTEST_UTIL
+#define DSTEST_UTIL
 
 #include <string>
-#include <Stream/InOut.h>
-#include "DP/Factory.h"
+#include <Stream/InOut.hpp>
+#include "DP/Factory.hpp"
 #include <iostream>
 
 namespace DSTest {
@@ -634,4 +634,4 @@ TestBalance(DS::TNode<M> const* t, int depth = 0) {
 
 }//namespace DSTest
 
-#endif //DSTEST_UTIL_H
+#endif //DSTEST_UTIL

@@ -1,7 +1,7 @@
-#ifndef DS_LNODE_HPP
-#define DS_LNODE_HPP
+#ifndef DS_LNODE_TPP
+#define DS_LNODE_TPP
 
-#include "Holder.hpp"
+#include "Holder.tpp"
 
 namespace DS {
 
@@ -148,4 +148,4 @@ qsort(LNode<T>* l, LNode<T>* r, LNode<T>*& head, LNode<T>*& tail) noexcept
 
 }//namespace DS
 
-#endif //DS_LNODE_HPP
+#endif //DS_LNODE_TPP

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14.0)
-project(DS VERSION 0.7 DESCRIPTION "")
+project(DS VERSION 0.7 DESCRIPTION "Data Structures Template Library")
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -8,25 +8,25 @@ set(DEPENDENCIES DP Stream StreamFormat)
 set(INC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INC_LIST
-		${INC_ROOT}/${PROJECT_NAME}/Container.h
-		${INC_ROOT}/${PROJECT_NAME}/Digraph.h
-		${INC_ROOT}/${PROJECT_NAME}/List.h
-		${INC_ROOT}/${PROJECT_NAME}/Map.h
-		${INC_ROOT}/${PROJECT_NAME}/Set.h
-		${INC_ROOT}/${PROJECT_NAME}/Vector.h)
+		${INC_ROOT}/${PROJECT_NAME}/Container.hpp
+		${INC_ROOT}/${PROJECT_NAME}/Digraph.hpp
+		${INC_ROOT}/${PROJECT_NAME}/List.hpp
+		${INC_ROOT}/${PROJECT_NAME}/Map.hpp
+		${INC_ROOT}/${PROJECT_NAME}/Set.hpp
+		${INC_ROOT}/${PROJECT_NAME}/Vector.hpp)
 set(SRC_LIST
-		${SRC_ROOT}/Digraph.hpp
-		${SRC_ROOT}/LNode.hpp
-		${SRC_ROOT}/ENode.hpp
-		${SRC_ROOT}/Holder.hpp
-		${SRC_ROOT}/List.hpp
-		${SRC_ROOT}/Map.hpp
-		${SRC_ROOT}/MNode.hpp
-		${SRC_ROOT}/Set.hpp
-		${SRC_ROOT}/SNode.hpp
-		${SRC_ROOT}/TNode.hpp
-		${SRC_ROOT}/Vector.hpp
-		${SRC_ROOT}/VNode.hpp)
+		${SRC_ROOT}/Digraph.tpp
+		${SRC_ROOT}/LNode.tpp
+		${SRC_ROOT}/ENode.tpp
+		${SRC_ROOT}/Holder.tpp
+		${SRC_ROOT}/List.tpp
+		${SRC_ROOT}/Map.tpp
+		${SRC_ROOT}/MNode.tpp
+		${SRC_ROOT}/Set.tpp
+		${SRC_ROOT}/SNode.tpp
+		${SRC_ROOT}/TNode.tpp
+		${SRC_ROOT}/Vector.tpp
+		${SRC_ROOT}/VNode.tpp)
 
 add_library(${PROJECT_NAME}OBJ INTERFACE)
 add_library(${PROJECT_NAME} INTERFACE)
@@ -54,9 +54,9 @@ endif()
 if ((DEFINED DOC_ROOT) AND (NOT ${DOC_ROOT} STREQUAL ""))
 	find_package(Doxygen)
 	if (DOXYGEN_FOUND)
-		set(DOXYGEN_IN_CFG ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.in.cfg)
+		set(DOXYGEN_IN_CFG ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.cfg)
 		set(DOXYGEN_OUTPUT_DIR ${DOC_ROOT}/${PROJECT_NAME})
-		set(DOXYGEN_CFG ${DOXYGEN_OUTPUT_DIR}/doxygen.cfg)
+		set(DOXYGEN_CFG ${DOC_ROOT}/.doxy/${PROJECT_NAME}.cfg)
 
 		configure_file(${DOXYGEN_IN_CFG} ${DOXYGEN_CFG} @ONLY)
 		message("Doxygen configuration ${DOXYGEN_CFG} generated.")

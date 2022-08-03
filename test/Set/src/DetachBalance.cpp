@@ -1,7 +1,7 @@
-#include "DS/Set.h"
+#include "DS/Set.hpp"
 #include <cassert>
 #include <random>
-#include "DSTest/Util.h"
+#include "DSTest/Util.hpp"
 
 using namespace DS;
 

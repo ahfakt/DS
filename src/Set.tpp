@@ -1,4 +1,4 @@
-#include "DS/Set.h"
+#include "DS/Set.hpp"
 
 namespace DS {
 
@@ -47,8 +47,8 @@ requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
 }
 
 template <typename K, typename C, typename ... Cs>
-template <typename IDType, typename ... FArgs>
-Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, IDType, FArgs ...> const& factory)
+template <typename IDType, typename ... Args>
+Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, IDType, Args ...> const& factory)
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
@@ -161,10 +161,10 @@ Set<K, C, Cs ...>::put(auto&& ... dkArgs)
 { return put(reinterpret_cast<SNode<K, C, Cs ...>*>(::new SNode<DK>(std::forward<decltype(dkArgs)>(dkArgs) ...))); }
 
 template <typename K, typename C, typename ... Cs>
-template <typename ... CIArgs>
+template <typename ... Args>
 typename Set<K, C, Cs ...>::template const_iterator<>
-Set<K, C, Cs ...>::put(DP::CreateInfo<K, CIArgs ...> const& createInfo, auto&& ... cArgs)
-{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...)); }
+Set<K, C, Cs ...>::put(DP::CreateInfo<K, Args ...> const& createInfo, auto&& ... args)
+{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo.constructor, std::forward<decltype(args)>(args) ...)); }
 
 
 template <typename K, typename C, typename ... Cs>
@@ -198,6 +198,12 @@ Set<K, C, Cs ...>::remove(SNode<K, C, Cs ...>* toDel) noexcept
 	--mSize;
 	return toDel;
 }
+
+template <typename K, typename C, typename... Cs>
+template <Direction d, std::size_t N>
+bool
+Set<K, C, Cs...>::remove(Iterator<d, N> i) noexcept
+{ return mRoot[N] && i.pos && i.pos == remove(reinterpret_cast<SNode<K, C, Cs ...>*>(i.pos)); }
 
 template <typename K, typename C, typename ... Cs>
 template <std::size_t N>
@@ -378,7 +384,7 @@ Set<K, C, Cs...>::Difference<N>::operator()(Set const& a, Set const& b) const
 	Set set;
 	if (a) {
 		if (b) {
-			nth_t<N, C, Cs ...> cmp;
+			DP::Type<N, C, Cs ...> cmp;
 			auto* i = a.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
 			auto* j = b.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
 
@@ -414,7 +420,7 @@ requires Selector<S, K, decltype(args) ...>
 {
 	Set set;
 	if (a && b) {
-		nth_t<N, C, Cs ...> cmp;
+		DP::Type<N, C, Cs ...> cmp;
 		S selector;
 		auto* i = a.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
 		auto* j = b.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
@@ -445,7 +451,7 @@ requires Selector<S, K, decltype(args) ...>
 	Set set;
 	if (a) {
 		if (b) {
-			nth_t<N, C, Cs ...> cmp;
+			DP::Type<N, C, Cs ...> cmp;
 			S selector;
 			auto* i = a.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
 			auto* j = b.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
@@ -484,7 +490,7 @@ requires Selector<S, K, decltype(args) ...>
 	Set set;
 	if (a) {
 		if (b) {
-			nth_t<N, C, Cs ...> cmp;
+			DP::Type<N, C, Cs ...> cmp;
 			S selector;
 			auto* i = a.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
 			auto* j = b.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();

@@ -1,4 +1,4 @@
-#include "DS/Map.h"
+#include "DS/Map.hpp"
 #include <cassert>
 
 using namespace DS;

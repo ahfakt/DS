@@ -1,9 +1,9 @@
-#ifndef DS_VECTOR_H
-#define DS_VECTOR_H
+#ifndef DS_VECTOR_HPP
+#define DS_VECTOR_HPP
 
-#include "Container.h"
-#include "../../src/Holder.hpp"
-#include <DP/Factory.h>
+#include "Container.hpp"
+#include "../../src/Holder.tpp"
+#include <DP/Factory.hpp>
 
 namespace DS {
 
@@ -42,8 +42,8 @@ public:
 	explicit Vector(Stream::Input& input, auto&& ... tArgs)
 	requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>;
 
-	template <typename IDType, typename ... FArgs>
-	Vector(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const& factory);
+	template <typename IDType, typename ... Args>
+	Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const& factory);
 
 	template <typename t>
 	friend Stream::Output&
@@ -59,9 +59,9 @@ public:
 	iterator
 	pushBack(auto&& ... dtArgs);
 
-	template <typename ... CIArgs>
+	template <typename ... Args>
 	iterator
-	pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs);
+	pushBack(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args);
 
 	[[nodiscard]] std::uint64_t
 	capacity() const noexcept;
@@ -126,7 +126,7 @@ public:
 
 	const_reverse_iterator
 	crend() const noexcept;
-};//class Vector<T>
+};//class DS::Vector<T>
 
 template <typename T>
 template <Direction d, Constness c>
@@ -175,10 +175,10 @@ public:
 	operator==(Iterator<od, oc> const& other) const noexcept;
 
 	explicit operator bool() const noexcept;
-};//class Vector<T>::Iterator<Direction, Constness>
+};//class DS::Vector<T>::Iterator<Direction, Constness>
 
 }//namespace DS
 
-#include "../../src/Vector.hpp"
+#include "../../src/Vector.tpp"
 
-#endif //DS_VECTOR_H
+#endif //DS_VECTOR_HPP

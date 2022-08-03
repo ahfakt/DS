@@ -1,8 +1,8 @@
-#ifndef DS_HOLDER_HPP
-#define DS_HOLDER_HPP
+#ifndef DS_HOLDER_TPP
+#define DS_HOLDER_TPP
 
-#include <DP/CreateInfo.h>
-#include <Stream/InOut.h>
+#include <DP/CreateInfo.hpp>
+#include <Stream/InOut.hpp>
 #include <random>
 
 namespace DS {
@@ -25,9 +25,9 @@ public:
 	requires (!Stream::ConstructibleFrom<T, decltype(input)>)
 	{ input >> *reinterpret_cast<T*>(raw); }
 
-	template <typename ... CFArgs>
-	Holder(DP::CreateFunc<T, CFArgs ...> const& createFunc, auto&& ... cArgs)
-	{ createFunc(reinterpret_cast<void*>(raw), std::forward<decltype(cArgs)>(cArgs) ...); }
+	template <typename ... Args>
+	Holder(DP::Constructor<T, Args ...> const& constructor, auto&& ... args)
+	{ constructor(reinterpret_cast<void*>(raw), std::forward<decltype(args)>(args) ...); }
 
 	T*
 	operator->() noexcept
@@ -111,18 +111,44 @@ concept Selector = requires (T const& a, T const& b, Args&& ... args)
 
 /// types
 
-template <typename T>
-using FirstSelector = decltype([](T const& a, T const& b) -> T const& { return a; });
+template <typename E>
+struct Engine {
+private:
+	static inline std::random_device s;
+protected:
+	static inline E e{s()};
+};
+
+template <typename D, typename E = std::default_random_engine>
+struct Random : Engine<E> {
+protected:
+	static inline D d{};
+public:
+	typename D::result_type
+	operator()() const
+	{ return d(Engine<E>::e); }
+
+	typename D::result_type
+	operator()(auto&& ... args) const
+	{ return d(Engine<E>::e, typename D::param_type{std::forward<decltype(args)>(args) ...}); }
+};
+
+template <typename T, typename E = std::default_random_engine>
+struct RandomSelector : Random<std::bernoulli_distribution, E> {
+	T const&
+	operator()(T const& a, T const& b) const
+	{ return Random<E, std::bernoulli_distribution>::operator()() ? a : b; }
+
+	T const&
+	operator()(T const& a, T const& b, double p) const
+	{ return Random<E, std::bernoulli_distribution>::operator()(p) ? a : b; }
+};
 
 template <typename T>
-using SecondSelector = decltype([](T const& a, T const& b) -> T const& { return b; });
+using LeftSelector = decltype([](T const& a, T const& b) -> T const& { return a; });
 
 template <typename T>
-using BernoulliSelector = decltype([](T const& a, T const& b, float p = .5f) -> T const& {
-	static std::random_device seed;
-	static std::mt19937 generator{seed()};
-	return std::bernoulli_distribution{p}(generator) ? a : b;
-});
+using RightSelector = decltype([](T const& a, T const& b) -> T const& { return b; });
 
 template <typename T, Constness c>
 using TConstness = std::conditional_t<c == Constness::CONST, T const, T>;
@@ -130,21 +156,10 @@ using TConstness = std::conditional_t<c == Constness::CONST, T const, T>;
 template <typename ... Types>
 struct Aggregation : Types ... {};
 
-template<std::size_t N, typename First, typename ... Others>
-struct nth
-{ using type = typename nth<N - 1, Others ...>::type; };
-
-template<typename First, typename ... Others>
-struct nth<0, First, Others ...>
-{ using type = First; };
-
-template<std::size_t N, typename ... Args>
-using nth_t = typename nth<N, Args ...>::type;
-
 /// functions
 
 template <typename P>
-std::size_t
+constexpr std::size_t
 Offset(auto P::* m)
 { return reinterpret_cast<std::byte*>(&(reinterpret_cast<P*>(0)->*m)) - reinterpret_cast<std::byte*>(0); }
 
@@ -155,4 +170,4 @@ ToParent(void* val, auto P::* m)
 
 }//namespace DS
 
-#endif //DS_HOLDER_HPP
+#endif //DS_HOLDER_TPP

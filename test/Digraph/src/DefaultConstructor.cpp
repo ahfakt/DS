@@ -1,4 +1,4 @@
-#include "DS/Digraph.h"
+#include "DS/Digraph.hpp"
 #include <cassert>
 
 using namespace DS;

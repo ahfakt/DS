@@ -1,7 +1,7 @@
-#ifndef DS_VNODE_HPP
-#define DS_VNODE_HPP
+#ifndef DS_VNODE_TPP
+#define DS_VNODE_TPP
 
-#include "ENode.hpp"
+#include "ENode.tpp"
 
 namespace DS {
 
@@ -69,4 +69,4 @@ struct VNode {
 
 }//namespace DS
 
-#endif //DS_VNODE_HPP
+#endif //DS_VNODE_TPP

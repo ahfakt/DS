@@ -1,15 +1,15 @@
-#ifndef DS_SET_H
-#define DS_SET_H
+#ifndef DS_SET_HPP
+#define DS_SET_HPP
 
-#include "Container.h"
-#include "../../src/SNode.hpp"
-#include <StreamFormat/Dot.h>
+#include "Container.hpp"
+#include "../../src/SNode.tpp"
+#include <StreamFormat/Dot.hpp>
 
 namespace DS {
 
 /**
  * @brief	Balanced search tree implementation.
- * @class	Set Set.h "DS/Set.h"
+ * @class	Set Set.hpp "DS/Set.hpp"
  * @tparam	K Key type to be stored in Set
  * @details	K and any K-based objects can be stored in a Set object simultaneously, even if K is an abstract class.
  */
@@ -54,28 +54,28 @@ public:
 	struct Difference {
 		Set
 		operator()(Set const& a, Set const& b) const;
-	};
+	};//struct DS::Set<K, C, Cs ...>::Difference<N>
 
 	template <typename S, std::size_t N = 0>
 	struct Intersection {
 		Set
 		operator()(Set const& a, Set const& b, auto&& ... args) const
 		requires Selector<S, K, decltype(args) ...>;
-	};
+	};//struct DS::Set<K, C, Cs ...>::Intersection<S, N>
 
 	template <typename S, std::size_t N = 0>
 	struct LeftJoin {
 		Set
 		operator()(Set const& a, Set const& b, auto&& ... args) const
 		requires Selector<S, K, decltype(args) ...>;
-	};
+	};//struct DS::Set<K, C, Cs ...>::LeftJoin<S, N>
 
 	template <typename S, std::size_t N = 0>
 	struct Union {
 		Set
 		operator()(Set const& a, Set const& b, auto&& ... args) const
 		requires Selector<S, K, decltype(args) ...>;
-	};
+	};//struct DS::Set<K, C, Cs ...>::Union<S, N>
 
 	Set() noexcept = default;
 
@@ -94,8 +94,8 @@ public:
 	explicit Set(Stream::Input& input, auto&& ... kArgs)
 	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>;
 
-	template <typename IDType, typename ... FArgs>
-	Set(Stream::Input& input, DP::Factory<K, IDType, FArgs ...> const& factory);
+	template <typename IDType, typename ... Args>
+	Set(Stream::Input& input, DP::Factory<K, IDType, Args ...> const& factory);
 
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Output&
@@ -116,9 +116,13 @@ public:
 	const_iterator<>
 	put(auto&& ... dkArgs);
 
-	template <typename ... CIArgs>
+	template <typename ... Args>
 	const_iterator<>
-	put(DP::CreateInfo<K, CIArgs ...> const& createInfo, auto&& ... cArgs);
+	put(DP::CreateInfo<K, Args ...> const& createInfo, auto&& ... args);
+
+	template <Direction d, std::size_t N = 0>
+	bool
+	remove(Iterator<d, N> i) noexcept;
 
 	template <std::size_t N = 0>
 	bool
@@ -163,7 +167,7 @@ public:
 	template <std::size_t N = 0>
 	const_reverse_iterator<N>
 	crend() const noexcept;
-};//class Set<K, C, Cs ...>
+};//class DS::Set<K, C, Cs ...>
 
 template <typename K, typename C, typename ... Cs>
 template <Direction d, std::size_t n>
@@ -206,10 +210,10 @@ public:
 	operator==(Iterator<od, on> const& other) const noexcept;
 
 	explicit operator bool() const noexcept;
-};//class Set<K, C, Cs ...>::Iterator<Direction, std::size_t>
+};//class DS::Set<K, C, Cs ...>::Iterator<Direction, std::size_t>
 
 }//namespace DS
 
-#include "../../src/Set.hpp"
+#include "../../src/Set.tpp"
 
-#endif //DS_SET_H
+#endif //DS_SET_HPP

@@ -1,7 +1,7 @@
-#ifndef DS_MNODE_HPP
-#define DS_MNODE_HPP
+#ifndef DS_MNODE_TPP
+#define DS_MNODE_TPP
 
-#include "SNode.hpp"
+#include "SNode.tpp"
 
 namespace DS {
 
@@ -113,21 +113,21 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename VIDType, typename ... VFArgs>
+	template <typename VIDType, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
 	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
 
 		if (state & 0x20) {
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+			auto const& vCreateInfo = DP::Factory<V, VIDType, VArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(input) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.constructor, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -158,10 +158,10 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KIDType, typename ... KFArgs>
+	template <typename KIDType, typename ... KArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
+			DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
@@ -173,11 +173,11 @@ struct MNode : SNode<K, Cs ...> {
 				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			}
-			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
+			auto const& kCreateInfo = DP::Factory<K, KIDType, KArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.create, Stream::Get<std::remove_cvref_t<KFArgs>>(input) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.constructor, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -196,20 +196,20 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KIDType, typename ... KFArgs, typename VIDType, typename ... VFArgs>
+	template <typename KIDType, typename ... KArgs, typename VIDType, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KIDType, KFArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory)
+			DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
 
 		if (state & 0x20) {
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VFArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+			auto const& vCreateInfo = DP::Factory<V, VIDType, VArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.create, Stream::Get<std::remove_cvref_t<VFArgs>>(input) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.constructor, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -221,11 +221,11 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			auto const& kCreateInfo = DP::Factory<K, KIDType, KFArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
+			auto const& kCreateInfo = DP::Factory<K, KIDType, KArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.create, Stream::Get<std::remove_cvref_t<KFArgs>>(input) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.constructor, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -290,4 +290,4 @@ struct MNode : SNode<K, Cs ...> {
 
 }//namespace DS
 
-#endif //DS_MNODE_HPP
+#endif //DS_MNODE_TPP

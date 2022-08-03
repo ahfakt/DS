@@ -1,9 +1,10 @@
-#ifndef DS_SNODE_HPP
-#define DS_SNODE_HPP
+#ifndef DS_SNODE_TPP
+#define DS_SNODE_TPP
 
-#include "TNode.hpp"
-#include "Holder.hpp"
-#include <DP/Factory.h>
+#include "TNode.tpp"
+#include "Holder.tpp"
+#include <DP/Builder.hpp>
+#include <DP/Factory.hpp>
 
 namespace DS {
 
@@ -92,14 +93,14 @@ struct SNode : TNode<sizeof...(Cs)> {
 		}
 	}
 
-	template <typename IDType, typename ... FArgs>
+	template <typename IDType, typename ... Args>
 	static TNode<sizeof...(Cs)>*
 	Create(TNode<sizeof...(Cs)>* P, TNode<sizeof...(Cs)>* S,
-			Stream::Input& input, DP::Factory<K, IDType, FArgs ...> const& factory)
+			Stream::Input& input, DP::Factory<K, IDType, Args ...> const& factory)
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
-		auto const& createInfo = DP::Factory<K, IDType, FArgs ...>::GetCreateInfo(Stream::Get<IDType>(input));
-		auto* t = new(createInfo.size) SNode(createInfo.create, Stream::Get<std::remove_cvref_t<FArgs>>(input) ...);
+		auto const& createInfo = DP::Factory<K, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
+		auto* t = new(createInfo.size) SNode(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
 		try {
 			t->left(state & 0x40 ? SNode::Create(P, t, input, factory) : P);
 			t->right(state & 0x10 ? SNode::Create(t, S, input, factory) : S);
@@ -149,7 +150,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	get(auto&& ... args)
 	{
 		auto* t = this;
-		nth_t<N, Cs ...> cmp;
+		DP::Type<N, Cs ...> cmp;
 		while(true) {
 			if (cmp(std::forward<decltype(args)>(args) ..., static_cast<K const&>(t->key))) {
 				if (t->d[N].hasLeft) {
@@ -173,12 +174,12 @@ struct SNode : TNode<sizeof...(Cs)> {
 	TNode<sizeof...(Cs)>*
 	attach(TNode<sizeof...(Cs)>** created) noexcept
 	{
-		if (nth_t<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key), static_cast<K const&>(key)))
+		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key), static_cast<K const&>(key)))
 			return this->d[N].hasLeft
 				? this->template attachedToLeft<N>(this->template left<N, SNode>()->template attach<N>(created))
 				: this->template attachToLeft<N>(*created);
 
-		if (nth_t<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key)))
+		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key)))
 			return this->d[N].hasRight
 				? this->template attachedToRight<N>(this->template right<N, SNode>()->template attach<N>(created))
 				: this->template attachToRight<N>(*created);
@@ -253,9 +254,9 @@ struct SNode : TNode<sizeof...(Cs)> {
 	TNode<sizeof...(Cs)>*
 	detach(TNode<sizeof...(Cs)>** toDel) noexcept
 	{
-		if (nth_t<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key), static_cast<K const&>(key)))
+		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key), static_cast<K const&>(key)))
 			return detachFromLeft<N>(toDel);
-		if (nth_t<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key)))
+		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key)))
 			return detachFromRight<N>(toDel);
 		if (this != *toDel)
 			return *toDel = nullptr;
@@ -303,4 +304,4 @@ struct SNode : TNode<sizeof...(Cs)> {
 
 }//namespace DS
 
-#endif //DS_SNODE_HPP
+#endif //DS_SNODE_TPP

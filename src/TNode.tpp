@@ -1,8 +1,8 @@
-#ifndef DS_TNODE_HPP
-#define DS_TNODE_HPP
+#ifndef DS_TNODE_TPP
+#define DS_TNODE_TPP
 
-#include "Holder.hpp"
-#include <StreamFormat/Dot.h>
+#include "Holder.tpp"
+#include <StreamFormat/Dot.hpp>
 
 namespace DS {
 
@@ -352,4 +352,4 @@ struct TNode {
 
 }//namespace DS
 
-#endif //DS_TNODE_HPP
+#endif //DS_TNODE_TPP

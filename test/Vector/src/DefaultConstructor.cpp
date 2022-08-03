@@ -1,4 +1,4 @@
-#include "DS/Vector.h"
+#include "DS/Vector.hpp"
 #include <cassert>
 
 using namespace DS;

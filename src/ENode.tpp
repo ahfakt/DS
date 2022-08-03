@@ -1,7 +1,7 @@
-#ifndef DS_ENODE_HPP
-#define DS_ENODE_HPP
+#ifndef DS_ENODE_TPP
+#define DS_ENODE_TPP
 
-#include "Holder.hpp"
+#include "Holder.tpp"
 
 namespace DS {
 
@@ -70,4 +70,4 @@ struct ENode {
 
 }//namespace DS
 
-#endif //DS_ENODE_HPP
+#endif //DS_ENODE_TPP

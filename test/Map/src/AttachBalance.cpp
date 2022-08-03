@@ -1,7 +1,7 @@
-#include "DS/Map.h"
+#include "DS/Map.hpp"
 #include <cassert>
 #include <random>
-#include "DSTest/Util.h"
+#include "DSTest/Util.hpp"
 
 using namespace DS;
 

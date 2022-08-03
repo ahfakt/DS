@@ -1,4 +1,4 @@
-#include "DS/Vector.h"
+#include "DS/Vector.hpp"
 
 namespace DS {
 
@@ -68,16 +68,16 @@ requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>
 }
 
 template <typename T>
-template <typename IDType, typename ... FArgs>
-Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, FArgs ...> const&)
+template <typename IDType, typename ... Args>
+Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
 		: Vector(Stream::Get<std::uint64_t>(input))
 {
 	while (mSize < mCapacity) {
 		try {
-			auto const& createInfo = DP::Factory<T, IDType, FArgs ...>::GetCreateInfo({Stream::Get<IDType>(input)});
+			auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
 			if (createInfo.size > sizeof(T))
 				throw Exception("createInfo.size is greater than the size of T.");
-			::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.create, Stream::Get<std::remove_cvref_t<FArgs>>(input) ...);
+			::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
 		} catch (...) {
 			this->~Vector();
 			throw;
@@ -153,19 +153,19 @@ Vector<T>::pushBack(auto&& ... dtArgs)
 }
 
 template <typename T>
-template <typename ... CIArgs>
+template <typename ... Args>
 typename Vector<T>::iterator
-Vector<T>::pushBack(DP::CreateInfo<T, CIArgs ...> const& createInfo, auto&& ... cArgs)
+Vector<T>::pushBack(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
 {
 	if (createInfo.size > sizeof(T))
 		throw Exception("createInfo.size is greater than the size of T.");
 
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...);
+		::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? mCapacity * 1.5 : 2);
-	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo.create, std::forward<decltype(cArgs)>(cArgs) ...);
+	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...);
 	try {
 		for (std::uint64_t i = 0; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));

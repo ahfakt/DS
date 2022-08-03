@@ -1,10 +1,10 @@
-#ifndef DS_DIGRAPH_H
-#define DS_DIGRAPH_H
+#ifndef DS_DIGRAPH_HPP
+#define DS_DIGRAPH_HPP
 
-#include "List.h"
-#include "Map.h"
-#include "Vector.h"
-#include "../../src/VNode.hpp"
+#include "List.hpp"
+#include "Map.hpp"
+#include "Vector.hpp"
+#include "../../src/VNode.tpp"
 
 namespace DS {
 
@@ -34,17 +34,17 @@ class Digraph {
 	deserializeVertices(Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
 
-	template <typename VIDType, typename ... VFArgs>
+	template <typename VIDType, typename ... VArgs>
 	Vector<VNode<V, E>*>
-	deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType, VFArgs ...> const& vFactory);
+	deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory);
 
 	void
 	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
 
-	template <typename EIDType, typename ... EFArgs>
+	template <typename EIDType, typename ... EArgs>
 	void
-	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
+	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory);
 
 public:
 	template <Constness>
@@ -91,16 +91,16 @@ public:
 	explicit Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...> && Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
 
-	template <typename EIDType, typename ... EFArgs>
-	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory)
+	template <typename EIDType, typename ... EArgs>
+	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory)
 	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
 
-	template <typename VIDType, typename ... VFArgs>
-	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, auto&& ... eArgs)
+	template <typename VIDType, typename ... VArgs>
+	Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
 
-	template <typename VIDType, typename ... VFArgs, typename EIDType, typename ... EFArgs>
-	Digraph(DP::Factory<V, VIDType, VFArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EFArgs ...> const& eFactory);
+	template <typename VIDType, typename ... VArgs, typename EIDType, typename ... EArgs>
+	Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory);
 
 	template <typename v, typename e>
 	friend Stream::Output&
@@ -116,9 +116,9 @@ public:
 	vertex
 	addVertex(auto&& ... dvArgs);
 
-	template <typename ... VCIArgs>
+	template <typename ... VArgs>
 	vertex
-	addVertex(DP::CreateInfo<V, VCIArgs ...> const& vCreateInfo, auto&& ... vcArgs);
+	addVertex(DP::CreateInfo<V, VArgs ...> const& vCreateInfo, auto&& ... vArgs);
 
 	edge
 	addEdge(auto&& ... eArgs);
@@ -127,9 +127,9 @@ public:
 	edge
 	addEdge(auto&& ... deArgs);
 
-	template <typename ... ECIArgs>
+	template <typename ... EArgs>
 	edge
-	addEdge(DP::CreateInfo<E, ECIArgs ...> const& eCreateInfo, auto&& ... ecArgs);
+	addEdge(DP::CreateInfo<E, EArgs ...> const& eCreateInfo, auto&& ... eArgs);
 
 	template <Constness c>
 	Digraph&
@@ -155,7 +155,7 @@ public:
 
 	edge_view
 	getEdgeView() noexcept;
-};//class Digraph<V, E>
+};//class DS::Digraph<V, E>
 
 template <typename V, typename E>
 template <Constness c>
@@ -212,7 +212,7 @@ public:
 	operator==(VDescriptor<oc> const& other) const noexcept;
 
 	explicit operator bool() const noexcept;
-};//class Digraph<V, E>::VDescriptor<Constness>
+};//class DS::Digraph<V, E>::VDescriptor<Constness>
 
 template <typename V, typename E>
 template <Constness c>
@@ -273,7 +273,7 @@ public:
 	operator==(EDescriptor<oc> const& other) const noexcept;
 
 	explicit operator bool() const noexcept;
-};//class Digraph<V, E>::EDescriptor<Constness>
+};//class DS::Digraph<V, E>::EDescriptor<Constness>
 
 template <typename V, typename E>
 template <Constness c>
@@ -334,7 +334,7 @@ public:
 
 	const_reverse_iterator
 	crend() const noexcept;
-};//class Digraph<V, E>::VView<Constness>
+};//class DS::Digraph<V, E>::VView<Constness>
 
 template <typename V, typename E>
 template <Constness vvc>
@@ -367,7 +367,7 @@ public:
 
 	VDescriptor<c> const*
 	operator->() const noexcept;
-};//class Digraph<V, E>::VView<Constness>::Iterator<Direction, Constness>
+};//class DS::Digraph<V, E>::VView<Constness>::Iterator<Direction, Constness>
 
 template <typename V, typename E>
 template <Constness c>
@@ -428,7 +428,7 @@ public:
 
 	const_reverse_iterator
 	crend() const noexcept;
-};//class Digraph<V, E>::EView<Constness>
+};//class DS::Digraph<V, E>::EView<Constness>
 
 template <typename V, typename E>
 template <Constness evc>
@@ -461,7 +461,7 @@ public:
 
 	EDescriptor<c> const*
 	operator->() const noexcept;
-};//class Digraph<V, E>::EView<Constness>::Iterator<Direction, Constness>
+};//class DS::Digraph<V, E>::EView<Constness>::Iterator<Direction, Constness>
 
 template <typename V, typename E>
 template <Direction d, Constness c>
@@ -523,7 +523,7 @@ public:
 
 	const_reverse_iterator
 	crend() const noexcept;
-};//class Digraph<V, E>::AdjacencyList<Direction, Constness>
+};//class DS::Digraph<V, E>::AdjacencyList<Direction, Constness>
 
 template <typename V, typename E>
 template <Direction ald, Constness alc>
@@ -556,10 +556,10 @@ public:
 
 	EDescriptor<c> const*
 	operator->() const noexcept;
-};//class Digraph<V, E>::AdjacencyList<Direction, Constness>::Iterator<Direction, Constness>
+};//class DS::Digraph<V, E>::AdjacencyList<Direction, Constness>::Iterator<Direction, Constness>
 
 }//namespace DS
 
-#include "../../src/Digraph.hpp"
+#include "../../src/Digraph.tpp"
 
-#endif //DS_DIGRAPH_H
+#endif //DS_DIGRAPH_HPP
