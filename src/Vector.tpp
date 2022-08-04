@@ -20,7 +20,7 @@ requires std::is_copy_constructible_v<T>
 		Holder<T> const* src = other.mHead;
 		do {
 			try {
-				::new(static_cast<void*>(mHead + mSize)) Holder<T>(static_cast<T const&>(*src));
+				::new(mHead + mSize) Holder<T>(static_cast<T const&>(*src));
 			} catch (...) {
 				this->~Vector();
 				throw;
@@ -58,7 +58,7 @@ requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>
 {
 	while (mSize < mCapacity) {
 		try {
-			::new(static_cast<void*>(mHead + mSize)) Holder<T>(input, std::forward<decltype(tArgs)>(tArgs) ...);
+			::new(mHead + mSize) Holder<T>(input, std::forward<decltype(tArgs)>(tArgs) ...);
 		} catch (...) {
 			this->~Vector();
 			throw;
@@ -77,7 +77,7 @@ Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
 			auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
 			if (createInfo.size > sizeof(T))
 				throw Exception("createInfo.size is greater than the size of T.");
-			::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
+			::new(mHead + mSize) Holder<T>(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
 		} catch (...) {
 			this->~Vector();
 			throw;
@@ -112,7 +112,7 @@ typename Vector<T>::iterator
 Vector<T>::pushBack(auto&& ... tArgs)
 {
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<T>(std::forward<decltype(tArgs)>(tArgs) ...);
+		::new(mHead + mSize) Holder<T>(std::forward<decltype(tArgs)>(tArgs) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
@@ -135,7 +135,7 @@ typename Vector<T>::iterator
 Vector<T>::pushBack(auto&& ... dtArgs)
 {
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...);
+		::new(mHead + mSize) Holder<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
@@ -161,7 +161,7 @@ Vector<T>::pushBack(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... ar
 		throw Exception("createInfo.size is greater than the size of T.");
 
 	if (mSize < mCapacity) {
-		::new(static_cast<void*>(mHead + mSize)) Holder<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...);
+		::new(mHead + mSize) Holder<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? mCapacity * 1.5 : 2);

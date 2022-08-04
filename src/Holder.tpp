@@ -2,10 +2,18 @@
 #define DS_HOLDER_TPP
 
 #include <DP/CreateInfo.hpp>
+#include <DP/Builder.hpp>
 #include <Stream/InOut.hpp>
 #include <random>
 
 namespace DS {
+
+template <typename T, typename ... Args>
+concept ConstructibleFrom = std::destructible<T> && requires
+{ T{std::declval<Args>() ...}; };
+
+template <typename T, typename ... Args>
+concept NotConstructibleFrom = !ConstructibleFrom<T, Args ...>;
 
 template <typename T>
 class alignas(T) Holder {
@@ -14,20 +22,24 @@ class alignas(T) Holder {
 public:
 	Holder() noexcept = default;
 
-	Holder(auto&& ... args)
-	{ ::new(reinterpret_cast<void*>(raw)) T{std::forward<decltype(args)>(args) ...}; }
+	explicit Holder(auto&& ... args)
+	requires ConstructibleFrom<T, decltype(args) ...>
+	{ ::new(raw) T{std::forward<decltype(args)>(args) ...}; }
 
-	Holder(Stream::ExtractableTo<T> auto& input, auto&& ... args)
-	requires (!Stream::ConstructibleFrom<T, decltype(input), decltype(args) ...>)
-	{ input >> *::new(reinterpret_cast<void*>(raw)) T{std::forward<decltype(args)>(args) ...}; }
+	explicit Holder(Stream::ExtractableTo<T> auto& input, auto&& ... args)
+	requires NotConstructibleFrom<T, decltype(input), decltype(args) ...>
+	{ input >> *::new(raw) T{std::forward<decltype(args)>(args) ...}; }
 
-	Holder(Stream::TriviallyExtractableTo<T> auto& input)
-	requires (!Stream::ConstructibleFrom<T, decltype(input)>)
+	explicit Holder(Stream::TriviallyExtractableTo<T> auto& input)
+	requires NotConstructibleFrom<T, decltype(input)>
 	{ input >> *reinterpret_cast<T*>(raw); }
 
 	template <typename ... Args>
-	Holder(DP::Constructor<T, Args ...> const& constructor, auto&& ... args)
-	{ constructor(reinterpret_cast<void*>(raw), std::forward<decltype(args)>(args) ...); }
+	explicit Holder(DP::Constructor<T, Args ...> const& constructor, auto&& ... args)
+	{ constructor(raw, std::forward<decltype(args)>(args) ...); }
+
+	explicit Holder(DP::Builder<T> const& builder)
+	{ builder(raw); }
 
 	T*
 	operator->() noexcept
@@ -62,7 +74,7 @@ public:
 
 	explicit operator void const*() const noexcept
 	{ return raw; }
-};//class Holder<T>
+};//class DS::Holder<T>
 
 ///enums
 
