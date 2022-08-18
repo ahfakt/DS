@@ -16,10 +16,9 @@ INSTALL_PREFIX=/home/user
 # cmake --help to see available generators
 GENERATOR="Unix Makefiles"
 
-git clone https://github.com/ahfakt/DP.git
-git clone https://github.com/ahfakt/IO.git
 git clone https://github.com/ahfakt/Stream.git
 git clone https://github.com/ahfakt/StreamFormat.git
+git clone https://github.com/ahfakt/DP.git
 git clone https://github.com/ahfakt/DS.git
 
 # Generate
@@ -34,11 +33,10 @@ cmake \
     -G "${GENERATOR}"
 
 # Build
-# DP | DPOBJ | DPDoc
-# IO | IOOBJ | IODoc
 # Stream | StreamOBJ | StreamDoc
 # StreamFormat | StreamFormatOBJ | StreamFormatDoc
-# DS | DSOBJ | DSDoc
+# DPDoc
+# DSDoc
 cmake \
     --build ../build/DS/${SYSTEM_PROCESSOR}/${BUILD_TYPE} \
     --target DSDoc \
