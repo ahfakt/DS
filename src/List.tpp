@@ -46,7 +46,7 @@ List<T>::operator=(List value) noexcept
 
 template <typename T>
 List<T>::List(Stream::Input& input, auto&& ... tArgs)
-requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>
+requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
@@ -74,13 +74,13 @@ List<T>::List(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
 	if (mSize) {
 		{
 			auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
-			(mTail = mHead = new(createInfo.size) LNode<T>(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...))->prev = nullptr;
+			(mTail = mHead = new(createInfo.size) LNode<T>(createInfo, Stream::Get<std::remove_cvref_t<Args>>(input) ...))->prev = nullptr;
 		}
 		std::uint64_t size = mSize;
 		while (--size) {
 			try {
 				auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
-				mTail->next = new(createInfo.size) LNode<T>(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
+				mTail->next = new(createInfo.size) LNode<T>(createInfo, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
 			} catch (...) {
 				this->~List();
 				throw;
@@ -95,7 +95,7 @@ List<T>::List(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
 template <typename T>
 Stream::Output&
 operator<<(Stream::Output& output, List<T> const& list)
-requires Stream::InsertableTo<T, Stream::Output>
+requires Stream::InsertableTo<T, decltype(output)>
 {
 	output << list.mSize;
 	for (LNode<T> const* l = list.mHead; l; l = l->next)
@@ -106,7 +106,7 @@ requires Stream::InsertableTo<T, Stream::Output>
 template <typename T>
 Stream::Format::DotOutput&
 operator<<(Stream::Format::DotOutput& dotOutput, List<T> const& list)
-requires Stream::InsertableTo<T, Stream::Format::StringOutput>
+requires Stream::InsertableTo<T, decltype(dotOutput)>
 {
 	dotOutput << "digraph G {\n";
 	if (list.mHead) {
@@ -176,7 +176,7 @@ template <typename T>
 template <typename ... Args>
 typename List<T>::iterator
 List<T>::pushFront(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
-{ return pushFront(new(createInfo.size) LNode<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...)); }
+{ return pushFront(new(createInfo.size) LNode<T>(createInfo, std::forward<decltype(args)>(args) ...)); }
 
 template <typename T>
 LNode<T>*
@@ -221,7 +221,7 @@ template <typename T>
 template <typename ... Args>
 typename List<T>::iterator
 List<T>::pushBack(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
-{ return pushBack(new(createInfo.size) LNode<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...)); }
+{ return pushBack(new(createInfo.size) LNode<T>(createInfo, std::forward<decltype(args)>(args) ...)); }
 
 template <typename T>
 LNode<T>*
@@ -252,7 +252,7 @@ template <typename T>
 template <typename ... Args, Direction d, Constness c>
 typename List<T>::iterator
 List<T>::insertBefore(Iterator<d, c> at, DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
-{ return insertBefore(at.pos, new(createInfo.size) LNode<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...)); }
+{ return insertBefore(at.pos, new(createInfo.size) LNode<T>(createInfo, std::forward<decltype(args)>(args) ...)); }
 
 template <typename T>
 LNode<T>*
@@ -283,7 +283,7 @@ template <typename T>
 template <typename ... Args, Direction d, Constness c>
 typename List<T>::iterator
 List<T>::insertAfter(Iterator<d, c> at, DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
-{ return insertAfter(at.pos, new(createInfo.size) LNode<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...)); }
+{ return insertAfter(at.pos, new(createInfo.size) LNode<T>(createInfo, std::forward<decltype(args)>(args) ...)); }
 
 template <typename T>
 template <Direction d, Constness c>

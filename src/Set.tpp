@@ -36,7 +36,7 @@ Set<K, C, Cs ...>::operator=(Set value) noexcept
 
 template <typename K, typename C, typename ... Cs>
 Set<K, C, Cs ...>::Set(Stream::Input& input, auto&& ... kArgs)
-requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
+requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
@@ -61,7 +61,7 @@ Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, IDType, Args ...> co
 template <typename K, typename C, typename ... Cs>
 Stream::Output&
 operator<<(Stream::Output& output, Set<K, C, Cs ...> const& set)
-requires Stream::InsertableTo<K, Stream::Output>
+requires Stream::InsertableTo<K, decltype(output)>
 {
 	output << set.mSize;
 	if (set.mRoot[0])
@@ -73,7 +73,7 @@ template <typename K, typename C, typename... Cs>
 template <std::size_t N>
 Stream::Format::DotOutput&
 Set<K, C, Cs...>::toDot(Stream::Format::DotOutput& dotOutput) const
-requires Stream::InsertableTo<K, Stream::Format::StringOutput>
+requires Stream::InsertableTo<K, decltype(dotOutput)>
 {
 	mRoot[N]->template toDot<N>(dotOutput);
 	reinterpret_cast<SNode<K, C, Cs ...>*>(mRoot[N])->template toDot<N>(dotOutput);
@@ -85,9 +85,8 @@ requires Stream::InsertableTo<K, Stream::Format::StringOutput>
 template <typename K, typename C, typename ... Cs>
 Stream::Format::DotOutput&
 operator<<(Stream::Format::DotOutput& dotOutput, Set<K, C, Cs ...> const& set)
-requires Stream::InsertableTo<K, Stream::Format::StringOutput>
+requires Stream::InsertableTo<K, decltype(dotOutput)>
 {
-
 	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";
 	if (set.mRoot[0])
 		set.toDot(dotOutput);
@@ -164,7 +163,7 @@ template <typename K, typename C, typename ... Cs>
 template <typename ... Args>
 typename Set<K, C, Cs ...>::template const_iterator<>
 Set<K, C, Cs ...>::put(DP::CreateInfo<K, Args ...> const& createInfo, auto&& ... args)
-{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo.constructor, std::forward<decltype(args)>(args) ...)); }
+{ return put(new(createInfo.size) SNode<K, C, Cs ...>(createInfo, std::forward<decltype(args)>(args) ...)); }
 
 
 template <typename K, typename C, typename ... Cs>

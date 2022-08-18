@@ -82,19 +82,19 @@ Digraph<V, E>::operator=(Digraph value) noexcept
 
 template <typename V, typename E>
 Digraph<V, E>::Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
-requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...> && Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>
+requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...> && Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>
 { deserializeEdges(deserializeVertices(input, std::forward<decltype(vArgs)>(vArgs) ...), input, std::forward<decltype(eArgs)>(eArgs) ...); }
 
 template <typename V, typename E>
 template <typename EIDType, typename ... EArgs>
 Digraph<V, E>::Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory)
-requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
+requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 { deserializeEdges(deserializeVertices(input, std::forward<decltype(vArgs)>(vArgs) ...), input, eFactory); }
 
 template <typename V, typename E>
 template <typename VIDType, typename ... VArgs>
 Digraph<V, E>::Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, auto&& ... eArgs)
-requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>
+requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>
 { deserializeEdges(deserializeVertices(input, vFactory), input, std::forward<decltype(eArgs)>(eArgs) ...); }
 
 template <typename V, typename E>
@@ -105,7 +105,7 @@ Digraph<V, E>::Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Strea
 template <typename V, typename E>
 Stream::Output&
 operator<<(Stream::Output& output, Digraph<V, E> const& digraph)
-requires Stream::InsertableTo<V, Stream::Output> && Stream::InsertableTo<E, Stream::Output>
+requires Stream::InsertableTo<V, decltype(output)> && Stream::InsertableTo<E, decltype(output)>
 {
 	Map<VNode<V, E> const*, std::uint64_t> map;
 
@@ -136,7 +136,7 @@ Digraph<V, E>::~Digraph()
 template <typename V, typename E>
 Vector<VNode<V, E>*>
 Digraph<V, E>::deserializeVertices(Stream::Input& input, auto&& ... vArgs)
-requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
+requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 {
 	mVerticesSize = Stream::Get<std::uint64_t>(input);
 	Vector<VNode<V, E>*> vs(mVerticesSize + 1);
@@ -174,14 +174,14 @@ Digraph<V, E>::deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType,
 	if (mVerticesSize) {
 		{
 			auto const& vCreateInfo = DP::Factory<V, VIDType, VArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
-			(mVTail = mVHead = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo.constructor, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...))->prev = nullptr;
+			(mVTail = mVHead = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...))->prev = nullptr;
 		}
 		vs.pushBack(static_cast<VNode<V, E>*>(mVHead->val));
 		std::uint64_t size = mVerticesSize;
 		while (--size) {
 			try {
 				auto const& vCreateInfo = DP::Factory<V, VIDType, VArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
-				(mVTail->next = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo.constructor, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...))->prev = mVTail;
+				(mVTail->next = new(Offset(&VNode<V, E>::val) + vCreateInfo.size) LNode<VNode<V, E>>(vCreateInfo, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...))->prev = mVTail;
 				mVTail = mVTail->next;
 			} catch (...) {
 				mVertices.~List();
@@ -198,7 +198,7 @@ Digraph<V, E>::deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType,
 template <typename V, typename E>
 void
 Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
-requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>
+requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>
 {
 	try {
 		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
@@ -234,7 +234,7 @@ Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, D
 		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
 			{
 				auto const& eCreateInfo = DP::Factory<E, EIDType, EArgs ...>::GetCreateInfo(Stream::Get<EIDType>(input));
-				(mETail = mEHead = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo.constructor, Stream::Get<std::remove_cvref_t<EArgs>>(input) ...))->prev = nullptr;
+				(mETail = mEHead = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo, Stream::Get<std::remove_cvref_t<EArgs>>(input) ...))->prev = nullptr;
 			}
 			try {
 				static_cast<ENode<V, E>*>(mEHead->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
@@ -242,7 +242,7 @@ Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, D
 				std::uint64_t size = mEdgesSize;
 				while (--size) {
 					auto const& eCreateInfo = DP::Factory<E, EIDType, EArgs ...>::GetCreateInfo(Stream::Get<EIDType>(input));
-					(mETail->next = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo.constructor, Stream::Get<std::remove_cvref_t<EArgs>>(input) ...))->prev = mETail;
+					(mETail->next = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo, Stream::Get<std::remove_cvref_t<EArgs>>(input) ...))->prev = mETail;
 					mETail = mETail->next;
 					static_cast<ENode<V, E>*>(mETail->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
 					static_cast<ENode<V, E>*>(mETail->val)->setOut(vs[Stream::Get<std::uint64_t>(input)]);
@@ -282,7 +282,7 @@ class Digraph<V, E>::VDescriptor<Constness::NCONST>
 Digraph<V, E>::addVertex(DP::CreateInfo<V, VArgs ...> const& vCreateInfo, auto&& ... vArgs)
 {
 	mVertices.pushFront(new(Offset(&VNode<V, E>::val) + vCreateInfo.size)
-		LNode<VNode<V, E>>(vCreateInfo.constructor, std::forward<decltype(vArgs)>(vArgs) ...));
+		LNode<VNode<V, E>>(vCreateInfo, std::forward<decltype(vArgs)>(vArgs) ...));
 	return static_cast<VNode<V, E>*>(mVHead->val);
 }
 
@@ -309,7 +309,7 @@ class Digraph<V, E>::EDescriptor<Constness::NCONST>
 Digraph<V, E>::addEdge(DP::CreateInfo<E, EArgs ...> const& eCreateInfo, auto&& ... eArgs)
 {
 	mEdges.pushFront(new(Offset(&ENode<V, E>::val) + eCreateInfo.size)
-		LNode<ENode<V, E>>(eCreateInfo.constructor, std::forward<decltype(eArgs)>(eArgs) ...));
+		LNode<ENode<V, E>>(eCreateInfo, std::forward<decltype(eArgs)>(eArgs) ...));
 	return static_cast<ENode<V, E>*>(mEHead->val);
 }
 

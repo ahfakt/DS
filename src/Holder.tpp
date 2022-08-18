@@ -16,31 +16,11 @@ template <typename T, typename ... Args>
 concept NotConstructibleFrom = !ConstructibleFrom<T, Args ...>;
 
 template <typename T>
-class alignas(T) Holder {
+class alignas(T) Raw {
+protected:
 	std::byte raw[sizeof(T)];
 
 public:
-	Holder() noexcept = default;
-
-	explicit Holder(auto&& ... args)
-	requires ConstructibleFrom<T, decltype(args) ...>
-	{ ::new(raw) T{std::forward<decltype(args)>(args) ...}; }
-
-	explicit Holder(Stream::ExtractableTo<T> auto& input, auto&& ... args)
-	requires NotConstructibleFrom<T, decltype(input), decltype(args) ...>
-	{ input >> *::new(raw) T{std::forward<decltype(args)>(args) ...}; }
-
-	explicit Holder(Stream::TriviallyExtractableTo<T> auto& input)
-	requires NotConstructibleFrom<T, decltype(input)>
-	{ input >> *reinterpret_cast<T*>(raw); }
-
-	template <typename ... Args>
-	explicit Holder(DP::Constructor<T, Args ...> const& constructor, auto&& ... args)
-	{ constructor(raw, std::forward<decltype(args)>(args) ...); }
-
-	explicit Holder(DP::Builder<T> const& builder)
-	{ builder(raw); }
-
 	T*
 	operator->() noexcept
 	{ return reinterpret_cast<T*>(raw); }
@@ -57,23 +37,48 @@ public:
 	operator*() const noexcept
 	{ return *reinterpret_cast<T const*>(raw); }
 
+	operator T&() noexcept
+	{ return *reinterpret_cast<T*>(raw); }
+
+	operator T const&() const noexcept
+	{ return *reinterpret_cast<T const*>(raw); }
+
 	explicit operator T*() noexcept
 	{ return reinterpret_cast<T*>(raw); }
 
 	explicit operator T const*() const noexcept
 	{ return reinterpret_cast<T const*>(raw); }
 
-	explicit operator T&() noexcept
-	{ return *reinterpret_cast<T*>(raw); }
-
-	explicit operator T const&() const noexcept
-	{ return *reinterpret_cast<T const*>(raw); }
-
 	explicit operator void*() noexcept
 	{ return raw; }
 
 	explicit operator void const*() const noexcept
 	{ return raw; }
+};//class DS::Raw<T>
+
+template <typename T>
+class Holder : public Raw<T> {
+public:
+	Holder() noexcept = default;
+
+	explicit Holder(auto&& ... args)
+	requires ConstructibleFrom<T, decltype(args) ...>
+	{ ::new(this->raw) T{std::forward<decltype(args)>(args) ...}; }
+
+	explicit Holder(Stream::ExtractableTo<T> auto& input, auto&& ... args)
+	requires NotConstructibleFrom<T, decltype(input), decltype(args) ...>
+	{ input >> *::new(this->raw) T{std::forward<decltype(args)>(args) ...}; }
+
+	explicit Holder(Stream::TriviallyExtractableTo<T> auto& input)
+	requires NotConstructibleFrom<T, decltype(input)>
+	{ input >> *reinterpret_cast<T*>(this->raw); }
+
+	template <typename ... Args>
+	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
+	{ createInfo.constructor(this->raw, std::forward<decltype(args)>(args) ...); }
+
+	explicit Holder(DP::Builder<T> const& builder)
+	{ builder(this->raw); }
 };//class DS::Holder<T>
 
 ///enums
@@ -132,7 +137,7 @@ protected:
 };
 
 template <typename D, typename E = std::default_random_engine>
-struct Random : Engine<E> {
+struct Random : protected Engine<E> {
 protected:
 	static inline D d{};
 public:
@@ -146,7 +151,7 @@ public:
 };
 
 template <typename T, typename E = std::default_random_engine>
-struct RandomSelector : Random<std::bernoulli_distribution, E> {
+struct RandomSelector : protected Random<std::bernoulli_distribution, E> {
 	T const&
 	operator()(T const& a, T const& b) const
 	{ return Random<E, std::bernoulli_distribution>::operator()() ? a : b; }

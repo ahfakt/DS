@@ -32,7 +32,7 @@ class Digraph {
 
 	Vector<VNode<V, E>*>
 	deserializeVertices(Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
+	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
 	template <typename VIDType, typename ... VArgs>
 	Vector<VNode<V, E>*>
@@ -40,7 +40,7 @@ class Digraph {
 
 	void
 	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
-	requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
+	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
 	template <typename EIDType, typename ... EArgs>
 	void
@@ -89,15 +89,15 @@ public:
 	operator=(Digraph value) noexcept;
 
 	explicit Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
-	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...> && Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
+	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...> && Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
 	template <typename EIDType, typename ... EArgs>
 	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory)
-	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
+	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
 	template <typename VIDType, typename ... VArgs>
 	Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, auto&& ... eArgs)
-	requires Stream::DeserializableWith<E, Stream::Input, decltype(eArgs) ...>;
+	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
 	template <typename VIDType, typename ... VArgs, typename EIDType, typename ... EArgs>
 	Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory);
@@ -105,7 +105,7 @@ public:
 	template <typename v, typename e>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Digraph<v, e> const& digraph)
-	requires Stream::InsertableTo<v, Stream::Output> && Stream::InsertableTo<e, Stream::Output>;
+	requires Stream::InsertableTo<v, decltype(output)> && Stream::InsertableTo<e, decltype(output)>;
 
 	~Digraph();
 

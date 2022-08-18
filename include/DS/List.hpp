@@ -63,7 +63,7 @@ public:
 	operator=(List value) noexcept;
 
 	explicit List(Stream::Input& input, auto&& ... tArgs)
-	requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>;
+	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
 
 	template <typename IDType, typename ... Args>
 	List(Stream::Input& input, DP::Factory<T, IDType, Args ...> const& factory);
@@ -71,12 +71,12 @@ public:
 	template <typename t>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, List<t> const& list)
-	requires Stream::InsertableTo<t, Stream::Output>;
+	requires Stream::InsertableTo<t, decltype(output)>;
 
 	template <typename t>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, List<t> const& list)
-	requires Stream::InsertableTo<t, Stream::Format::StringOutput>;
+	requires Stream::InsertableTo<t, decltype(dotOutput)>;
 
 	~List();
 

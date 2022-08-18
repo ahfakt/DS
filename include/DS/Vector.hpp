@@ -40,7 +40,7 @@ public:
 	operator=(Vector value) noexcept;
 
 	explicit Vector(Stream::Input& input, auto&& ... tArgs)
-	requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>;
+	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
 
 	template <typename IDType, typename ... Args>
 	Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const& factory);
@@ -48,7 +48,7 @@ public:
 	template <typename t>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Vector<t> const& vector)
-	requires Stream::InsertableTo<t, Stream::Output>;
+	requires Stream::InsertableTo<t, decltype(output)>;
 
 	~Vector();
 

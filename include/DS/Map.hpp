@@ -9,11 +9,11 @@
 namespace DS {
 
 /**
- * @brief	Balanced search tree implementation.
+ * @brief	Balanced multi-index search tree implementation.
  * @class	Map Map.hpp "DS/Map.hpp"
  * @tparam	K Key type of the mapped type to be stored in Map
  * @tparam	V Value type to be mapped by K in Map
- * @details	K can map any V and V-based objects in a Map object, even if V is an abstract class.
+ * @details	K and V can be any type, including abstract class
  */
 template <typename K, typename V, typename C = std::less<>, typename ... Cs>
 class Map : public Container {
@@ -37,7 +37,7 @@ class Map : public Container {
 	template <std::size_t N = 0>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::InsertableTo<K, Stream::Format::StringOutput> && Stream::InsertableTo<V, Stream::Format::StringOutput>;
+	requires Stream::InsertableTo<K, decltype(dotOutput)> && Stream::InsertableTo<V, decltype(dotOutput)>;
 
 public:
 	template <Direction, Constness, std::size_t N = 0>
@@ -85,6 +85,12 @@ public:
 		requires Selector<S, K, decltype(args) ...>;
 	};//struct DS::Map<K, V, C, Cs ...>::Union<S, N>
 
+	template <typename k, typename v>
+	struct Entry {
+		k key;
+		v value;
+	};//struct DS::Map<K, V, C, Cs ...>::Entry<k, v>
+
 	Map() noexcept = default;
 
 	Map(Map const& other)
@@ -100,15 +106,15 @@ public:
 	operator=(Map value) noexcept;
 
 	explicit Map(auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...> && Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
+	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...> && Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
 	template <typename VIDType, typename ... VArgs>
 	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
-	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>;
+	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
 
 	template <typename KIDType, typename ... KArgs>
 	Map(DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>;
+	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
 	template <typename KIDType, typename ... KArgs, typename VIDType, typename ... VArgs>
 	Map(DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory);
@@ -116,12 +122,12 @@ public:
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Map<k, v, c, cs ...> const& map)
-	requires Stream::InsertableTo<k, Stream::Output> && Stream::InsertableTo<v, Stream::Output>;
+	requires Stream::InsertableTo<k, decltype(output)> && Stream::InsertableTo<v, decltype(output)>;
 
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, Map<k, v, c, cs ...> const& map)
-	requires Stream::InsertableTo<k, Stream::Format::StringOutput> && Stream::InsertableTo<v, Stream::Format::StringOutput>;
+	requires Stream::InsertableTo<k, decltype(dotOutput)> && Stream::InsertableTo<v, decltype(dotOutput)>;
 
 	~Map();
 
@@ -246,6 +252,10 @@ protected:
 	Iterator(TNode<sizeof...(Cs) + 1>* pos) noexcept;
 
 public:
+	using Entry = Map<K, V, C, Cs ...>::Entry<
+		std::conditional_t<std::is_abstract_v<K>, Raw<K>, K> const,
+		TConstness<std::conditional_t<std::is_abstract_v<V>, Raw<V>, V>, c>>;
+
 	template <Direction od, Constness oc, std::size_t on>
 	Iterator(Iterator<od, oc, on> const& other) noexcept
 	requires ConstCompat<c, oc>;
@@ -271,11 +281,6 @@ public:
 	set(auto&& ... dvArgs) const
 	requires (c == Constness::NCONST);
 
-	template <typename ... VArgs>
-	V&
-	set(DP::CreateInfo<V, VArgs ...> const& vCreateInfo, auto&& ... vArgs) const
-	requires (c == Constness::NCONST);
-
 	Iterator&
 	operator++() noexcept;
 
@@ -288,10 +293,10 @@ public:
 	Iterator
 	operator--(int) noexcept;
 
-	std::pair<K const, TConstness<V, c>>&
+	Entry&
 	operator*() const noexcept;
 
-	std::pair<K const, TConstness<V, c>>*
+	Entry*
 	operator->() const noexcept;
 
 	template <Direction od, Constness oc, std::size_t on>

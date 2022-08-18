@@ -53,7 +53,7 @@ Vector<T>::operator=(Vector value) noexcept
 
 template <typename T>
 Vector<T>::Vector(Stream::Input& input, auto&& ... tArgs)
-requires Stream::DeserializableWith<T, Stream::Input, decltype(tArgs) ...>
+requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
 		: Vector(Stream::Get<std::uint64_t>(input))
 {
 	while (mSize < mCapacity) {
@@ -77,7 +77,7 @@ Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
 			auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
 			if (createInfo.size > sizeof(T))
 				throw Exception("createInfo.size is greater than the size of T.");
-			::new(mHead + mSize) Holder<T>(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
+			::new(mHead + mSize) Holder<T>(createInfo, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
 		} catch (...) {
 			this->~Vector();
 			throw;
@@ -89,7 +89,7 @@ Vector<T>::Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
 template <typename T>
 Stream::Output&
 operator<<(Stream::Output& output, Vector<T> const& vector)
-requires Stream::InsertableTo<T, Stream::Output>
+requires Stream::InsertableTo<T, decltype(output)>
 {
 	output << vector.mSize;
 	Holder<T> const* beg = vector.mHead;
@@ -161,11 +161,11 @@ Vector<T>::pushBack(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... ar
 		throw Exception("createInfo.size is greater than the size of T.");
 
 	if (mSize < mCapacity) {
-		::new(mHead + mSize) Holder<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...);
+		::new(mHead + mSize) Holder<T>(createInfo, std::forward<decltype(args)>(args) ...);
 		return mHead + mSize++;
 	}
 	Vector v(mCapacity > 1 ? mCapacity * 1.5 : 2);
-	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo.constructor, std::forward<decltype(args)>(args) ...);
+	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo, std::forward<decltype(args)>(args) ...);
 	try {
 		for (std::uint64_t i = 0; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));

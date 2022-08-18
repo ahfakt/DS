@@ -78,7 +78,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	static TNode<sizeof...(Cs)>*
 	Create(TNode<sizeof...(Cs)>* P, TNode<sizeof...(Cs)>* S,
 			Stream::Input& input, auto&& ... kArgs)
-	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
+	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = ::new SNode(input, std::forward<decltype(kArgs)>(kArgs) ...);
@@ -100,7 +100,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto const& createInfo = DP::Factory<K, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
-		auto* t = new(createInfo.size) SNode(createInfo.constructor, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
+		auto* t = new(createInfo.size) SNode(createInfo, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
 		try {
 			t->left(state & 0x40 ? SNode::Create(P, t, input, factory) : P);
 			t->right(state & 0x10 ? SNode::Create(t, S, input, factory) : S);
@@ -279,7 +279,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 
 	void
 	serialize(Stream::Output& output) const
-	requires Stream::InsertableTo<K, Stream::Output>
+	requires Stream::InsertableTo<K, decltype(output)>
 	{
 		output << this->state() << static_cast<K const&>(key);
 		if (this->d[0].hasLeft)
@@ -291,7 +291,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::InsertableTo<K, Stream::Format::StringOutput>
+	requires Stream::InsertableTo<K, decltype(dotOutput)>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, SNode>()->template toDot<N>(dotOutput);

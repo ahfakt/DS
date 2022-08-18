@@ -83,7 +83,7 @@ struct MNode : SNode<K, Cs ...> {
 	static MNode*
 	Create(MNode* P, MNode* S,
 			auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...> && Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
+	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...> && Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
@@ -117,7 +117,7 @@ struct MNode : SNode<K, Cs ...> {
 	static MNode*
 	Create(MNode* P, MNode* S,
 			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
-	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>
+	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
@@ -127,7 +127,7 @@ struct MNode : SNode<K, Cs ...> {
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.constructor, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -162,7 +162,7 @@ struct MNode : SNode<K, Cs ...> {
 	static MNode*
 	Create(MNode* P, MNode* S,
 			DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<V, Stream::Input, decltype(vArgs) ...>
+	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
@@ -177,7 +177,7 @@ struct MNode : SNode<K, Cs ...> {
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.constructor, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -209,7 +209,7 @@ struct MNode : SNode<K, Cs ...> {
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo.constructor, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -225,7 +225,7 @@ struct MNode : SNode<K, Cs ...> {
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo.constructor, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -261,7 +261,7 @@ struct MNode : SNode<K, Cs ...> {
 
 	void
 	serialize(Stream::Output& output) const
-	requires Stream::InsertableTo<K, Stream::Output> && Stream::InsertableTo<V, Stream::Output>
+	requires Stream::InsertableTo<K, decltype(output)> && Stream::InsertableTo<V, decltype(output)>
 	{
 		output << this->state();
 		if (this->d[0].hasValue)
@@ -276,7 +276,7 @@ struct MNode : SNode<K, Cs ...> {
 	template <std::size_t N>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::InsertableTo<V, Stream::Format::StringOutput>
+	requires Stream::InsertableTo<V, decltype(dotOutput)>
 	{
 		if (this->d[N].hasLeft)
 			this->template left<N, MNode>()->template toDot<N>(dotOutput);

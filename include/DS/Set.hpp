@@ -8,10 +8,12 @@
 namespace DS {
 
 /**
- * @brief	Balanced search tree implementation.
+ * @brief	Balanced multi-index search tree implementation.
  * @class	Set Set.hpp "DS/Set.hpp"
  * @tparam	K Key type to be stored in Set
- * @details	K and any K-based objects can be stored in a Set object simultaneously, even if K is an abstract class.
+ * @tparam	C Primary comparator
+ * @tparam	Cs Other comparators
+ * @details	K can be any type, including abstract class
  */
 template <typename K, typename C = std::less<>, typename ... Cs>
 class Set : public Container {
@@ -35,7 +37,7 @@ class Set : public Container {
 	template <std::size_t N = 0>
 	Stream::Format::DotOutput&
 	toDot(Stream::Format::DotOutput& dotOutput) const
-	requires Stream::InsertableTo<K, Stream::Format::StringOutput>;
+	requires Stream::InsertableTo<K, decltype(dotOutput)>;
 
 public:
 	template <Direction, std::size_t N = 0>
@@ -92,7 +94,7 @@ public:
 	operator=(Set value) noexcept;
 
 	explicit Set(Stream::Input& input, auto&& ... kArgs)
-	requires Stream::DeserializableWith<K, Stream::Input, decltype(kArgs) ...>;
+	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
 
 	template <typename IDType, typename ... Args>
 	Set(Stream::Input& input, DP::Factory<K, IDType, Args ...> const& factory);
@@ -100,12 +102,12 @@ public:
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Output&
 	operator<<(Stream::Output& output, Set<k, c, cs ...> const& set)
-	requires Stream::InsertableTo<k, Stream::Output>;
+	requires Stream::InsertableTo<k, decltype(output)>;
 
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Format::DotOutput&
 	operator<<(Stream::Format::DotOutput& dotOutput, Set<k, c, cs ...> const& set)
-	requires Stream::InsertableTo<k, Stream::Format::StringOutput>;
+	requires Stream::InsertableTo<k, decltype(dotOutput)>;
 
 	~Set();
 
