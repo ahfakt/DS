@@ -119,7 +119,7 @@ $(function() {
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>List&lt;T&gt;::List(Stream::Input&amp; input, auto&amp;&amp; ... tArgs)</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>requires Stream::DeserializableWith&lt;T, Stream::Input, decltype(tArgs) ...&gt;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>requires Stream::DeserializableWith&lt;T, decltype(input), decltype(tArgs) ...&gt;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    if (mSize) {</div>
@@ -147,13 +147,13 @@ $(function() {
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    if (mSize) {</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        {</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            auto const&amp; createInfo = DP::Factory&lt;T, IDType, Args ...&gt;::GetCreateInfo(Stream::Get&lt;IDType&gt;(input));</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            (mTail = mHead = new(createInfo.size) LNode&lt;T&gt;(createInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;Args&gt;&gt;(input) ...))-&gt;prev = nullptr;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            (mTail = mHead = new(createInfo.size) LNode&lt;T&gt;(createInfo, Stream::Get&lt;std::remove_cvref_t&lt;Args&gt;&gt;(input) ...))-&gt;prev = nullptr;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        }</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        std::uint64_t size = mSize;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        while (--size) {</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            try {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                auto const&amp; createInfo = DP::Factory&lt;T, IDType, Args ...&gt;::GetCreateInfo(Stream::Get&lt;IDType&gt;(input));</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                mTail-&gt;next = new(createInfo.size) LNode&lt;T&gt;(createInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;Args&gt;&gt;(input) ...);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                mTail-&gt;next = new(createInfo.size) LNode&lt;T&gt;(createInfo, Stream::Get&lt;std::remove_cvref_t&lt;Args&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            } catch (...) {</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                this-&gt;~List();</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                throw;</div>
@@ -168,7 +168,7 @@ $(function() {
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>Stream::Output&amp;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>operator&lt;&lt;(Stream::Output&amp; output, List&lt;T&gt; const&amp; list)</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>requires Stream::InsertableTo&lt;T, Stream::Output&gt;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>requires Stream::InsertableTo&lt;T, decltype(output)&gt;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>{</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    output &lt;&lt; list.mSize;</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    for (LNode&lt;T&gt; const* l = list.mHead; l; l = l-&gt;next)</div>
@@ -179,7 +179,7 @@ $(function() {
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>Stream::Format::DotOutput&amp;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>operator&lt;&lt;(Stream::Format::DotOutput&amp; dotOutput, List&lt;T&gt; const&amp; list)</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>requires Stream::InsertableTo&lt;T, Stream::Format::StringOutput&gt;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>requires Stream::InsertableTo&lt;T, decltype(dotOutput)&gt;</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>{</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    dotOutput &lt;&lt; &quot;digraph G {\n&quot;;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    if (list.mHead) {</div>
@@ -249,7 +249,7 @@ $(function() {
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>template &lt;typename ... Args&gt;</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>typename List&lt;T&gt;::iterator</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>List&lt;T&gt;::pushFront(DP::CreateInfo&lt;T, Args ...&gt; const&amp; createInfo, auto&amp;&amp; ... args)</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>{ return pushFront(new(createInfo.size) LNode&lt;T&gt;(createInfo.constructor, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>{ return pushFront(new(createInfo.size) LNode&lt;T&gt;(createInfo, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>LNode&lt;T&gt;*</div>
@@ -294,7 +294,7 @@ $(function() {
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>template &lt;typename ... Args&gt;</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>typename List&lt;T&gt;::iterator</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>List&lt;T&gt;::pushBack(DP::CreateInfo&lt;T, Args ...&gt; const&amp; createInfo, auto&amp;&amp; ... args)</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>{ return pushBack(new(createInfo.size) LNode&lt;T&gt;(createInfo.constructor, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>{ return pushBack(new(createInfo.size) LNode&lt;T&gt;(createInfo, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>LNode&lt;T&gt;*</div>
@@ -325,7 +325,7 @@ $(function() {
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>template &lt;typename ... Args, Direction d, Constness c&gt;</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>typename List&lt;T&gt;::iterator</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>List&lt;T&gt;::insertBefore(Iterator&lt;d, c&gt; at, DP::CreateInfo&lt;T, Args ...&gt; const&amp; createInfo, auto&amp;&amp; ... args)</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>{ return insertBefore(at.pos, new(createInfo.size) LNode&lt;T&gt;(createInfo.constructor, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>{ return insertBefore(at.pos, new(createInfo.size) LNode&lt;T&gt;(createInfo, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>LNode&lt;T&gt;*</div>
@@ -356,7 +356,7 @@ $(function() {
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>template &lt;typename ... Args, Direction d, Constness c&gt;</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>typename List&lt;T&gt;::iterator</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>List&lt;T&gt;::insertAfter(Iterator&lt;d, c&gt; at, DP::CreateInfo&lt;T, Args ...&gt; const&amp; createInfo, auto&amp;&amp; ... args)</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>{ return insertAfter(at.pos, new(createInfo.size) LNode&lt;T&gt;(createInfo.constructor, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>{ return insertAfter(at.pos, new(createInfo.size) LNode&lt;T&gt;(createInfo, std::forward&lt;decltype(args)&gt;(args) ...)); }</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>template &lt;Direction d, Constness c&gt;</div>

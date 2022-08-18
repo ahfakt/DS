@@ -127,19 +127,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac6f6973e429f5a1d15711a41b82c413f"><td class="memItemLeft" align="right" valign="top"><a id="ac6f6973e429f5a1d15711a41b82c413f" name="ac6f6973e429f5a1d15711a41b82c413f"></a>
 <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">Digraph</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">Digraph</a> value) noexcept</td></tr>
 <tr class="separator:ac6f6973e429f5a1d15711a41b82c413f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2be34d61be927cd9bb614daf891b65d9"><td class="memItemLeft" align="right" valign="top"><a id="a2be34d61be927cd9bb614daf891b65d9" name="a2be34d61be927cd9bb614daf891b65d9"></a>
+<tr class="memitem:a2b0a597dc406979511827309a85adb81"><td class="memItemLeft" align="right" valign="top"><a id="a2b0a597dc406979511827309a85adb81" name="a2b0a597dc406979511827309a85adb81"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Digraph</b> (auto &amp;&amp;... vArgs, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... eArgs)</td></tr>
-<tr class="separator:a2be34d61be927cd9bb614daf891b65d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd8bf257864d50f6df204bbcb36209e4"><td class="memTemplParams" colspan="2"><a id="abd8bf257864d50f6df204bbcb36209e4" name="abd8bf257864d50f6df204bbcb36209e4"></a>
+<tr class="separator:a2b0a597dc406979511827309a85adb81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a502063a6cba638afb80dd206ca73d34a"><td class="memTemplParams" colspan="2"><a id="a502063a6cba638afb80dd206ca73d34a" name="a502063a6cba638afb80dd206ca73d34a"></a>
 template&lt;typename EIDType , typename ... EArgs&gt; <br />
-requires Stream::DeserializableWith&lt;V, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a>, decltype(vArgs) ...&gt;</td></tr>
-<tr class="memitem:abd8bf257864d50f6df204bbcb36209e4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Digraph</b> (auto &amp;&amp;... vArgs, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; E, EIDType, EArgs ... &gt; const &amp;eFactory)</td></tr>
-<tr class="separator:abd8bf257864d50f6df204bbcb36209e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a251e4ee180618d5942d60fc9c9926f14"><td class="memTemplParams" colspan="2"><a id="a251e4ee180618d5942d60fc9c9926f14" name="a251e4ee180618d5942d60fc9c9926f14"></a>
+requires Stream::DeserializableWith&lt;V, decltype(input), decltype(vArgs) ...&gt;</td></tr>
+<tr class="memitem:a502063a6cba638afb80dd206ca73d34a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Digraph</b> (auto &amp;&amp;... vArgs, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; E, EIDType, EArgs ... &gt; const &amp;eFactory)</td></tr>
+<tr class="separator:a502063a6cba638afb80dd206ca73d34a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28a5e30989ecbb4f41cb6e1a8f5a4214"><td class="memTemplParams" colspan="2"><a id="a28a5e30989ecbb4f41cb6e1a8f5a4214" name="a28a5e30989ecbb4f41cb6e1a8f5a4214"></a>
 template&lt;typename VIDType , typename ... VArgs&gt; <br />
-requires Stream::DeserializableWith&lt;E, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a>, decltype(eArgs) ...&gt;</td></tr>
-<tr class="memitem:a251e4ee180618d5942d60fc9c9926f14"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Digraph</b> (<a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; V, VIDType, VArgs ... &gt; const &amp;vFactory, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... eArgs)</td></tr>
-<tr class="separator:a251e4ee180618d5942d60fc9c9926f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires Stream::DeserializableWith&lt;E, decltype(input), decltype(eArgs) ...&gt;</td></tr>
+<tr class="memitem:a28a5e30989ecbb4f41cb6e1a8f5a4214"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Digraph</b> (<a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; V, VIDType, VArgs ... &gt; const &amp;vFactory, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... eArgs)</td></tr>
+<tr class="separator:a28a5e30989ecbb4f41cb6e1a8f5a4214"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9df8fc3ce210e636964e66d24a2bc769"><td class="memTemplParams" colspan="2"><a id="a9df8fc3ce210e636964e66d24a2bc769" name="a9df8fc3ce210e636964e66d24a2bc769"></a>
 template&lt;typename VIDType , typename ... VArgs, typename EIDType , typename ... EArgs&gt; </td></tr>
 <tr class="memitem:a9df8fc3ce210e636964e66d24a2bc769"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Digraph</b> (<a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; V, VIDType, VArgs ... &gt; const &amp;vFactory, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; E, EIDType, EArgs ... &gt; const &amp;eFactory)</td></tr>
@@ -198,11 +198,11 @@ Friends</h2></td></tr>
 template&lt;typename v , typename e &gt; </td></tr>
 <tr class="memitem:a3d2b10255aee1730f60e88ec637a046f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">Digraph</a>&lt; v, e &gt; &amp;a, <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">Digraph</a>&lt; v, e &gt; &amp;b) noexcept</td></tr>
 <tr class="separator:a3d2b10255aee1730f60e88ec637a046f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9deb25e9dbe35f1092115566560ebb2"><td class="memTemplParams" colspan="2"><a id="ab9deb25e9dbe35f1092115566560ebb2" name="ab9deb25e9dbe35f1092115566560ebb2"></a>
+<tr class="memitem:af2b80403f9fd615375c444fa59baac0e"><td class="memTemplParams" colspan="2"><a id="af2b80403f9fd615375c444fa59baac0e" name="af2b80403f9fd615375c444fa59baac0e"></a>
 template&lt;typename v , typename e &gt; <br />
-requires Stream::InsertableTo&lt;v, <a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a>&gt; &amp;&amp; Stream::InsertableTo&lt;e, <a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a>&gt;</td></tr>
-<tr class="memitem:ab9deb25e9dbe35f1092115566560ebb2"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;output, <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">Digraph</a>&lt; v, e &gt; const &amp;digraph)</td></tr>
-<tr class="separator:ab9deb25e9dbe35f1092115566560ebb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires Stream::InsertableTo&lt;v, decltype(output)&gt; &amp;&amp; Stream::InsertableTo&lt;e, decltype(output)&gt;</td></tr>
+<tr class="memitem:af2b80403f9fd615375c444fa59baac0e"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;output, <a class="el" href="../../d1/dd7/classDS_1_1Digraph.html">Digraph</a>&lt; v, e &gt; const &amp;digraph)</td></tr>
+<tr class="separator:af2b80403f9fd615375c444fa59baac0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename V, typename E&gt;<br />

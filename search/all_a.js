@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['pipe_0',['Pipe',['../../Stream/d3/de2/classStream_1_1Pipe.html',1,'Stream']]],
-  ['pipeinput_1',['PipeInput',['../../Stream/df/d21/classStream_1_1PipeInput.html',1,'Stream']]],
-  ['pipeoutput_2',['PipeOutput',['../../Stream/df/dc1/classStream_1_1PipeOutput.html',1,'Stream']]]
+  ['operator_20bool_0',['operator bool',['../d2/da8/classDS_1_1Container.html#a1c5ae9c8156d1faad04b2f9ded320720',1,'DS::Container']]],
+  ['output_1',['Output',['../../Stream/df/dc2/classStream_1_1Output.html',1,'Stream']]]
 ];

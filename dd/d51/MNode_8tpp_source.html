@@ -156,7 +156,7 @@ $(function() {
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    static MNode*</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    Create(MNode* P, MNode* S,</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            auto&amp;&amp; ... kArgs, Stream::Input&amp; input, auto&amp;&amp; ... vArgs)</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    requires Stream::DeserializableWith&lt;K, Stream::Input, decltype(kArgs) ...&gt; &amp;&amp; Stream::DeserializableWith&lt;V, Stream::Input, decltype(vArgs) ...&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    requires Stream::DeserializableWith&lt;K, decltype(input), decltype(kArgs) ...&gt; &amp;&amp; Stream::DeserializableWith&lt;V, decltype(input), decltype(vArgs) ...&gt;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    {</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        auto state = Stream::Get&lt;std::uint8_t&gt;(input);</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        auto* t = reinterpret_cast&lt;MNode*&gt;(::operator new(sizeof(MNode)));</div>
@@ -190,7 +190,7 @@ $(function() {
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    static MNode*</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    Create(MNode* P, MNode* S,</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            auto&amp;&amp; ... kArgs, Stream::Input&amp; input, DP::Factory&lt;V, VIDType, VArgs ...&gt; const&amp; vFactory)</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    requires Stream::DeserializableWith&lt;K, Stream::Input, decltype(kArgs) ...&gt;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    requires Stream::DeserializableWith&lt;K, decltype(input), decltype(kArgs) ...&gt;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    {</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        auto state = Stream::Get&lt;std::uint8_t&gt;(input);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        MNode* t;</div>
@@ -200,7 +200,7 @@ $(function() {
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            t = reinterpret_cast&lt;MNode*&gt;(operator new(sizeof(MNode), vCreateInfo.size));</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            t-&gt;template state(2);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            try {</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                ::new(static_cast&lt;void*&gt;(t-&gt;val)) Holder&lt;V&gt;(vCreateInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;VArgs&gt;&gt;(input) ...);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                ::new(static_cast&lt;void*&gt;(t-&gt;val)) Holder&lt;V&gt;(vCreateInfo, Stream::Get&lt;std::remove_cvref_t&lt;VArgs&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                t-&gt;d[0].hasValue = true;</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            } catch (...) {</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                operator delete(t);</div>
@@ -235,7 +235,7 @@ $(function() {
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    static MNode*</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    Create(MNode* P, MNode* S,</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            DP::Factory&lt;K, KIDType, KArgs ...&gt; const&amp; kFactory, Stream::Input&amp; input, auto&amp;&amp; ... vArgs)</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    requires Stream::DeserializableWith&lt;V, Stream::Input, decltype(vArgs) ...&gt;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    requires Stream::DeserializableWith&lt;V, decltype(input), decltype(vArgs) ...&gt;</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    {</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        auto state = Stream::Get&lt;std::uint8_t&gt;(input);</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        auto* t = reinterpret_cast&lt;MNode*&gt;(::operator new(sizeof(MNode)));</div>
@@ -250,7 +250,7 @@ $(function() {
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            if (kCreateInfo.size &gt; sizeof(K))</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                throw std::system_error(MException::Code::LargerKey, &quot;kCreateInfo.size is greater than the size of K.&quot;);</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            ::new(static_cast&lt;void*&gt;(t-&gt;key)) Holder&lt;K&gt;(kCreateInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;KArgs&gt;&gt;(input) ...);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            ::new(static_cast&lt;void*&gt;(t-&gt;key)) Holder&lt;K&gt;(kCreateInfo, Stream::Get&lt;std::remove_cvref_t&lt;KArgs&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        } catch (...) {</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            if (t-&gt;d[0].hasValue)</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                t-&gt;val-&gt;~V();</div>
@@ -282,7 +282,7 @@ $(function() {
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            t = reinterpret_cast&lt;MNode*&gt;(operator new(sizeof(MNode), vCreateInfo.size));</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            t-&gt;template state(2);</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            try {</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                ::new(static_cast&lt;void*&gt;(t-&gt;val)) Holder&lt;V&gt;(vCreateInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;VArgs&gt;&gt;(input) ...);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                ::new(static_cast&lt;void*&gt;(t-&gt;val)) Holder&lt;V&gt;(vCreateInfo, Stream::Get&lt;std::remove_cvref_t&lt;VArgs&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                t-&gt;d[0].hasValue = true;</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            } catch (...) {</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                operator delete(t);</div>
@@ -298,7 +298,7 @@ $(function() {
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            if (kCreateInfo.size &gt; sizeof(K))</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                throw std::system_error(MException::Code::LargerKey, &quot;kCreateInfo.size is greater than the size of K.&quot;);</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            ::new(static_cast&lt;void*&gt;(t-&gt;key)) Holder&lt;K&gt;(kCreateInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;KArgs&gt;&gt;(input) ...);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            ::new(static_cast&lt;void*&gt;(t-&gt;key)) Holder&lt;K&gt;(kCreateInfo, Stream::Get&lt;std::remove_cvref_t&lt;KArgs&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        } catch (...) {</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            if (t-&gt;d[0].hasValue)</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                t-&gt;val-&gt;~V();</div>
@@ -334,7 +334,7 @@ $(function() {
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    void</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    serialize(Stream::Output&amp; output) const</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    requires Stream::InsertableTo&lt;K, Stream::Output&gt; &amp;&amp; Stream::InsertableTo&lt;V, Stream::Output&gt;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    requires Stream::InsertableTo&lt;K, decltype(output)&gt; &amp;&amp; Stream::InsertableTo&lt;V, decltype(output)&gt;</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    {</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        output &lt;&lt; this-&gt;state();</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        if (this-&gt;d[0].hasValue)</div>
@@ -349,7 +349,7 @@ $(function() {
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    template &lt;std::size_t N&gt;</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    Stream::Format::DotOutput&amp;</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    toDot(Stream::Format::DotOutput&amp; dotOutput) const</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    requires Stream::InsertableTo&lt;V, Stream::Format::StringOutput&gt;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    requires Stream::InsertableTo&lt;V, decltype(dotOutput)&gt;</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    {</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        if (this-&gt;d[N].hasLeft)</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            this-&gt;template left&lt;N, MNode&gt;()-&gt;template toDot&lt;N&gt;(dotOutput);</div>

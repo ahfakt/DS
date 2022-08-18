@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7efileoutput_0',['~FileOutput',['../../Stream/df/dc2/classStream_1_1FileOutput.html#ace5f0acccd18375f4ac5f6cad3f89788',1,'Stream::FileOutput']]]
+  ['connect_0',['connect',['../../Stream/d1/db1/classStream_1_1Socket.html#aaebd4ba143f187e81c2b81806e022365',1,'Stream::Socket']]]
 ];

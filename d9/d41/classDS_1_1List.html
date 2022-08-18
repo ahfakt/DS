@@ -121,9 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0667497ddf6500d7a40bb9c44c4ef8be"><td class="memItemLeft" align="right" valign="top"><a id="a0667497ddf6500d7a40bb9c44c4ef8be" name="a0667497ddf6500d7a40bb9c44c4ef8be"></a>
 <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d9/d41/classDS_1_1List.html">List</a> value) noexcept</td></tr>
 <tr class="separator:a0667497ddf6500d7a40bb9c44c4ef8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b73180ea71597811b63eac8c69b5a55"><td class="memItemLeft" align="right" valign="top"><a id="a8b73180ea71597811b63eac8c69b5a55" name="a8b73180ea71597811b63eac8c69b5a55"></a>
+<tr class="memitem:aa323ed612e4f895e3b83dc90ba6e0189"><td class="memItemLeft" align="right" valign="top"><a id="aa323ed612e4f895e3b83dc90ba6e0189" name="aa323ed612e4f895e3b83dc90ba6e0189"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>List</b> (<a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... tArgs)</td></tr>
-<tr class="separator:a8b73180ea71597811b63eac8c69b5a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aa323ed612e4f895e3b83dc90ba6e0189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebdb346e77814cf7cfcfef740e953fce"><td class="memTemplParams" colspan="2"><a id="aebdb346e77814cf7cfcfef740e953fce" name="aebdb346e77814cf7cfcfef740e953fce"></a>
 template&lt;typename IDType , typename ... Args&gt; </td></tr>
 <tr class="memitem:aebdb346e77814cf7cfcfef740e953fce"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>List</b> (<a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; T, IDType, Args ... &gt; const &amp;factory)</td></tr>
@@ -249,16 +249,16 @@ Friends</h2></td></tr>
 template&lt;typename t &gt; </td></tr>
 <tr class="memitem:a3dd863cf06e002ed3f4b860baacd3ee5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; &amp;a, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; &amp;b) noexcept</td></tr>
 <tr class="separator:a3dd863cf06e002ed3f4b860baacd3ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9543b14f14a5afde528b449e244f92ec"><td class="memTemplParams" colspan="2"><a id="a9543b14f14a5afde528b449e244f92ec" name="a9543b14f14a5afde528b449e244f92ec"></a>
+<tr class="memitem:ab782f61396d4738b1032aa4e6bc3253d"><td class="memTemplParams" colspan="2"><a id="ab782f61396d4738b1032aa4e6bc3253d" name="ab782f61396d4738b1032aa4e6bc3253d"></a>
 template&lt;typename t &gt; <br />
-requires Stream::InsertableTo&lt;t, <a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a>&gt;</td></tr>
-<tr class="memitem:a9543b14f14a5afde528b449e244f92ec"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;output, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; const &amp;list)</td></tr>
-<tr class="separator:a9543b14f14a5afde528b449e244f92ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49d1acb8c20999603406093276fc24ff"><td class="memTemplParams" colspan="2"><a id="a49d1acb8c20999603406093276fc24ff" name="a49d1acb8c20999603406093276fc24ff"></a>
+requires Stream::InsertableTo&lt;t, decltype(output)&gt;</td></tr>
+<tr class="memitem:ab782f61396d4738b1032aa4e6bc3253d"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;output, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; const &amp;list)</td></tr>
+<tr class="separator:ab782f61396d4738b1032aa4e6bc3253d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d1deb922f8b8a2da78efa7c81cb8569"><td class="memTemplParams" colspan="2"><a id="a6d1deb922f8b8a2da78efa7c81cb8569" name="a6d1deb922f8b8a2da78efa7c81cb8569"></a>
 template&lt;typename t &gt; <br />
-requires Stream::InsertableTo&lt;t, <a class="elRef" href="../../../StreamFormat/d8/d50/classStream_1_1Format_1_1StringOutput.html">Stream::Format::StringOutput</a>&gt;</td></tr>
-<tr class="memitem:a49d1acb8c20999603406093276fc24ff"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;dotOutput, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; const &amp;list)</td></tr>
-<tr class="separator:a49d1acb8c20999603406093276fc24ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires Stream::InsertableTo&lt;t, decltype(dotOutput)&gt;</td></tr>
+<tr class="memitem:a6d1deb922f8b8a2da78efa7c81cb8569"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;dotOutput, <a class="el" href="../../d9/d41/classDS_1_1List.html">List</a>&lt; t &gt; const &amp;list)</td></tr>
+<tr class="separator:a6d1deb922f8b8a2da78efa7c81cb8569"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />

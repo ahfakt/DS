@@ -79,7 +79,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Balanced search tree implementation.  
+<p>Balanced multi-index search tree implementation.  
  <a href="../../d5/db6/classDS_1_1Map.html#details">More...</a></p>
 
 <p><code>#include &quot;<a class="el" href="../../dc/dbe/Map_8hpp_source.html">DS/Map.hpp</a>&quot;</code></p>
@@ -88,7 +88,7 @@ Inheritance diagram for DS::Map&lt; K, V, C, Cs &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../df/d5b/classDS_1_1Map__inherit__graph.png" border="0" usemap="#aDS_1_1Map_3_01K_00_01V_00_01C_00_01Cs_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="aDS_1_1Map_3_01K_00_01V_00_01C_00_01Cs_01_4_inherit__map" id="aDS_1_1Map_3_01K_00_01V_00_01C_00_01Cs_01_4_inherit__map">
-<area shape="rect" title="Balanced search tree implementation." alt="" coords="5,175,852,399"/>
+<area shape="rect" title="Balanced multi&#45;index search tree implementation." alt="" coords="5,175,852,399"/>
 <area shape="rect" href="../../d2/da8/classDS_1_1Container.html" title="Base class for data structures." alt="" coords="301,5,556,127"/>
 </map>
 </div>
@@ -96,6 +96,8 @@ Inheritance diagram for DS::Map&lt; K, V, C, Cs &gt;:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d39/structDS_1_1Map_1_1Difference.html">Difference</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dd9/structDS_1_1Map_1_1Entry.html">Entry</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/da7/structDS_1_1Map_1_1Exception.html">Exception</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,19 +136,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad70b7133ab89803c704c6d4af41cffef"><td class="memItemLeft" align="right" valign="top"><a id="ad70b7133ab89803c704c6d4af41cffef" name="ad70b7133ab89803c704c6d4af41cffef"></a>
 <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a> value) noexcept</td></tr>
 <tr class="separator:ad70b7133ab89803c704c6d4af41cffef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90567420b4e0b20d29309f9de793560a"><td class="memItemLeft" align="right" valign="top"><a id="a90567420b4e0b20d29309f9de793560a" name="a90567420b4e0b20d29309f9de793560a"></a>
+<tr class="memitem:a0cf603c499e88827a46ef8ee37843eaa"><td class="memItemLeft" align="right" valign="top"><a id="a0cf603c499e88827a46ef8ee37843eaa" name="a0cf603c499e88827a46ef8ee37843eaa"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Map</b> (auto &amp;&amp;... kArgs, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... vArgs)</td></tr>
-<tr class="separator:a90567420b4e0b20d29309f9de793560a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad93741870e13d3fa15f93c1541e52926"><td class="memTemplParams" colspan="2"><a id="ad93741870e13d3fa15f93c1541e52926" name="ad93741870e13d3fa15f93c1541e52926"></a>
+<tr class="separator:a0cf603c499e88827a46ef8ee37843eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb0a6731e93e3f6b3bd4e593da379121"><td class="memTemplParams" colspan="2"><a id="aeb0a6731e93e3f6b3bd4e593da379121" name="aeb0a6731e93e3f6b3bd4e593da379121"></a>
 template&lt;typename VIDType , typename ... VArgs&gt; <br />
-requires Stream::DeserializableWith&lt;K, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a>, decltype(kArgs) ...&gt;</td></tr>
-<tr class="memitem:ad93741870e13d3fa15f93c1541e52926"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Map</b> (auto &amp;&amp;... kArgs, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; V, VIDType, VArgs ... &gt; const &amp;vFactory)</td></tr>
-<tr class="separator:ad93741870e13d3fa15f93c1541e52926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a2af551b7ee043d74490ab472f58c41"><td class="memTemplParams" colspan="2"><a id="a6a2af551b7ee043d74490ab472f58c41" name="a6a2af551b7ee043d74490ab472f58c41"></a>
+requires Stream::DeserializableWith&lt;K, decltype(input), decltype(kArgs) ...&gt;</td></tr>
+<tr class="memitem:aeb0a6731e93e3f6b3bd4e593da379121"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Map</b> (auto &amp;&amp;... kArgs, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; V, VIDType, VArgs ... &gt; const &amp;vFactory)</td></tr>
+<tr class="separator:aeb0a6731e93e3f6b3bd4e593da379121"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb0d803f4842f24b3fe1ab4b76156b84"><td class="memTemplParams" colspan="2"><a id="adb0d803f4842f24b3fe1ab4b76156b84" name="adb0d803f4842f24b3fe1ab4b76156b84"></a>
 template&lt;typename KIDType , typename ... KArgs&gt; <br />
-requires Stream::DeserializableWith&lt;V, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a>, decltype(vArgs) ...&gt;</td></tr>
-<tr class="memitem:a6a2af551b7ee043d74490ab472f58c41"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Map</b> (<a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; K, KIDType, KArgs ... &gt; const &amp;kFactory, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... vArgs)</td></tr>
-<tr class="separator:a6a2af551b7ee043d74490ab472f58c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires Stream::DeserializableWith&lt;V, decltype(input), decltype(vArgs) ...&gt;</td></tr>
+<tr class="memitem:adb0d803f4842f24b3fe1ab4b76156b84"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Map</b> (<a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; K, KIDType, KArgs ... &gt; const &amp;kFactory, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, auto &amp;&amp;... vArgs)</td></tr>
+<tr class="separator:adb0d803f4842f24b3fe1ab4b76156b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42b9ba0277ec817fc1a95376cea707e5"><td class="memTemplParams" colspan="2"><a id="a42b9ba0277ec817fc1a95376cea707e5" name="a42b9ba0277ec817fc1a95376cea707e5"></a>
 template&lt;typename KIDType , typename ... KArgs, typename VIDType , typename ... VArgs&gt; </td></tr>
 <tr class="memitem:a42b9ba0277ec817fc1a95376cea707e5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Map</b> (<a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; K, KIDType, KArgs ... &gt; const &amp;kFactory, <a class="elRef" href="../../../Stream/d7/d83/classStream_1_1Input.html">Stream::Input</a> &amp;input, <a class="elRef" href="../../../DP/d0/d7b/classDP_1_1Factory.html">DP::Factory</a>&lt; V, VIDType, VArgs ... &gt; const &amp;vFactory)</td></tr>
@@ -275,28 +277,28 @@ Friends</h2></td></tr>
 template&lt;typename k , typename v , typename c , typename ... cs&gt; </td></tr>
 <tr class="memitem:ac037a69b3543408f06d5cc95c8a27c8a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; k, v, c, cs ... &gt; &amp;a, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; k, v, c, cs ... &gt; &amp;b) noexcept</td></tr>
 <tr class="separator:ac037a69b3543408f06d5cc95c8a27c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af72afa61eb93a747f0c68297f52378f8"><td class="memTemplParams" colspan="2"><a id="af72afa61eb93a747f0c68297f52378f8" name="af72afa61eb93a747f0c68297f52378f8"></a>
+<tr class="memitem:a95cd064d4ecef4ce3cfc6429c7862357"><td class="memTemplParams" colspan="2"><a id="a95cd064d4ecef4ce3cfc6429c7862357" name="a95cd064d4ecef4ce3cfc6429c7862357"></a>
 template&lt;typename k , typename v , typename c , typename ... cs&gt; <br />
-requires Stream::InsertableTo&lt;k, <a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a>&gt; &amp;&amp; Stream::InsertableTo&lt;v, <a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a>&gt;</td></tr>
-<tr class="memitem:af72afa61eb93a747f0c68297f52378f8"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;output, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; k, v, c, cs ... &gt; const &amp;map)</td></tr>
-<tr class="separator:af72afa61eb93a747f0c68297f52378f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7bf319a06adb249d3a0b832a816bbac"><td class="memTemplParams" colspan="2"><a id="af7bf319a06adb249d3a0b832a816bbac" name="af7bf319a06adb249d3a0b832a816bbac"></a>
+requires Stream::InsertableTo&lt;k, decltype(output)&gt; &amp;&amp; Stream::InsertableTo&lt;v, decltype(output)&gt;</td></tr>
+<tr class="memitem:a95cd064d4ecef4ce3cfc6429c7862357"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../Stream/df/dc2/classStream_1_1Output.html">Stream::Output</a> &amp;output, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; k, v, c, cs ... &gt; const &amp;map)</td></tr>
+<tr class="separator:a95cd064d4ecef4ce3cfc6429c7862357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada478341eb3aa5e858c806b5d46cc338"><td class="memTemplParams" colspan="2"><a id="ada478341eb3aa5e858c806b5d46cc338" name="ada478341eb3aa5e858c806b5d46cc338"></a>
 template&lt;typename k , typename v , typename c , typename ... cs&gt; <br />
-requires Stream::InsertableTo&lt;k, <a class="elRef" href="../../../StreamFormat/d8/d50/classStream_1_1Format_1_1StringOutput.html">Stream::Format::StringOutput</a>&gt; &amp;&amp; Stream::InsertableTo&lt;v, <a class="elRef" href="../../../StreamFormat/d8/d50/classStream_1_1Format_1_1StringOutput.html">Stream::Format::StringOutput</a>&gt;</td></tr>
-<tr class="memitem:af7bf319a06adb249d3a0b832a816bbac"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;dotOutput, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; k, v, c, cs ... &gt; const &amp;map)</td></tr>
-<tr class="separator:af7bf319a06adb249d3a0b832a816bbac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires Stream::InsertableTo&lt;k, decltype(dotOutput)&gt; &amp;&amp; Stream::InsertableTo&lt;v, decltype(dotOutput)&gt;</td></tr>
+<tr class="memitem:ada478341eb3aa5e858c806b5d46cc338"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (<a class="elRef" href="../../../StreamFormat/d3/dd1/classStream_1_1Format_1_1DotOutput.html">Stream::Format::DotOutput</a> &amp;dotOutput, <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; k, v, c, cs ... &gt; const &amp;map)</td></tr>
+<tr class="separator:ada478341eb3aa5e858c806b5d46cc338"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename K, typename V, typename C = std::less&lt;&gt;, typename ... Cs&gt;<br />
-class DS::Map&lt; K, V, C, Cs &gt;</div><p >Balanced search tree implementation. </p>
+class DS::Map&lt; K, V, C, Cs &gt;</div><p >Balanced multi-index search tree implementation. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">K</td><td>Key type of the mapped type to be stored in <a class="el" href="../../d5/db6/classDS_1_1Map.html" title="Balanced search tree implementation.">Map</a> </td></tr>
-    <tr><td class="paramname">V</td><td>Value type to be mapped by K in <a class="el" href="../../d5/db6/classDS_1_1Map.html" title="Balanced search tree implementation.">Map</a></td></tr>
+    <tr><td class="paramname">K</td><td>Key type of the mapped type to be stored in <a class="el" href="../../d5/db6/classDS_1_1Map.html" title="Balanced multi-index search tree implementation.">Map</a> </td></tr>
+    <tr><td class="paramname">V</td><td>Value type to be mapped by K in <a class="el" href="../../d5/db6/classDS_1_1Map.html" title="Balanced multi-index search tree implementation.">Map</a></td></tr>
   </table>
   </dd>
 </dl>
-<p>K can map any V and V-based objects in a <a class="el" href="../../d5/db6/classDS_1_1Map.html" title="Balanced search tree implementation.">Map</a> object, even if V is an abstract class. </p>
+<p>K and V can be any type, including abstract class </p>
 
 <p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00019">19</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>

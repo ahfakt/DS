@@ -69,6 +69,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -78,6 +79,11 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:abf93234e1e51045b8263de46a631d344"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dc5/classDS_1_1Map_1_1Iterator.html#abf93234e1e51045b8263de46a631d344">Entry</a> = <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt; K, V, C, Cs ... &gt;::Entry&lt; std::conditional_t&lt; std::is_abstract_v&lt; K &gt;, Raw&lt; K &gt;, K &gt; const, TConstness&lt; std::conditional_t&lt; std::is_abstract_v&lt; V &gt;, Raw&lt; V &gt;, V &gt;, c &gt; &gt;</td></tr>
+<tr class="separator:abf93234e1e51045b8263de46a631d344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a418506d285629ecbb24a311292c003b6"><td class="memTemplParams" colspan="2"><a id="a418506d285629ecbb24a311292c003b6" name="a418506d285629ecbb24a311292c003b6"></a>
@@ -104,11 +110,6 @@ template&lt;Derived&lt; V &gt; DV&gt; <br />
 requires (c == Constness::NCONST)</td></tr>
 <tr class="memitem:a497810c9a783a99286d28b41d98ca4cf"><td class="memTemplItemLeft" align="right" valign="top">DV &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set</b> (auto &amp;&amp;... dvArgs) const</td></tr>
 <tr class="separator:a497810c9a783a99286d28b41d98ca4cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34671c6e7b49e4395ec4eb643fe2a0a1"><td class="memTemplParams" colspan="2"><a id="a34671c6e7b49e4395ec4eb643fe2a0a1" name="a34671c6e7b49e4395ec4eb643fe2a0a1"></a>
-template&lt;typename ... VArgs&gt; <br />
-requires (c == Constness::NCONST)</td></tr>
-<tr class="memitem:a34671c6e7b49e4395ec4eb643fe2a0a1"><td class="memTemplItemLeft" align="right" valign="top">V &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set</b> (<a class="elRef" href="../../../DP/db/d02/structDP_1_1CreateInfo.html">DP::CreateInfo</a>&lt; V, VArgs ... &gt; const &amp;vCreateInfo, auto &amp;&amp;... vArgs) const</td></tr>
-<tr class="separator:a34671c6e7b49e4395ec4eb643fe2a0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acebda88a8edef8effbd78e0705f0b26c"><td class="memItemLeft" align="right" valign="top"><a id="acebda88a8edef8effbd78e0705f0b26c" name="acebda88a8edef8effbd78e0705f0b26c"></a>
 <a class="el" href="../../df/dc5/classDS_1_1Map_1_1Iterator.html">Iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> () noexcept</td></tr>
 <tr class="separator:acebda88a8edef8effbd78e0705f0b26c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,12 +122,12 @@ requires (c == Constness::NCONST)</td></tr>
 <tr class="memitem:a3daa4845d7432b9f86ae1d252c411310"><td class="memItemLeft" align="right" valign="top"><a id="a3daa4845d7432b9f86ae1d252c411310" name="a3daa4845d7432b9f86ae1d252c411310"></a>
 <a class="el" href="../../df/dc5/classDS_1_1Map_1_1Iterator.html">Iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator--</b> (int) noexcept</td></tr>
 <tr class="separator:a3daa4845d7432b9f86ae1d252c411310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6826620e5870e2124ed8fee8e0d7e82"><td class="memItemLeft" align="right" valign="top"><a id="ac6826620e5870e2124ed8fee8e0d7e82" name="ac6826620e5870e2124ed8fee8e0d7e82"></a>
-std::pair&lt; K const, TConstness&lt; V, c &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const noexcept</td></tr>
-<tr class="separator:ac6826620e5870e2124ed8fee8e0d7e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad936be804143e1ac1e64e2a41b421722"><td class="memItemLeft" align="right" valign="top"><a id="ad936be804143e1ac1e64e2a41b421722" name="ad936be804143e1ac1e64e2a41b421722"></a>
-std::pair&lt; K const, TConstness&lt; V, c &gt; &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const noexcept</td></tr>
-<tr class="separator:ad936be804143e1ac1e64e2a41b421722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbf34cc0e1aae0604f33555d1f978dfb"><td class="memItemLeft" align="right" valign="top"><a id="afbf34cc0e1aae0604f33555d1f978dfb" name="afbf34cc0e1aae0604f33555d1f978dfb"></a>
+<a class="el" href="../../d4/dd9/structDS_1_1Map_1_1Entry.html">Entry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const noexcept</td></tr>
+<tr class="separator:afbf34cc0e1aae0604f33555d1f978dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9324d86d88e4a6bc0ac15c5a8a823382"><td class="memItemLeft" align="right" valign="top"><a id="a9324d86d88e4a6bc0ac15c5a8a823382" name="a9324d86d88e4a6bc0ac15c5a8a823382"></a>
+<a class="el" href="../../d4/dd9/structDS_1_1Map_1_1Entry.html">Entry</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const noexcept</td></tr>
+<tr class="separator:a9324d86d88e4a6bc0ac15c5a8a823382"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac36e3ded5e12ae82e98b91eb12b19af3"><td class="memTemplParams" colspan="2"><a id="ac36e3ded5e12ae82e98b91eb12b19af3" name="ac36e3ded5e12ae82e98b91eb12b19af3"></a>
 template&lt;Direction od, Constness oc, std::size_t on&gt; </td></tr>
 <tr class="memitem:ac36e3ded5e12ae82e98b91eb12b19af3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (<a class="el" href="../../df/dc5/classDS_1_1Map_1_1Iterator.html">Iterator</a>&lt; od, oc, on &gt; const &amp;other) const noexcept</td></tr>
@@ -155,8 +156,29 @@ Friends</h2></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename K, typename V, typename C = std::less&lt;&gt;, typename ... Cs&gt;<br />
 template&lt;Direction d, Constness c, std::size_t n&gt;<br />
 class DS::Map&lt; K, V, C, Cs &gt;::Iterator&lt; d, c, n &gt;</div>
-<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00240">240</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
-</div><h2 class="groupheader">Friends And Related Function Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00246">246</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="abf93234e1e51045b8263de46a631d344" name="abf93234e1e51045b8263de46a631d344"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf93234e1e51045b8263de46a631d344">&#9670;&nbsp;</a></span>Entry</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename K , typename V , typename C  = std::less&lt;&gt;, typename ... Cs&gt; </div>
+<div class="memtemplate">
+template&lt;Direction d, Constness c, std::size_t n&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d5/db6/classDS_1_1Map.html">DS::Map</a>&lt; K, V, C, Cs &gt;::Iterator&lt; d, c, n &gt;::Entry =  <a class="el" href="../../d5/db6/classDS_1_1Map.html">Map</a>&lt;K, V, C, Cs ...&gt;::Entry&lt; std::conditional_t&lt;std::is_abstract_v&lt;K&gt;, Raw&lt;K&gt;, K&gt; const, TConstness&lt;std::conditional_t&lt;std::is_abstract_v&lt;V&gt;, Raw&lt;V&gt;, V&gt;, c&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00255">255</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
 <a id="ad2f32e921244459f7cc6d50355429cc6" name="ad2f32e921244459f7cc6d50355429cc6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad2f32e921244459f7cc6d50355429cc6">&#9670;&nbsp;</a></span>Map</h2>
 
@@ -181,7 +203,7 @@ template&lt;Direction d, Constness c, std::size_t n&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00241">241</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00247">247</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +232,7 @@ template&lt;Direction d, Constness c, std::size_t n&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00244">244</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/dbe/Map_8hpp_source.html#l00250">250</a> of file <a class="el" href="../../dc/dbe/Map_8hpp_source.html">Map.hpp</a>.</p>
 
 </div>
 </div>

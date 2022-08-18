@@ -126,7 +126,7 @@ $(function() {
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>Vector&lt;T&gt;::Vector(Stream::Input&amp; input, auto&amp;&amp; ... tArgs)</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>requires Stream::DeserializableWith&lt;T, Stream::Input, decltype(tArgs) ...&gt;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>requires Stream::DeserializableWith&lt;T, decltype(input), decltype(tArgs) ...&gt;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        : Vector(Stream::Get&lt;std::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>{</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    while (mSize &lt; mCapacity) {</div>
@@ -150,7 +150,7 @@ $(function() {
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            auto const&amp; createInfo = DP::Factory&lt;T, IDType, Args ...&gt;::GetCreateInfo(Stream::Get&lt;IDType&gt;(input));</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            if (createInfo.size &gt; sizeof(T))</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                throw Exception(&quot;createInfo.size is greater than the size of T.&quot;);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            ::new(mHead + mSize) Holder&lt;T&gt;(createInfo.constructor, Stream::Get&lt;std::remove_cvref_t&lt;Args&gt;&gt;(input) ...);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            ::new(mHead + mSize) Holder&lt;T&gt;(createInfo, Stream::Get&lt;std::remove_cvref_t&lt;Args&gt;&gt;(input) ...);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        } catch (...) {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            this-&gt;~Vector();</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            throw;</div>
@@ -162,7 +162,7 @@ $(function() {
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>template &lt;typename T&gt;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>Stream::Output&amp;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>operator&lt;&lt;(Stream::Output&amp; output, Vector&lt;T&gt; const&amp; vector)</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>requires Stream::InsertableTo&lt;T, Stream::Output&gt;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>requires Stream::InsertableTo&lt;T, decltype(output)&gt;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>{</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    output &lt;&lt; vector.mSize;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    Holder&lt;T&gt; const* beg = vector.mHead;</div>
@@ -234,11 +234,11 @@ $(function() {
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        throw Exception(&quot;createInfo.size is greater than the size of T.&quot;);</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    if (mSize &lt; mCapacity) {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        ::new(mHead + mSize) Holder&lt;T&gt;(createInfo.constructor, std::forward&lt;decltype(args)&gt;(args) ...);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        ::new(mHead + mSize) Holder&lt;T&gt;(createInfo, std::forward&lt;decltype(args)&gt;(args) ...);</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        return mHead + mSize++;</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    }</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    Vector v(mCapacity &gt; 1 ? mCapacity * 1.5 : 2);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    new(static_cast&lt;void*&gt;(v.mHead + mSize)) Holder&lt;T&gt;(createInfo.constructor, std::forward&lt;decltype(args)&gt;(args) ...);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    new(static_cast&lt;void*&gt;(v.mHead + mSize)) Holder&lt;T&gt;(createInfo, std::forward&lt;decltype(args)&gt;(args) ...);</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    try {</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        for (std::uint64_t i = 0; i &lt; mSize; ++i)</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            v.pushBack(std::move_if_noexcept(*reinterpret_cast&lt;T*&gt;(mHead + i)));</div>
