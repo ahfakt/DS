@@ -97,7 +97,7 @@ int main()
 
 	{
 		int abc[] = {5, 8, 13};
-		Stream::BufferInput bufferInput(abc, sizeof(abc));
+		Stream::BufferInput bufferInput(abc, sizeof abc);
 		Holder<StreamConstruct> h(bufferInput);
 		assert((h->a == 5 && h->b == 8 && h->c == 13));
 	}
@@ -111,23 +111,23 @@ int main()
 
 	{
 		int a = 5;
-		Stream::BufferInput bufferInput(&a, sizeof(a));
+		Stream::BufferInput bufferInput(&a, sizeof a);
 		Holder<int> h(bufferInput);
 		assert(*h == 5);
 	}
 
 	{
 		int abc[] = {5, 8, 13};
-		Stream::BufferInput bufferInput(abc, sizeof(abc));
+		Stream::BufferInput bufferInput(abc, sizeof abc);
 		Holder<TrivialDefaultConstruct> h(bufferInput);
 		assert((h->a == 5 && h->b == 8 && h->c == 13));
 	}
 
 	{
-		char s[] = "string";
-		Stream::BufferInput bufferInput(s, sizeof(s));
+		char s[] = {6,0,0,0,0,0,0,0,'s','t','r','i','n','g'};
+		Stream::BufferInput bufferInput(s, sizeof s);
 		Holder<std::string> h(bufferInput);
-		assert(*h == s);
+		assert(*h == s+8);
 	}
 
 	return 0;

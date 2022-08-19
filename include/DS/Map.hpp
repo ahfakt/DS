@@ -89,6 +89,7 @@ public:
 	struct Entry {
 		k key;
 		v value;
+		auto operator<=>(Entry const& other) const = default;
 	};//struct DS::Map<K, V, C, Cs ...>::Entry<k, v>
 
 	Map() noexcept = default;

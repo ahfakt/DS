@@ -54,6 +54,10 @@ public:
 
 	explicit operator void const*() const noexcept
 	{ return raw; }
+
+	auto
+	operator<=>(Raw const& other) const noexcept
+	{ return *reinterpret_cast<T const*>(raw) <=> *reinterpret_cast<T const*>(other.raw); }
 };//class DS::Raw<T>
 
 template <typename T>

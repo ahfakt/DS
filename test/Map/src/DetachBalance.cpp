@@ -17,7 +17,7 @@ int main()
 	for (int i = 0; i < 1024; ++i)
 		map1D.put(distrib(gen));
 	for (int i = 0; i < map1D.size(); ++i) {
-		map1D.remove(map1D.at(std::uniform_int_distribution<>{0, static_cast<int>(map1D.size() - i - 1)}(gen))->first);
+		map1D.remove(map1D.at(std::uniform_int_distribution<>{0, static_cast<int>(map1D.size() - i - 1)}(gen)));
 		DSTest::TestBalance<1, 0>(rootNode1D[0]);
 	}
 
@@ -28,7 +28,7 @@ int main()
 	for (int i = 0; i < 1024; ++i)
 		map2D.put(distrib(gen));
 	for (int i = 0; i < map2D.size(); ++i) {
-		map2D.remove(map2D.at(std::uniform_int_distribution<>{0, static_cast<int>(map2D.size() - i - 1)}(gen))->first);
+		map2D.remove(map2D.at(std::uniform_int_distribution<>{0, static_cast<int>(map2D.size() - i - 1)}(gen)));
 		DSTest::TestBalance<2, 0>(rootNode2D[0]);
 		DSTest::TestBalance<2, 1>(rootNode2D[1]);
 	}
