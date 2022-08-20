@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 		<meta name="generator" content="Doxygen 1.9.3"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<title>DS: /run/media/null/Lepton/DS/src/Set.tpp Source File</title>
+		<title>DS: /run/media/null/Lepton/DS/src/DS/Set.tpp Source File</title>
 		<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="../../jquery.js"></script>
 		<script type="text/javascript" src="../../dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_a306b7cc5167c29e131a00bfce4c6187.html">run</a></li><li class="navelem"><a class="el" href="../../dir_507acf48ac41e7159f0a1b442db86079.html">media</a></li><li class="navelem"><a class="el" href="../../dir_a948842fa98f12679c5b270b3cb08c8f.html">null</a></li><li class="navelem"><a class="el" href="../../dir_07db626c45ea25c07b7068518579809d.html">Lepton</a></li><li class="navelem"><a class="el" href="../../dir_4b956dd144ff9f5351cf62da18b5cfaf.html">DS</a></li><li class="navelem"><a class="el" href="../../dir_2d9f5cd84a3783764918901bbc13df14.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_a306b7cc5167c29e131a00bfce4c6187.html">run</a></li><li class="navelem"><a class="el" href="../../dir_507acf48ac41e7159f0a1b442db86079.html">media</a></li><li class="navelem"><a class="el" href="../../dir_a948842fa98f12679c5b270b3cb08c8f.html">null</a></li><li class="navelem"><a class="el" href="../../dir_07db626c45ea25c07b7068518579809d.html">Lepton</a></li><li class="navelem"><a class="el" href="../../dir_4b956dd144ff9f5351cf62da18b5cfaf.html">DS</a></li><li class="navelem"><a class="el" href="../../dir_2d9f5cd84a3783764918901bbc13df14.html">src</a></li><li class="navelem"><a class="el" href="../../dir_0009da890adcdc6646311a5eacea289a.html">DS</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -120,12 +120,12 @@ $(function() {
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>template &lt;typename K, typename C, typename ... Cs&gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>template &lt;typename IDType, typename ... Args&gt;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>Set&lt;K, C, Cs ...&gt;::Set(Stream::Input&amp; input, DP::Factory&lt;K, IDType, Args ...&gt; const&amp; factory)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>template &lt;typename ID, typename ... Args&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>Set&lt;K, C, Cs ...&gt;::Set(Stream::Input&amp; input, DP::Factory&lt;K, ID, Args ...&gt;, auto&amp;&amp; ... kArgs)</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>{</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    if (mSize) {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        mRoot[0] = SNode&lt;K, C, Cs ...&gt;::Create(nullptr, nullptr, input, factory);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        mRoot[0] = SNode&lt;K, C, Cs ...&gt;::Create(nullptr, nullptr, input, DP::Factory&lt;K, ID, Args ...&gt;{}, std::forward&lt;decltype(kArgs)&gt;(kArgs) ...);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        if constexpr(sizeof...(Cs) &gt; 0)</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            SNode&lt;K, C, Cs ...&gt;::template BuildTree&lt;SNode&lt;K, C, Cs ...&gt;, Exception&gt;(mRoot);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>

@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 		<meta name="generator" content="Doxygen 1.9.3"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<title>DS: /run/media/null/Lepton/DS/src/Map.tpp Source File</title>
+		<title>DS: /run/media/null/Lepton/DS/src/DS/Map.tpp Source File</title>
 		<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="../../jquery.js"></script>
 		<script type="text/javascript" src="../../dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_a306b7cc5167c29e131a00bfce4c6187.html">run</a></li><li class="navelem"><a class="el" href="../../dir_507acf48ac41e7159f0a1b442db86079.html">media</a></li><li class="navelem"><a class="el" href="../../dir_a948842fa98f12679c5b270b3cb08c8f.html">null</a></li><li class="navelem"><a class="el" href="../../dir_07db626c45ea25c07b7068518579809d.html">Lepton</a></li><li class="navelem"><a class="el" href="../../dir_4b956dd144ff9f5351cf62da18b5cfaf.html">DS</a></li><li class="navelem"><a class="el" href="../../dir_2d9f5cd84a3783764918901bbc13df14.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_a306b7cc5167c29e131a00bfce4c6187.html">run</a></li><li class="navelem"><a class="el" href="../../dir_507acf48ac41e7159f0a1b442db86079.html">media</a></li><li class="navelem"><a class="el" href="../../dir_a948842fa98f12679c5b270b3cb08c8f.html">null</a></li><li class="navelem"><a class="el" href="../../dir_07db626c45ea25c07b7068518579809d.html">Lepton</a></li><li class="navelem"><a class="el" href="../../dir_4b956dd144ff9f5351cf62da18b5cfaf.html">DS</a></li><li class="navelem"><a class="el" href="../../dir_2d9f5cd84a3783764918901bbc13df14.html">src</a></li><li class="navelem"><a class="el" href="../../dir_0009da890adcdc6646311a5eacea289a.html">DS</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -120,38 +120,38 @@ $(function() {
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>template &lt;typename K, typename V, typename C, typename ... Cs&gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>template &lt;typename VIDType, typename ... VArgs&gt;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>Map&lt;K, V, C, Cs ...&gt;::Map(auto&amp;&amp; ... kArgs, Stream::Input&amp; input, DP::Factory&lt;V, VIDType, VArgs ...&gt; const&amp; vFactory)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>template &lt;typename VID, typename ... VArgs&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>Map&lt;K, V, C, Cs ...&gt;::Map(auto&amp;&amp; ... kArgs, Stream::Input&amp; input, DP::Factory&lt;V, VID, VArgs ...&gt;, auto&amp;&amp; ... vArgs)</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>requires Stream::DeserializableWith&lt;K, decltype(input), decltype(kArgs) ...&gt;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    if (mSize) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        mRoot[0] = MNode&lt;K, V, C, Cs ...&gt;::Create(nullptr, nullptr, std::forward&lt;decltype(kArgs)&gt;(kArgs) ..., input, vFactory);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        mRoot[0] = MNode&lt;K, V, C, Cs ...&gt;::Create(nullptr, nullptr, std::forward&lt;decltype(kArgs)&gt;(kArgs) ..., input, DP::Factory&lt;V, VID, VArgs ...&gt;{}, std::forward&lt;decltype(vArgs)&gt;(vArgs) ...);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        if constexpr(sizeof...(Cs) &gt; 0)</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            SNode&lt;K, C, Cs ...&gt;::template BuildTree&lt;MNode&lt;K, V, C, Cs ...&gt;, Exception&gt;(mRoot);</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>template &lt;typename K, typename V, typename C, typename ... Cs&gt;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>template &lt;typename KIDType, typename ... KArgs&gt;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>Map&lt;K, V, C, Cs ...&gt;::Map(DP::Factory&lt;K, KIDType, KArgs ...&gt; const&amp; kFactory, Stream::Input&amp; input, auto&amp;&amp; ... vArgs)</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>template &lt;typename KID, typename ... KArgs&gt;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>Map&lt;K, V, C, Cs ...&gt;::Map(DP::Factory&lt;K, KID, KArgs ...&gt;, auto&amp;&amp; ... kArgs, Stream::Input&amp; input, auto&amp;&amp; ... vArgs)</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>requires Stream::DeserializableWith&lt;V, decltype(input), decltype(vArgs) ...&gt;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    if (mSize) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        mRoot[0] = MNode&lt;K, V, C, Cs ...&gt;::Create(nullptr, nullptr, kFactory, input, std::forward&lt;decltype(vArgs)&gt;(vArgs) ...);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        mRoot[0] = MNode&lt;K, V, C, Cs ...&gt;::Create(nullptr, nullptr, DP::Factory&lt;K, KID, KArgs ...&gt;{}, std::forward&lt;decltype(kArgs)&gt;(kArgs) ..., input, std::forward&lt;decltype(vArgs)&gt;(vArgs) ...);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        if constexpr(sizeof...(Cs) &gt; 0)</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            SNode&lt;K, C, Cs ...&gt;::template BuildTree&lt;MNode&lt;K, V, C, Cs ...&gt;, Exception&gt;(mRoot);</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>template &lt;typename K, typename V, typename C, typename ... Cs&gt;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>template &lt;typename KIDType, typename ... KArgs, typename VIDType, typename ... VArgs&gt;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>Map&lt;K, V, C, Cs ...&gt;::Map(DP::Factory&lt;K, KIDType, KArgs ...&gt; const&amp; kFactory, Stream::Input&amp; input, DP::Factory&lt;V, VIDType, VArgs ...&gt; const&amp; vFactory)</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>template &lt;typename KID, typename ... KArgs, typename VID, typename ... VArgs&gt;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>Map&lt;K, V, C, Cs ...&gt;::Map(DP::Factory&lt;K, KID, KArgs ...&gt;, auto&amp;&amp; ... kArgs, Stream::Input&amp; input, DP::Factory&lt;V, VID, VArgs ...&gt;, auto&amp;&amp; ... vArgs)</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        : Container(Stream::Get&lt;std::uint64_t&gt;(input))</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>{</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    if (mSize) {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        mRoot[0] = MNode&lt;K, V, C, Cs ...&gt;::Create(nullptr, nullptr, kFactory, input, vFactory);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        mRoot[0] = MNode&lt;K, V, C, Cs ...&gt;::Create(nullptr, nullptr, DP::Factory&lt;K, KID, KArgs ...&gt;{}, std::forward&lt;decltype(kArgs)&gt;(kArgs) ..., input, DP::Factory&lt;V, VID, VArgs ...&gt;{}, std::forward&lt;decltype(vArgs)&gt;(vArgs) ...);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        if constexpr(sizeof...(Cs) &gt; 0)</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            SNode&lt;K, C, Cs ...&gt;::template BuildTree&lt;MNode&lt;K, V, C, Cs ...&gt;, Exception&gt;(mRoot);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
