@@ -2,7 +2,7 @@
 #define DS_VECTOR_HPP
 
 #include "Container.hpp"
-#include "../../src/Holder.tpp"
+#include "../../src/DS/Holder.tpp"
 #include <DP/Factory.hpp>
 
 namespace DS {
@@ -42,8 +42,8 @@ public:
 	explicit Vector(Stream::Input& input, auto&& ... tArgs)
 	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
 
-	template <typename IDType, typename ... Args>
-	Vector(Stream::Input& input, DP::Factory<T, IDType, Args ...> const& factory);
+	template <typename ID, typename ... Args>
+	Vector(Stream::Input& input, DP::Factory<T, ID, Args ...>, auto&& ... tArgs);
 
 	template <typename t>
 	friend Stream::Output&
@@ -179,6 +179,6 @@ public:
 
 }//namespace DS
 
-#include "../../src/Vector.tpp"
+#include "../../src/DS/Vector.tpp"
 
 #endif //DS_VECTOR_HPP

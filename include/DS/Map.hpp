@@ -2,7 +2,7 @@
 #define DS_MAP_HPP
 
 #include "Container.hpp"
-#include "../../src/MNode.tpp"
+#include "../../src/DS/MNode.tpp"
 #include <DP/Factory.hpp>
 #include <StreamFormat/Dot.hpp>
 
@@ -109,16 +109,16 @@ public:
 	explicit Map(auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...> && Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename VIDType, typename ... VArgs>
-	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
+	template <typename VID, typename ... VArgs>
+	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
 
-	template <typename KIDType, typename ... KArgs>
-	Map(DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
+	template <typename KID, typename ... KArgs>
+	Map(DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename KIDType, typename ... KArgs, typename VIDType, typename ... VArgs>
-	Map(DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory);
+	template <typename KID, typename ... KArgs, typename VID, typename ... VArgs>
+	Map(DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs);
 
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Output&
@@ -309,6 +309,6 @@ public:
 
 }//namespace DS
 
-#include "../../src/Map.tpp"
+#include "../../src/DS/Map.tpp"
 
 #endif //DS_MAP

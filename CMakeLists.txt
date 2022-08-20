@@ -15,18 +15,18 @@ set(INC_LIST
 		${INC_ROOT}/${PROJECT_NAME}/Set.hpp
 		${INC_ROOT}/${PROJECT_NAME}/Vector.hpp)
 set(SRC_LIST
-		${SRC_ROOT}/Digraph.tpp
-		${SRC_ROOT}/LNode.tpp
-		${SRC_ROOT}/ENode.tpp
-		${SRC_ROOT}/Holder.tpp
-		${SRC_ROOT}/List.tpp
-		${SRC_ROOT}/Map.tpp
-		${SRC_ROOT}/MNode.tpp
-		${SRC_ROOT}/Set.tpp
-		${SRC_ROOT}/SNode.tpp
-		${SRC_ROOT}/TNode.tpp
-		${SRC_ROOT}/Vector.tpp
-		${SRC_ROOT}/VNode.tpp)
+		${SRC_ROOT}/${PROJECT_NAME}/Digraph.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/LNode.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/ENode.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/Holder.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/List.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/Map.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/MNode.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/Set.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/SNode.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/TNode.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/Vector.tpp
+		${SRC_ROOT}/${PROJECT_NAME}/VNode.tpp)
 
 add_library(${PROJECT_NAME}OBJ INTERFACE)
 add_library(${PROJECT_NAME} INTERFACE)

@@ -81,6 +81,10 @@ public:
 	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
 	{ createInfo.constructor(this->raw, std::forward<decltype(args)>(args) ...); }
 
+	template <std::size_t ... I, typename ... Args>
+	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, std::derived_from<Stream::Input> auto& input, std::index_sequence<I ...>, auto&& ... args)
+	{ createInfo.constructor(this->raw, Stream::Get<std::remove_cvref_t<DP::Type<I, Args ...>>>(input) ..., std::forward<decltype(args)>(args) ...); }
+
 	explicit Holder(DP::Builder<T> const& builder)
 	{ builder(this->raw); }
 };//class DS::Holder<T>

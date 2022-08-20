@@ -47,38 +47,38 @@ requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...> && 
 }
 
 template <typename K, typename V, typename C, typename ... Cs>
-template <typename VIDType, typename ... VArgs>
-Map<K, V, C, Cs ...>::Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
+template <typename VID, typename ... VArgs>
+Map<K, V, C, Cs ...>::Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
 requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, std::forward<decltype(kArgs)>(kArgs) ..., input, vFactory);
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...);
 		if constexpr(sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
 
 template <typename K, typename V, typename C, typename ... Cs>
-template <typename KIDType, typename ... KArgs>
-Map<K, V, C, Cs ...>::Map(DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
+template <typename KID, typename ... KArgs>
+Map<K, V, C, Cs ...>::Map(DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, kFactory, input, std::forward<decltype(vArgs)>(vArgs) ...);
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...);
 		if constexpr(sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
 
 template <typename K, typename V, typename C, typename ... Cs>
-template <typename KIDType, typename ... KArgs, typename VIDType, typename ... VArgs>
-Map<K, V, C, Cs ...>::Map(DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
+template <typename KID, typename ... KArgs, typename VID, typename ... VArgs>
+Map<K, V, C, Cs ...>::Map(DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, kFactory, input, vFactory);
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...);
 		if constexpr(sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}

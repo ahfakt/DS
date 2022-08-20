@@ -4,7 +4,7 @@
 #include "List.hpp"
 #include "Map.hpp"
 #include "Vector.hpp"
-#include "../../src/VNode.tpp"
+#include "../../src/DS/VNode.tpp"
 
 namespace DS {
 
@@ -34,17 +34,17 @@ class Digraph {
 	deserializeVertices(Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename VIDType, typename ... VArgs>
+	template <typename VID, typename ... VArgs>
 	Vector<VNode<V, E>*>
-	deserializeVertices(Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory);
+	deserializeVertices(Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs);
 
 	void
 	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
-	template <typename EIDType, typename ... EArgs>
+	template <typename EID, typename ... EArgs>
 	void
-	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory);
+	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs);
 
 public:
 	template <Constness>
@@ -91,16 +91,16 @@ public:
 	explicit Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...> && Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
-	template <typename EIDType, typename ... EArgs>
-	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory)
+	template <typename EID, typename ... EArgs>
+	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename VIDType, typename ... VArgs>
-	Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, auto&& ... eArgs)
+	template <typename VID, typename ... VArgs>
+	Digraph(DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
-	template <typename VIDType, typename ... VArgs, typename EIDType, typename ... EArgs>
-	Digraph(DP::Factory<V, VIDType, VArgs ...> const& vFactory, Stream::Input& input, DP::Factory<E, EIDType, EArgs ...> const& eFactory);
+	template <typename VID, typename ... VArgs, typename EID, typename ... EArgs>
+	Digraph(DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs);
 
 	template <typename v, typename e>
 	friend Stream::Output&
@@ -560,6 +560,6 @@ public:
 
 }//namespace DS
 
-#include "../../src/Digraph.tpp"
+#include "../../src/DS/Digraph.tpp"
 
 #endif //DS_DIGRAPH_HPP

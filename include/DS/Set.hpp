@@ -2,7 +2,7 @@
 #define DS_SET_HPP
 
 #include "Container.hpp"
-#include "../../src/SNode.tpp"
+#include "../../src/DS/SNode.tpp"
 #include <StreamFormat/Dot.hpp>
 
 namespace DS {
@@ -96,8 +96,8 @@ public:
 	explicit Set(Stream::Input& input, auto&& ... kArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
 
-	template <typename IDType, typename ... Args>
-	Set(Stream::Input& input, DP::Factory<K, IDType, Args ...> const& factory);
+	template <typename ID, typename ... Args>
+	Set(Stream::Input& input, DP::Factory<K, ID, Args ...>, auto&& ... kArgs);
 
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Output&
@@ -216,6 +216,6 @@ public:
 
 }//namespace DS
 
-#include "../../src/Set.tpp"
+#include "../../src/DS/Set.tpp"
 
 #endif //DS_SET_HPP

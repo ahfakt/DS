@@ -2,7 +2,7 @@
 #define DS_LIST_HPP
 
 #include "Container.hpp"
-#include "../../src/LNode.tpp"
+#include "../../src/DS/LNode.tpp"
 #include <DP/Factory.hpp>
 #include <StreamFormat/Dot.hpp>
 
@@ -65,8 +65,8 @@ public:
 	explicit List(Stream::Input& input, auto&& ... tArgs)
 	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
 
-	template <typename IDType, typename ... Args>
-	List(Stream::Input& input, DP::Factory<T, IDType, Args ...> const& factory);
+	template <typename ID, typename ... Args>
+	List(Stream::Input& input, DP::Factory<T, ID, Args ...>, auto&& ... tArgs);
 
 	template <typename t>
 	friend Stream::Output&
@@ -229,6 +229,6 @@ public:
 
 }//namespace DS
 
-#include "../../src/List.tpp"
+#include "../../src/DS/List.tpp"
 
 #endif //DS_LIST_HPP

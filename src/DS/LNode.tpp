@@ -9,7 +9,7 @@ template <typename T>
 struct LNode {
 	LNode* prev;
 	LNode* next;
-	Holder<T> val;
+	Holder<T> val;	
 
 	static void*
 	operator new(std::size_t, std::size_t const valSize)

@@ -113,21 +113,22 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename VIDType, typename ... VArgs>
+	template <typename VID, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
+			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 	{
+		using vseq = std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
 
 		if (state & 0x20) {
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+			auto const& vCreateInfo = DP::Factory<V, VID, VArgs ...>::GetCreateInfo(Stream::Get<VID>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, input, vseq{}, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -148,8 +149,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, vFactory) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, vFactory) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -158,12 +159,13 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KIDType, typename ... KArgs>
+	template <typename KID, typename ... KArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, auto&& ... vArgs)
+			DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 	{
+		using kseq = std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
 		t->template state(2);
@@ -173,11 +175,11 @@ struct MNode : SNode<K, Cs ...> {
 				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			}
-			auto const& kCreateInfo = DP::Factory<K, KIDType, KArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
+			auto const& kCreateInfo = DP::Factory<K, KID, KArgs ...>::GetCreateInfo(Stream::Get<KID>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, input, kseq{}, std::forward<decltype(kArgs)>(kArgs) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -186,8 +188,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, kFactory, input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, kFactory, input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -196,20 +198,22 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KIDType, typename ... KArgs, typename VIDType, typename ... VArgs>
+	template <typename KID, typename ... KArgs, typename VID, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KIDType, KArgs ...> const& kFactory, Stream::Input& input, DP::Factory<V, VIDType, VArgs ...> const& vFactory)
+			DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
 	{
+		using kseq = std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>;
+		using vseq = std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
 
 		if (state & 0x20) {
-			auto const& vCreateInfo = DP::Factory<V, VIDType, VArgs ...>::GetCreateInfo(Stream::Get<VIDType>(input));
+			auto const& vCreateInfo = DP::Factory<V, VID, VArgs ...>::GetCreateInfo(Stream::Get<VID>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, Stream::Get<std::remove_cvref_t<VArgs>>(input) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, input, vseq{}, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -221,11 +225,11 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			auto const& kCreateInfo = DP::Factory<K, KIDType, KArgs ...>::GetCreateInfo(Stream::Get<KIDType>(input));
+			auto const& kCreateInfo = DP::Factory<K, KID, KArgs ...>::GetCreateInfo(Stream::Get<KID>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, Stream::Get<std::remove_cvref_t<KArgs>>(input) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, input, kseq{}, std::forward<decltype(kArgs)>(kArgs) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -234,8 +238,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, kFactory, input, vFactory) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, kFactory, input, vFactory) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {

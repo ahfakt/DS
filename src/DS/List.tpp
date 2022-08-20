@@ -67,20 +67,21 @@ requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
 }
 
 template <typename T>
-template <typename IDType, typename ... Args>
-List<T>::List(Stream::Input& input, DP::Factory<T, IDType, Args ...> const&)
+template <typename ID, typename ... Args>
+List<T>::List(Stream::Input& input, DP::Factory<T, ID, Args ...>, auto&& ... tArgs)
 		: Container(Stream::Get<std::uint64_t>(input))
 {
+	using seq = std::make_index_sequence<sizeof...(Args) - sizeof...(tArgs)>;
 	if (mSize) {
 		{
-			auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
-			(mTail = mHead = new(createInfo.size) LNode<T>(createInfo, Stream::Get<std::remove_cvref_t<Args>>(input) ...))->prev = nullptr;
+			auto const& createInfo = DP::Factory<T, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
+			(mTail = mHead = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...))->prev = nullptr;
 		}
 		std::uint64_t size = mSize;
 		while (--size) {
 			try {
-				auto const& createInfo = DP::Factory<T, IDType, Args ...>::GetCreateInfo(Stream::Get<IDType>(input));
-				mTail->next = new(createInfo.size) LNode<T>(createInfo, Stream::Get<std::remove_cvref_t<Args>>(input) ...);
+				auto const& createInfo = DP::Factory<T, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
+				mTail->next = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...);
 			} catch (...) {
 				this->~List();
 				throw;
