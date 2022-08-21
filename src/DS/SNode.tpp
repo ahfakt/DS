@@ -98,7 +98,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	Create(TNode<sizeof...(Cs)>* P, TNode<sizeof...(Cs)>* S,
 			Stream::Input& input, DP::Factory<K, ID, Args ...>, auto&& ... kArgs)
 	{
-		using seq = std::make_index_sequence<sizeof...(Args) - sizeof...(tArgs)>;
+		using seq = std::make_index_sequence<sizeof...(Args) - sizeof...(kArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto const& createInfo = DP::Factory<K, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
 		auto* t = new(createInfo.size) SNode(createInfo, input, seq{}, std::forward<decltype(kArgs)>(kArgs) ...);
