@@ -2,43 +2,33 @@
 
 ```shell
 # Target system processor
-SYSTEM_PROCESSOR=x86_64
+SYSTEM_PROCESSOR=x64
 
-# Debug, Release, RelWithDebInfo, MinSizeRel ...
-BUILD_TYPE=Debug
+# Debug, Release, RelWithDebInfo, MinSizeRel
+BUILD_TYPE=Release
 
-# Shared library files will be in ${INSTALL_PREFIX}/lib/${SYSTEM_PROCESSOR}/${BUILD_TYPE}
-INSTALL_PREFIX=/home/user
-
-# Uncomment to generate Doxygen documentation target
-#DOC_ROOT=/home/user/doc
-
-# cmake --help to see available generators
-GENERATOR="Unix Makefiles"
-
+git clone https://github.com/ahfakt/DP.git
 git clone https://github.com/ahfakt/Stream.git
 git clone https://github.com/ahfakt/StreamFormat.git
-git clone https://github.com/ahfakt/DP.git
 git clone https://github.com/ahfakt/DS.git
 
 # Generate
-mkdir build
-cd DS
+mkdir build && cd DS
 cmake \
-    -B ../build/DS/${SYSTEM_PROCESSOR}/${BUILD_TYPE} \
-    -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
-    -DDOC_ROOT=${DOC_ROOT} \
-    -DCMAKE_DEPENDS_USE_COMPILER=FALSE \
-    -G "${GENERATOR}"
+    -B../build/${SYSTEM_PROCESSOR}/${BUILD_TYPE}/DS \
+    -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} \
+    -DCMAKE_CXX_STANDARD:STRING=20 \
+    -G "Unix Makefiles"
 
 # Build
-# Stream | StreamOBJ | StreamDoc
-# StreamFormat | StreamFormatOBJ | StreamFormatDoc
 # DPDoc
+# Stream | StreamDoc
+# StreamFormat | StreamFormatDoc
 # DSDoc
+# Test targets are avaiable only when BUILD_TYPE=Debug
+# Documentation is avaiable only when BUILD_TYPE=Release
 cmake \
-    --build ../build/DS/${SYSTEM_PROCESSOR}/${BUILD_TYPE} \
-    --target DSDoc \
-    -- -j 6
+    --build ../build/${SYSTEM_PROCESSOR}/${BUILD_TYPE}/DS \
+    --config ${BUILD_TYPE} \
+    --target all
 ```
