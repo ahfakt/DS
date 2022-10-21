@@ -1,10 +1,10 @@
 #ifndef DSTEST_UTIL
 #define DSTEST_UTIL
 
-#include <string>
 #include <Stream/InOut.hpp>
-#include "DP/Factory.hpp"
+#include <DP/Factory.hpp>
 #include <iostream>
+#include <string>
 
 namespace DSTest {
 
