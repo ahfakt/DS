@@ -231,7 +231,7 @@ template <typename EID, typename ... EArgs>
 void
 Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs)
 {
-	using vseq = std::make_index_sequence<sizeof...(EArgs) - sizeof...(eArgs)>;
+	using eseq = std::make_index_sequence<sizeof...(EArgs) - sizeof...(eArgs)>;
 	try {
 		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
 			{
