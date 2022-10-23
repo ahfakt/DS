@@ -21,13 +21,13 @@ target_sources(${PROJECT_NAME}_MoveConstructor PRIVATE ${SRC_ROOT}/MoveConstruct
 add_test(NAME ${PROJECT_NAME}_MoveConstructor COMMAND ${PROJECT_NAME}_MoveConstructor)
 
 add_executable(${PROJECT_NAME}_AttachBalance)
-target_include_directories(${PROJECT_NAME}_AttachBalance PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
+target_include_directories(${PROJECT_NAME}_AttachBalance PRIVATE ../inc)
 target_link_libraries(${PROJECT_NAME}_AttachBalance PRIVATE Stream DS)
 target_sources(${PROJECT_NAME}_AttachBalance PRIVATE ${SRC_ROOT}/AttachBalance.cpp)
 add_test(NAME ${PROJECT_NAME}_AttachBalance COMMAND ${PROJECT_NAME}_AttachBalance)
 
 add_executable(${PROJECT_NAME}_DetachBalance)
-target_include_directories(${PROJECT_NAME}_DetachBalance PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
+target_include_directories(${PROJECT_NAME}_DetachBalance PRIVATE ../inc)
 target_link_libraries(${PROJECT_NAME}_DetachBalance PRIVATE Stream DS)
 target_sources(${PROJECT_NAME}_DetachBalance PRIVATE ${SRC_ROOT}/DetachBalance.cpp)
 add_test(NAME ${PROJECT_NAME}_DetachBalance COMMAND ${PROJECT_NAME}_DetachBalance)
