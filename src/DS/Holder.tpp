@@ -162,11 +162,11 @@ template <typename T, typename E = std::default_random_engine>
 struct RandomSelector : protected Random<std::bernoulli_distribution, E> {
 	T const&
 	operator()(T const& a, T const& b) const
-	{ return Random<E, std::bernoulli_distribution>::operator()() ? a : b; }
+	{ return Random<std::bernoulli_distribution, E>::operator()() ? a : b; }
 
 	T const&
 	operator()(T const& a, T const& b, double p) const
-	{ return Random<E, std::bernoulli_distribution>::operator()(p) ? a : b; }
+	{ return Random<std::bernoulli_distribution, E>::operator()(p) ? a : b; }
 };
 
 template <typename T>
