@@ -27,8 +27,8 @@ class Digraph {
 		};
 	};
 
-	LNode<VNode<V, E>>* mVPivot = nullptr;
-	LNode<ENode<V, E>>* mEPivot = nullptr;
+	LNode<VNode<V, E>>* mVPivot{nullptr};
+	LNode<ENode<V, E>>* mEPivot{nullptr};
 
 	Vector<VNode<V, E>*>
 	deserializeVertices(Stream::Input& input, auto&& ... vArgs)

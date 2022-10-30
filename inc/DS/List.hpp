@@ -18,8 +18,8 @@ class List : public Container {
 	template <typename v, typename e>
 	friend class Digraph;
 
-	LNode<T>* mHead = nullptr;
-	LNode<T>* mTail = nullptr;
+	LNode<T>* mHead{nullptr};
+	LNode<T>* mTail{nullptr};
 
 	LNode<T>*
 	pushFront(LNode<T>* l) noexcept;

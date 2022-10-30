@@ -8,11 +8,11 @@ namespace DS {
 template <typename V, typename E>
 struct VNode {
 	std::uint64_t inDegree{0};
-	ENode<V, E>* inHead = nullptr;
-	ENode<V, E>* inTail = nullptr;
+	ENode<V, E>* inHead{nullptr};
+	ENode<V, E>* inTail{nullptr};
 	std::uint64_t outDegree{0};
-	ENode<V, E>* outHead = nullptr;
-	ENode<V, E>* outTail = nullptr;
+	ENode<V, E>* outHead{nullptr};
+	ENode<V, E>* outTail{nullptr};
 	union {
 		std::uint8_t _ = 1;
 		std::uint8_t color:3;

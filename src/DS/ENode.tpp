@@ -10,12 +10,12 @@ struct VNode;
 
 template <typename V, typename E>
 struct ENode {
-	ENode* left = nullptr;
-	ENode* right = nullptr;
-	ENode* down = nullptr;
-	ENode* up = nullptr;
-	VNode<V, E>* in = nullptr;
-	VNode<V, E>* out = nullptr;
+	ENode* left{nullptr};
+	ENode* right{nullptr};
+	ENode* down{nullptr};
+	ENode* up{nullptr};
+	VNode<V, E>* in{nullptr};
+	VNode<V, E>* out{nullptr};
 	Holder<E> val;
 
 	static void*
