@@ -96,8 +96,8 @@ public:
 	explicit Set(Stream::Input& input, auto&& ... kArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
 
-	template <typename ID, typename ... Args>
-	Set(Stream::Input& input, DP::Factory<K, ID, Args ...>, auto&& ... kArgs);
+	template <typename Type, typename ... Args>
+	Set(Stream::Input& input, DP::Factory<K, Type, Args ...>, auto&& ... kArgs);
 
 	template <typename k, typename c, typename ... cs>
 	friend Stream::Output&

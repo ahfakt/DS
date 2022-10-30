@@ -93,18 +93,18 @@ struct SNode : TNode<sizeof...(Cs)> {
 		}
 	}
 
-	template <typename ID, typename ... Args>
+	template <typename Type, typename ... Args>
 	static TNode<sizeof...(Cs)>*
 	Create(TNode<sizeof...(Cs)>* P, TNode<sizeof...(Cs)>* S,
-			Stream::Input& input, DP::Factory<K, ID, Args ...>, auto&& ... kArgs)
+			Stream::Input& input, DP::Factory<K, Type, Args ...>, auto&& ... kArgs)
 	{
 		using seq = std::make_index_sequence<sizeof...(Args) - sizeof...(kArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
-		auto const& createInfo = DP::Factory<K, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
+		auto const& createInfo = DP::Factory<K, Type, Args ...>::GetCreateInfo(Stream::Get<Type>(input));
 		auto* t = new(createInfo.size) SNode(createInfo, input, seq{}, std::forward<decltype(kArgs)>(kArgs) ...);
 		try {
-			t->left(state & 0x40 ? SNode::Create(P, t, input, DP::Factory<K, ID, Args ...>{}) : P);
-			t->right(state & 0x10 ? SNode::Create(t, S, input, DP::Factory<K, ID, Args ...>{}) : S);
+			t->left(state & 0x40 ? SNode::Create(P, t, input, DP::Factory<K, Type, Args ...>{}) : P);
+			t->right(state & 0x10 ? SNode::Create(t, S, input, DP::Factory<K, Type, Args ...>{}) : S);
 			t->state(state);
 			return t;
 		} catch (...) {

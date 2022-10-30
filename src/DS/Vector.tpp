@@ -68,14 +68,14 @@ requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
 }
 
 template <typename T>
-template <typename ID, typename ... Args>
-Vector<T>::Vector(Stream::Input& input, DP::Factory<T, ID, Args ...>, auto&& ... tArgs)
+template <typename Type, typename ... Args>
+Vector<T>::Vector(Stream::Input& input, DP::Factory<T, Type, Args ...>, auto&& ... tArgs)
 		: Vector(Stream::Get<std::uint64_t>(input))
 {
 	using seq = std::make_index_sequence<sizeof...(Args) - sizeof...(tArgs)>;
 	while (mSize < mCapacity) {
 		try {
-			auto const& createInfo = DP::Factory<T, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
+			auto const& createInfo = DP::Factory<T, Type, Args ...>::GetCreateInfo(Stream::Get<Type>(input));
 			if (createInfo.size > sizeof(T))
 				throw Exception("createInfo.size is greater than the size of T.");
 			::new(mHead + mSize) Holder<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...);

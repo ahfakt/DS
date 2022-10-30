@@ -65,8 +65,8 @@ public:
 	explicit List(Stream::Input& input, auto&& ... tArgs)
 	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
 
-	template <typename ID, typename ... Args>
-	List(Stream::Input& input, DP::Factory<T, ID, Args ...>, auto&& ... tArgs);
+	template <typename Type, typename ... Args>
+	List(Stream::Input& input, DP::Factory<T, Type, Args ...>, auto&& ... tArgs);
 
 	template <typename t>
 	friend Stream::Output&

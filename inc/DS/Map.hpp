@@ -109,16 +109,16 @@ public:
 	explicit Map(auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...> && Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename VID, typename ... VArgs>
-	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
+	template <typename VType, typename ... VArgs>
+	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
 
-	template <typename KID, typename ... KArgs>
-	Map(DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
+	template <typename KType, typename ... KArgs>
+	Map(DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename KID, typename ... KArgs, typename VID, typename ... VArgs>
-	Map(DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs);
+	template <typename KType, typename ... KArgs, typename VType, typename ... VArgs>
+	Map(DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs);
 
 	template <typename k, typename v, typename c, typename ... cs>
 	friend Stream::Output&

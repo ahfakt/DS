@@ -34,17 +34,17 @@ class Digraph {
 	deserializeVertices(Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename VID, typename ... VArgs>
+	template <typename VType, typename ... VArgs>
 	Vector<VNode<V, E>*>
-	deserializeVertices(Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs);
+	deserializeVertices(Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs);
 
 	void
 	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
-	template <typename EID, typename ... EArgs>
+	template <typename EType, typename ... EArgs>
 	void
-	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs);
+	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, DP::Factory<E, EType, EArgs ...>, auto&& ... eArgs);
 
 public:
 	template <Constness>
@@ -91,16 +91,16 @@ public:
 	explicit Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...> && Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
-	template <typename EID, typename ... EArgs>
-	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs)
+	template <typename EType, typename ... EArgs>
+	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EType, EArgs ...>, auto&& ... eArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
 
-	template <typename VID, typename ... VArgs>
-	Digraph(DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
+	template <typename VType, typename ... VArgs>
+	Digraph(DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
 	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
 
-	template <typename VID, typename ... VArgs, typename EID, typename ... EArgs>
-	Digraph(DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EID, EArgs ...>, auto&& ... eArgs);
+	template <typename VType, typename ... VArgs, typename EType, typename ... EArgs>
+	Digraph(DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EType, EArgs ...>, auto&& ... eArgs);
 
 	template <typename v, typename e>
 	friend Stream::Output&

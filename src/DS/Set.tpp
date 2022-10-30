@@ -47,12 +47,12 @@ requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 }
 
 template <typename K, typename C, typename ... Cs>
-template <typename ID, typename ... Args>
-Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, ID, Args ...>, auto&& ... kArgs)
+template <typename Type, typename ... Args>
+Set<K, C, Cs ...>::Set(Stream::Input& input, DP::Factory<K, Type, Args ...>, auto&& ... kArgs)
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
-		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, input, DP::Factory<K, ID, Args ...>{}, std::forward<decltype(kArgs)>(kArgs) ...);
+		mRoot[0] = SNode<K, C, Cs ...>::Create(nullptr, nullptr, input, DP::Factory<K, Type, Args ...>{}, std::forward<decltype(kArgs)>(kArgs) ...);
 		if constexpr(sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<SNode<K, C, Cs ...>, Exception>(mRoot);
 	}

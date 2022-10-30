@@ -113,10 +113,10 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename VID, typename ... VArgs>
+	template <typename VType, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
+			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
 	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
 	{
 		using vseq = std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>;
@@ -124,7 +124,7 @@ struct MNode : SNode<K, Cs ...> {
 		MNode* t;
 
 		if (state & 0x20) {
-			auto const& vCreateInfo = DP::Factory<V, VID, VArgs ...>::GetCreateInfo(Stream::Get<VID>(input));
+			auto const& vCreateInfo = DP::Factory<V, VType, VArgs ...>::GetCreateInfo(Stream::Get<VType>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
@@ -149,8 +149,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -159,10 +159,10 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KID, typename ... KArgs>
+	template <typename KType, typename ... KArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
+			DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
 	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
 	{
 		using kseq = std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>;
@@ -175,7 +175,7 @@ struct MNode : SNode<K, Cs ...> {
 				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			}
-			auto const& kCreateInfo = DP::Factory<K, KID, KArgs ...>::GetCreateInfo(Stream::Get<KID>(input));
+			auto const& kCreateInfo = DP::Factory<K, KType, KArgs ...>::GetCreateInfo(Stream::Get<KType>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
@@ -188,8 +188,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, DP::Factory<K, KType, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, DP::Factory<K, KType, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -198,10 +198,10 @@ struct MNode : SNode<K, Cs ...> {
 		}
 	}
 
-	template <typename KID, typename ... KArgs, typename VID, typename ... VArgs>
+	template <typename KType, typename ... KArgs, typename VType, typename ... VArgs>
 	static MNode*
 	Create(MNode* P, MNode* S,
-			DP::Factory<K, KID, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VID, VArgs ...>, auto&& ... vArgs)
+			DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
 	{
 		using kseq = std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>;
 		using vseq = std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>;
@@ -209,7 +209,7 @@ struct MNode : SNode<K, Cs ...> {
 		MNode* t;
 
 		if (state & 0x20) {
-			auto const& vCreateInfo = DP::Factory<V, VID, VArgs ...>::GetCreateInfo(Stream::Get<VID>(input));
+			auto const& vCreateInfo = DP::Factory<V, VType, VArgs ...>::GetCreateInfo(Stream::Get<VType>(input));
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
@@ -225,7 +225,7 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			auto const& kCreateInfo = DP::Factory<K, KID, KArgs ...>::GetCreateInfo(Stream::Get<KID>(input));
+			auto const& kCreateInfo = DP::Factory<K, KType, KArgs ...>::GetCreateInfo(Stream::Get<KType>(input));
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
@@ -238,8 +238,8 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, DP::Factory<K, KID, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VID, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, DP::Factory<K, KType, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, DP::Factory<K, KType, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...) : S);
 			t->state(state);
 			return t;
 		} catch (...) {

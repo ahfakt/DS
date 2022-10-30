@@ -67,20 +67,20 @@ requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
 }
 
 template <typename T>
-template <typename ID, typename ... Args>
-List<T>::List(Stream::Input& input, DP::Factory<T, ID, Args ...>, auto&& ... tArgs)
+template <typename Type, typename ... Args>
+List<T>::List(Stream::Input& input, DP::Factory<T, Type, Args ...>, auto&& ... tArgs)
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	using seq = std::make_index_sequence<sizeof...(Args) - sizeof...(tArgs)>;
 	if (mSize) {
 		{
-			auto const& createInfo = DP::Factory<T, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
+			auto const& createInfo = DP::Factory<T, Type, Args ...>::GetCreateInfo(Stream::Get<Type>(input));
 			(mTail = mHead = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...))->prev = nullptr;
 		}
 		std::uint64_t size = mSize;
 		while (--size) {
 			try {
-				auto const& createInfo = DP::Factory<T, ID, Args ...>::GetCreateInfo(Stream::Get<ID>(input));
+				auto const& createInfo = DP::Factory<T, Type, Args ...>::GetCreateInfo(Stream::Get<Type>(input));
 				mTail->next = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...);
 			} catch (...) {
 				this->~List();

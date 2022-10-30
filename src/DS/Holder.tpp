@@ -5,6 +5,7 @@
 #include <DP/Builder.hpp>
 #include <Stream/InOut.hpp>
 #include <random>
+#include <utility>
 
 namespace DS {
 
@@ -137,15 +138,14 @@ concept Selector = requires (T const& a, T const& b, Args&& ... args)
 /// types
 
 template <typename E>
-struct Engine {
-private:
+class Engine {
 	static inline std::random_device s;
 protected:
 	static inline E e{s()};
 };
 
 template <typename D, typename E = std::default_random_engine>
-struct Random : protected Engine<E> {
+class Random : protected Engine<E> {
 protected:
 	static inline D d{};
 public:
