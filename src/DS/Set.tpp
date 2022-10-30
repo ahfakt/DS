@@ -231,7 +231,7 @@ Set<K, C, Cs ...>::at(std::uint64_t i) const noexcept
 	if (mRoot[N]) {
 		if (i < mSize / 2) {
 			it.pos = mRoot[N]->template leftMost<N>();
-			for (std::uint64_t j = 0; j < i; ++j)
+			for (std::uint64_t j{0}; j < i; ++j)
 				++it;
 		} else {
 			it.pos = mRoot[N]->template rightMost<N>();

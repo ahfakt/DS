@@ -11,7 +11,7 @@ namespace DS {
  */
 class Container {
 protected:
-	std::uint64_t mSize = 0;
+	std::uint64_t mSize{0};
 
 	Container() = default;
 

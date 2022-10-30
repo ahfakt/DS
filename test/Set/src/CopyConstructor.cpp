@@ -6,7 +6,7 @@ using namespace DS;
 int main()
 {
 	Set<int> set1D;
-	for (int i = 0; i < 13; ++i)
+	for (int i{0}; i < 13; ++i)
 		set1D.put(i);
 
 	Set<int> set1DCopied(set1D);
@@ -16,7 +16,7 @@ int main()
 
 	//
 	Set<int, std::less<>, std::greater<>> set2D;
-	for (int i = 0; i < 13; ++i)
+	for (int i{0}; i < 13; ++i)
 		set2D.put(i);
 
 	Set<int, std::less<>, std::greater<>> set2DCopied(set2D);

@@ -6,7 +6,7 @@ using namespace DS;
 int main()
 {
 	Map<int, int> map1D;
-	for (int i = 0; i < 13; ++i)
+	for (int i{0}; i < 13; ++i)
 		map1D.put(i).set(i);
 
 	Map<int, int> map1DCopied(map1D);
@@ -16,7 +16,7 @@ int main()
 
 	//
 	Map<int, int, std::less<>, std::greater<>> map2D;
-	for (int i = 0; i < 13; ++i)
+	for (int i{0}; i < 13; ++i)
 		map2D.put(i).set(i);
 
 	Map<int, int, std::less<>, std::greater<>> map2DCopied(map2D);

@@ -119,7 +119,7 @@ Vector<T>::pushBack(auto&& ... tArgs)
 	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
 	::new(static_cast<void*>(v.mHead + mSize)) Holder<T>(std::forward<decltype(tArgs)>(tArgs) ...);
 	try {
-		for (std::uint64_t i = 0; i < mSize; ++i)
+		for (std::uint64_t i{0}; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
 	} catch (...) {
 		reinterpret_cast<T*>(v.mHead + mSize)->~T();
@@ -142,7 +142,7 @@ Vector<T>::pushBack(auto&& ... dtArgs)
 	Vector v(mCapacity > 1 ? 1.5 * mCapacity : 2);
 	::new(static_cast<void*>(v.mHead + mSize)) Holder<DT>(std::forward<decltype(dtArgs)>(dtArgs) ...);
 	try {
-		for (std::uint64_t i = 0; i < mSize; ++i)
+		for (std::uint64_t i{0}; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
 	} catch (...) {
 		reinterpret_cast<DT*>(v.mHead + mSize)->~D();
@@ -168,7 +168,7 @@ Vector<T>::pushBack(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... ar
 	Vector v(mCapacity > 1 ? mCapacity * 1.5 : 2);
 	new(static_cast<void*>(v.mHead + mSize)) Holder<T>(createInfo, std::forward<decltype(args)>(args) ...);
 	try {
-		for (std::uint64_t i = 0; i < mSize; ++i)
+		for (std::uint64_t i{0}; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
 	} catch (...) {
 		reinterpret_cast<T*>(v.mHead + mSize)->~T();
@@ -190,7 +190,7 @@ Vector<T>::reserve(std::uint64_t n)
 {
 	if (n > mCapacity) {
 		Vector v(n);
-		for (std::uint64_t i = 0; i < mSize; ++i)
+		for (std::uint64_t i{0}; i < mSize; ++i)
 			v.pushBack(std::move_if_noexcept(*reinterpret_cast<T*>(mHead + i)));
 		swap(*this, v);
 	}
