@@ -105,8 +105,8 @@ requires Stream::InsertableTo<T, decltype(output)>
 }
 
 template <typename T>
-Stream::Format::DotOutput&
-operator<<(Stream::Format::DotOutput& dotOutput, List<T> const& list)
+Format::DotOutput&
+operator<<(Format::DotOutput& dotOutput, List<T> const& list)
 requires Stream::InsertableTo<T, decltype(dotOutput)>
 {
 	dotOutput << "digraph G {\n";

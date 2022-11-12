@@ -2,7 +2,7 @@
 #define DS_TNODE_TPP
 
 #include "Holder.tpp"
-#include <StreamFormat/Dot.hpp>
+#include <Format/Dot.hpp>
 
 namespace DS {
 
@@ -324,8 +324,8 @@ struct TNode {
 	}
 
 	template <std::size_t N>
-	Stream::Format::DotOutput&
-	toDot(Stream::Format::DotOutput& dotOutput) const
+	Format::DotOutput&
+	toDot(Format::DotOutput& dotOutput) const
 	{
 		dotOutput << "subgraph {\n";
 		if (d[N].hasLeft)

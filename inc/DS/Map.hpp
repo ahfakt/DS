@@ -4,7 +4,7 @@
 #include "Container.hpp"
 #include "../../src/DS/MNode.tpp"
 #include <DP/Factory.hpp>
-#include <StreamFormat/Dot.hpp>
+#include <Format/Dot.hpp>
 
 namespace DS {
 
@@ -35,8 +35,8 @@ class Map : public Container {
 	remove(MNode<K, V, C, Cs ...>* toDel) noexcept;
 
 	template <std::size_t N = 0>
-	Stream::Format::DotOutput&
-	toDot(Stream::Format::DotOutput& dotOutput) const
+	Format::DotOutput&
+	toDot(Format::DotOutput& dotOutput) const
 	requires Stream::InsertableTo<K, decltype(dotOutput)> && Stream::InsertableTo<V, decltype(dotOutput)>;
 
 public:
@@ -126,8 +126,8 @@ public:
 	requires Stream::InsertableTo<k, decltype(output)> && Stream::InsertableTo<v, decltype(output)>;
 
 	template <typename k, typename v, typename c, typename ... cs>
-	friend Stream::Format::DotOutput&
-	operator<<(Stream::Format::DotOutput& dotOutput, Map<k, v, c, cs ...> const& map)
+	friend Format::DotOutput&
+	operator<<(Format::DotOutput& dotOutput, Map<k, v, c, cs ...> const& map)
 	requires Stream::InsertableTo<k, decltype(dotOutput)> && Stream::InsertableTo<v, decltype(dotOutput)>;
 
 	~Map();

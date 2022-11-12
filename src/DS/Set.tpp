@@ -71,8 +71,8 @@ requires Stream::InsertableTo<K, decltype(output)>
 
 template <typename K, typename C, typename... Cs>
 template <std::size_t N>
-Stream::Format::DotOutput&
-Set<K, C, Cs...>::toDot(Stream::Format::DotOutput& dotOutput) const
+Format::DotOutput&
+Set<K, C, Cs...>::toDot(Format::DotOutput& dotOutput) const
 requires Stream::InsertableTo<K, decltype(dotOutput)>
 {
 	mRoot[N]->template toDot<N>(dotOutput);
@@ -83,8 +83,8 @@ requires Stream::InsertableTo<K, decltype(dotOutput)>
 }
 
 template <typename K, typename C, typename ... Cs>
-Stream::Format::DotOutput&
-operator<<(Stream::Format::DotOutput& dotOutput, Set<K, C, Cs ...> const& set)
+Format::DotOutput&
+operator<<(Format::DotOutput& dotOutput, Set<K, C, Cs ...> const& set)
 requires Stream::InsertableTo<K, decltype(dotOutput)>
 {
 	dotOutput << "digraph G {\nsplines=false\nnode[shape=circle style=filled fillcolor=\"white;0.9:black\"]\n";

@@ -290,8 +290,8 @@ struct SNode : TNode<sizeof...(Cs)> {
 	}
 
 	template <std::size_t N>
-	Stream::Format::DotOutput&
-	toDot(Stream::Format::DotOutput& dotOutput) const
+	Format::DotOutput&
+	toDot(Format::DotOutput& dotOutput) const
 	requires Stream::InsertableTo<K, decltype(dotOutput)>
 	{
 		if (this->d[N].hasLeft)

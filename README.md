@@ -9,7 +9,7 @@ BUILD_TYPE=Release
 
 git clone https://github.com/ahfakt/DP.git
 git clone https://github.com/ahfakt/Stream.git
-git clone https://github.com/ahfakt/StreamFormat.git
+git clone https://github.com/ahfakt/Format.git
 git clone https://github.com/ahfakt/DS.git
 
 # Generate
@@ -23,7 +23,7 @@ cmake \
 # Build
 # DPDoc
 # Stream | StreamDoc
-# StreamFormat | StreamFormatDoc
+# Format | FormatDoc
 # DSDoc
 # Test targets are avaiable only when BUILD_TYPE=Debug
 # Documentation is avaiable only when BUILD_TYPE=Release

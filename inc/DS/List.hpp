@@ -4,7 +4,7 @@
 #include "Container.hpp"
 #include "../../src/DS/LNode.tpp"
 #include <DP/Factory.hpp>
-#include <StreamFormat/Dot.hpp>
+#include <Format/Dot.hpp>
 
 namespace DS {
 
@@ -74,8 +74,8 @@ public:
 	requires Stream::InsertableTo<t, decltype(output)>;
 
 	template <typename t>
-	friend Stream::Format::DotOutput&
-	operator<<(Stream::Format::DotOutput& dotOutput, List<t> const& list)
+	friend Format::DotOutput&
+	operator<<(Format::DotOutput& dotOutput, List<t> const& list)
 	requires Stream::InsertableTo<t, decltype(dotOutput)>;
 
 	~List();

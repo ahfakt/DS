@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14.0)
 project(DS VERSION 0.7 DESCRIPTION "Data Structures Template Library")
 
 
-set(DEPENDENCIES DP Stream StreamFormat)
+set(DEPENDENCIES DP Stream Format)
 set(INC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INC_LIST

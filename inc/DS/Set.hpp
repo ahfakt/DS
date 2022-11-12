@@ -3,7 +3,7 @@
 
 #include "Container.hpp"
 #include "../../src/DS/SNode.tpp"
-#include <StreamFormat/Dot.hpp>
+#include <Format/Dot.hpp>
 
 namespace DS {
 
@@ -35,8 +35,8 @@ class Set : public Container {
 	remove(SNode<K, C, Cs ...>* toDel) noexcept;
 
 	template <std::size_t N = 0>
-	Stream::Format::DotOutput&
-	toDot(Stream::Format::DotOutput& dotOutput) const
+	Format::DotOutput&
+	toDot(Format::DotOutput& dotOutput) const
 	requires Stream::InsertableTo<K, decltype(dotOutput)>;
 
 public:
@@ -105,8 +105,8 @@ public:
 	requires Stream::InsertableTo<k, decltype(output)>;
 
 	template <typename k, typename c, typename ... cs>
-	friend Stream::Format::DotOutput&
-	operator<<(Stream::Format::DotOutput& dotOutput, Set<k, c, cs ...> const& set)
+	friend Format::DotOutput&
+	operator<<(Format::DotOutput& dotOutput, Set<k, c, cs ...> const& set)
 	requires Stream::InsertableTo<k, decltype(dotOutput)>;
 
 	~Set();
