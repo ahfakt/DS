@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14.0)
-project(DSTest VERSION 0.1 DESCRIPTION "")
+project(${PROJECT_NAME}_Test VERSION 0.1 DESCRIPTION "")
 
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Digraph ${CMAKE_CURRENT_BINARY_DIR}/Digraph)
