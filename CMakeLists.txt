@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(DS VERSION 0.7 DESCRIPTION "Data Structures Template Library")
 
 
