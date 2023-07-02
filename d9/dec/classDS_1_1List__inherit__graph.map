@@ -1,4 +1,5 @@
 <map id="DS::List&lt; T &gt;" name="DS::List&lt; T &gt;">
-<area shape="rect" id="node1" title="Doubly linked list implementation." alt="" coords="5,167,488,368"/>
-<area shape="rect" id="node2" href="$d2/da8/classDS_1_1Container.html" title="Base class for data structures." alt="" coords="117,5,376,119"/>
+<area shape="rect" id="Node000001" title="Doubly linked list implementation." alt="" coords="5,187,473,469"/>
+<area shape="rect" id="Node000002" href="$d2/da8/classDS_1_1Container.html" title="Base class for data structures." alt="" coords="117,5,361,139"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="242,153,242,187,237,187,237,153"/>
 </map>
