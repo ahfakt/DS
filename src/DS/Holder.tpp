@@ -8,6 +8,19 @@
 
 namespace DS {
 
+template <typename T>
+struct typeOf
+{ using type = void; };
+
+template <typename T, typename M>
+struct typeOf<M T::*>
+{ using type = M; };
+
+// Type of member
+template <auto MemberPtr>
+using TypeOf = typename typeOf<decltype(MemberPtr)>::type;
+
+
 template <std::size_t i, typename T, typename ... U>
 struct typeAt
 { using type = typename typeAt<i - 1, U ...>::type; };
