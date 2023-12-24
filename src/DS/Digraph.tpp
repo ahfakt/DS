@@ -8,13 +8,13 @@ requires std::is_copy_constructible_v<V> && std::is_copy_constructible_v<E>
 {
 	Map<VNode<V, E> const*, VNode<V, E>*> map;
 
-	if (mVerticesSize = other.mVerticesSize) {
+	if ((mVerticesSize = other.mVerticesSize)) {
 		(mVTail = mVHead = ::new LNode<VNode<V, E>>(static_cast<V const&>(static_cast<VNode<V, E> const*>(other.mVHead->val)->val)))->prev = nullptr;
 		try {
 			map.put(static_cast<VNode<V, E> const*>(other.mVHead->val))
 				.set(static_cast<VNode<V, E>*>(mVHead->val));
 			LNode<VNode<V, E>> const* src = other.mVHead;
-			while (src = src->next) {
+			while ((src = src->next)) {
 				(mVTail->next = ::new LNode<VNode<V, E>>(static_cast<V const&>(static_cast<VNode<V, E> const*>(src->val)->val)))->prev = mVTail;
 				mVTail = mVTail->next;
 				map.put(static_cast<VNode<V, E> const*>(src->val))
@@ -28,7 +28,7 @@ requires std::is_copy_constructible_v<V> && std::is_copy_constructible_v<E>
 	}
 
 	try {
-		if (mEdgesSize = other.mEdgesSize) {
+		if ((mEdgesSize = other.mEdgesSize)) {
 			(mETail = mEHead = ::new LNode<ENode<V, E>>(static_cast<E const&>(static_cast<ENode<V, E> const*>(other.mEHead->val)->val)))->prev = nullptr;
 			if (static_cast<ENode<V, E> const*>(other.mEHead->val)->in)
 				static_cast<ENode<V, E>*>(mEHead->val)
@@ -37,7 +37,7 @@ requires std::is_copy_constructible_v<V> && std::is_copy_constructible_v<E>
 				static_cast<ENode<V, E>*>(mEHead->val)
 					->setOut(map[static_cast<ENode<V, E> const*>(other.mEHead->val)->out]->value);
 			LNode<ENode<V, E>> const* src = other.mEHead;
-			while (src = src->next) {
+			while ((src = src->next)) {
 				try {
 					(mETail->next = ::new LNode<ENode<V, E>>(static_cast<E const&>(static_cast<ENode<V, E> const*>(src->val)->val)))->prev = mETail;
 					mETail = mETail->next;
@@ -204,7 +204,7 @@ Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, a
 requires Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>
 {
 	try {
-		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
+		if ((mEdgesSize = Stream::Get<std::uint64_t>(input))) {
 			(mETail = mEHead = ::new LNode<ENode<V, E>>(input, std::forward<decltype(eArgs)>(eArgs) ...))->prev = nullptr;
 			try {
 				static_cast<ENode<V, E>*>(mEHead->val)->setIn(vs[Stream::Get<std::uint64_t>(input)]);
@@ -235,7 +235,7 @@ Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, D
 {
 	using eseq = std::make_index_sequence<sizeof...(EArgs) - sizeof...(eArgs)>;
 	try {
-		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {
+		if ((mEdgesSize = Stream::Get<std::uint64_t>(input))) {
 			{
 				auto const& eCreateInfo = DP::Factory<E, EType, EArgs ...>::GetCreateInfo(Stream::Get<EType>(input));
 				(mETail = mEHead = new(Offset(&ENode<V, E>::val) + eCreateInfo.size) LNode<ENode<V, E>>(eCreateInfo, input, eseq{}, std::forward<decltype(eArgs)>(eArgs) ...))->prev = nullptr;

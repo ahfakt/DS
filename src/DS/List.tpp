@@ -10,7 +10,7 @@ requires std::is_copy_constructible_v<T>
 	if (mSize) {
 		(mTail = mHead = ::new LNode<T>(static_cast<T const&>(other.mHead->val)))->prev = nullptr;
 		LNode<T> const* src = other.mHead;
-		while (src = src->next) {
+		while ((src = src->next)) {
 			try {
 				(mTail->next = ::new LNode<T>(static_cast<T const&>(src->val)))->prev = mTail;
 				mTail = mTail->next;
@@ -114,12 +114,12 @@ requires Stream::InsertableTo<T, decltype(dotOutput)>
 		LNode<T>* l = list.mHead;
 		do {
 			dotOutput << l->val << (l->next ? "->" : "\n");
-		} while (l = l->next);
+		} while ((l = l->next));
 		if (list.mTail != list.mHead) {
 			l = list.mTail;
 			do {
 				dotOutput << l->val << (l->prev ? "->" : "\n");
-			} while (l = l->prev);
+			} while ((l = l->prev));
 		}
 	}
 	dotOutput << "}\n";
