@@ -1,5 +1,4 @@
-#ifndef DS_LIST_HPP
-#define DS_LIST_HPP
+#pragma once
 
 #include "Container.hpp"
 #include "../../src/DS/LNode.tpp"
@@ -63,7 +62,7 @@ public:
 	operator=(List value) noexcept;
 
 	explicit List(Stream::Input& input, auto&& ... tArgs)
-	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
+	requires Stream::Deserializable<T, decltype(input), decltype(tArgs) ...>;
 
 	template <typename Type, typename ... Args>
 	List(Stream::Input& input, DP::Factory<T, Type, Args ...>, auto&& ... tArgs);
@@ -230,5 +229,3 @@ public:
 }//namespace DS
 
 #include "../../src/DS/List.tpp"
-
-#endif //DS_LIST_HPP

@@ -1,5 +1,4 @@
-#ifndef DS_CONTAINER_HPP
-#define DS_CONTAINER_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -36,5 +35,3 @@ public:
 };//class DS::Container
 
 }//namespace DS
-
-#endif //DS_CONTAINER_HPP

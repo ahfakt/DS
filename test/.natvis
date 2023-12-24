@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="DS::List&lt;*&gt;">
+		<DisplayString>{mSize}</DisplayString>
+		<Expand HideRawView="1">
+			<LinkedListItems>
+				<Size>mSize</Size>
+				<HeadPointer>mHead</HeadPointer>
+				<NextPointer>next</NextPointer>
+				<ValueNode>*($T1*)val</ValueNode>
+			</LinkedListItems>
+		</Expand>
+	</Type>
+	<Type Name="DS::Vector&lt;*&gt;">
+		<DisplayString>{mSize}/{mCapacity}</DisplayString>
+		<Expand HideRawView="1">
+			<ArrayItems>
+				<Size>mSize</Size>
+				<ValuePointer>($T1*)mHead</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+</AutoVisualizer>

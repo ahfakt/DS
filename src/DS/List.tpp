@@ -46,7 +46,7 @@ List<T>::operator=(List value) noexcept
 
 template <typename T>
 List<T>::List(Stream::Input& input, auto&& ... tArgs)
-requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
+requires Stream::Deserializable<T, decltype(input), decltype(tArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {

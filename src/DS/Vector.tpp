@@ -53,7 +53,7 @@ Vector<T>::operator=(Vector value) noexcept
 
 template <typename T>
 Vector<T>::Vector(Stream::Input& input, auto&& ... tArgs)
-requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>
+requires Stream::Deserializable<T, decltype(input), decltype(tArgs) ...>
 		: Vector(Stream::Get<std::uint64_t>(input))
 {
 	while (mSize < mCapacity) {

@@ -1,5 +1,4 @@
-#ifndef DS_SET_HPP
-#define DS_SET_HPP
+#pragma once
 
 #include "Container.hpp"
 #include "../../src/DS/SNode.tpp"
@@ -94,7 +93,7 @@ public:
 	operator=(Set value) noexcept;
 
 	explicit Set(Stream::Input& input, auto&& ... kArgs)
-	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>;
+	requires Stream::Deserializable<K, decltype(input), decltype(kArgs) ...>;
 
 	template <typename Type, typename ... Args>
 	Set(Stream::Input& input, DP::Factory<K, Type, Args ...>, auto&& ... kArgs);
@@ -111,13 +110,22 @@ public:
 
 	~Set();
 
+	/**
+	 * @brief	Construct K with kArgs.
+	 */
 	const_iterator<>
 	put(auto&& ... kArgs);
 
+	/**
+	 * @brief	Construct DK with dkArgs.
+	 */
 	template <Derived<K> DK>
 	const_iterator<>
 	put(auto&& ... dkArgs);
 
+	/**
+	 * @brief	Construct K with createInfo and args.
+	 */
 	template <typename ... Args>
 	const_iterator<>
 	put(DP::CreateInfo<K, Args ...> const& createInfo, auto&& ... args);
@@ -217,5 +225,3 @@ public:
 }//namespace DS
 
 #include "../../src/DS/Set.tpp"
-
-#endif //DS_SET_HPP

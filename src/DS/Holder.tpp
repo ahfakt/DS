@@ -1,5 +1,4 @@
-#ifndef DS_HOLDER_TPP
-#define DS_HOLDER_TPP
+#pragma once
 
 #include <DP/CreateInfo.hpp>
 #include <DP/Builder.hpp>
@@ -9,12 +8,64 @@
 
 namespace DS {
 
-template <typename T, typename ... Args>
-concept ConstructibleFrom = std::destructible<T> && requires
-{ T{std::declval<Args>() ...}; };
+template <std::size_t i, typename T, typename ... U>
+struct typeAt
+{ using type = typename typeAt<i - 1, U ...>::type; };
 
-template <typename T, typename ... Args>
-concept NotConstructibleFrom = !ConstructibleFrom<T, Args ...>;
+template <typename T, typename ... U>
+struct typeAt<0, T, U ...>
+{ using type = T; };
+
+// Type of T[i]
+template <std::size_t i, typename ... T>
+using TypeAt = typename typeAt<i, T ...>::type;
+
+
+template <std::size_t i, auto V, auto ... U>
+struct valueAt
+{ static inline constexpr TypeAt<i - 1, decltype(U) ...> value = valueAt<i - 1, U ...>::value; };
+
+template <auto V, auto ... U>
+struct valueAt<0, V, U ...>
+{ static inline constexpr decltype(V) value = V; };
+
+// Value of non-type V[i]
+template <std::size_t i, auto ... V>
+inline constexpr TypeAt<i, decltype(V) ...> ValueAt = valueAt<i, V ...>::value;
+
+
+template <typename T, typename ... U>
+struct Pack
+{
+	T value;
+	Pack<U ...> next;
+};
+
+template <typename T>
+struct Pack<T>
+{
+	T value;
+};
+
+template <std::size_t I>
+struct getAt {
+	template <typename ... T>
+	static TypeAt<I, T ...>& get(Pack<T ...>& p)
+	{ return getAt<I - 1>::get(p.next); }
+};
+
+template <>
+struct getAt<0> {
+	template <typename ... T>
+	static TypeAt<0, T ...>& get(Pack<T ...>& p)
+	{ return p.value; }
+};
+
+template <std::size_t I, typename ... T>
+TypeAt<I, T ...>&
+GetAt(Pack<T ...>& p)
+{ return getAt<I>::get(p); }
+
 
 template <typename T>
 class alignas(T) Raw {
@@ -58,37 +109,38 @@ public:
 
 	auto
 	operator<=>(Raw const& other) const noexcept
+	requires requires(T const& a, T const& b) { a <=> b; }
 	{ return *reinterpret_cast<T const*>(raw) <=> *reinterpret_cast<T const*>(other.raw); }
 };//class DS::Raw<T>
 
 template <typename T>
-class Holder : public Raw<T> {
-public:
+struct Holder : Raw<T> {
 	Holder() noexcept = default;
 
 	explicit Holder(auto&& ... args)
-	requires ConstructibleFrom<T, decltype(args) ...>
-	{ ::new(this->raw) T{std::forward<decltype(args)>(args) ...}; }
+	requires Stream::InitializableFrom<T, decltype(args) ...>
+	{ ::new(this) T{std::forward<decltype(args)>(args) ...}; }
 
-	explicit Holder(Stream::ExtractableTo<T> auto& input, auto&& ... args)
-	requires NotConstructibleFrom<T, decltype(input), decltype(args) ...>
-	{ input >> *::new(this->raw) T{std::forward<decltype(args)>(args) ...}; }
+	explicit Holder(Stream::Source auto& input, auto&& ... args)
+	requires Stream::InitializableExtractableFrom<T, decltype(input), decltype(args) ...>
+	{ input >> *::new(this) T{std::forward<decltype(args)>(args) ...}; }
 
-	explicit Holder(Stream::TriviallyExtractableTo<T> auto& input)
-	requires NotConstructibleFrom<T, decltype(input)>
-	{ input >> *reinterpret_cast<T*>(this->raw); }
+	explicit Holder(Stream::Source auto& input)
+	requires Stream::TriviallyExtractableFrom<T, decltype(input)>
+	{ input >> *reinterpret_cast<T*>(this); }
+
+	template <typename ... Args, std::size_t ... I>
+	explicit Holder(Stream::Source auto& input, Pack<Args ...>& args, std::index_sequence<I ...>)
+			: Holder(input, GetAt<I>(args) ...) {}
 
 	template <typename ... Args>
 	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
-	{ createInfo.constructor(this->raw, std::forward<decltype(args)>(args) ...); }
+	{ createInfo.constructor(this, std::forward<decltype(args)>(args) ...); }
 
-	template <std::size_t ... I, typename ... Args>
-	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, std::derived_from<Stream::Input> auto& input, std::index_sequence<I ...>, auto&& ... args)
-	{ createInfo.constructor(this->raw, Stream::Get<std::remove_cvref_t<DP::Type<I, Args ...>>>(input) ..., std::forward<decltype(args)>(args) ...); }
-
-	explicit Holder(DP::Builder<T> const& builder)
-	{ builder(this->raw); }
-};//class DS::Holder<T>
+	template <typename ... Args, std::size_t ... I>
+	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, Stream::Source auto& input, std::index_sequence<I ...>, auto&& ... args)
+	{ createInfo.constructor(this, Stream::Get<std::remove_cvref_t<TypeAt<I, Args ...>>>(input) ..., std::forward<decltype(args)>(args) ...); }
+};//struct DS::Holder<T>
 
 ///enums
 
@@ -194,5 +246,3 @@ ToParent(void* val, auto P::* m)
 { return reinterpret_cast<P*>(reinterpret_cast<std::byte*>(val) - Offset(m)); }
 
 }//namespace DS
-
-#endif //DS_HOLDER_TPP

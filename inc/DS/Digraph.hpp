@@ -1,5 +1,4 @@
-#ifndef DS_DIGRAPH_HPP
-#define DS_DIGRAPH_HPP
+#pragma once
 
 #include "List.hpp"
 #include "Map.hpp"
@@ -32,7 +31,7 @@ class Digraph {
 
 	Vector<VNode<V, E>*>
 	deserializeVertices(Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
+	requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...>;
 
 	template <typename VType, typename ... VArgs>
 	Vector<VNode<V, E>*>
@@ -40,7 +39,7 @@ class Digraph {
 
 	void
 	deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
-	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
+	requires Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>;
 
 	template <typename EType, typename ... EArgs>
 	void
@@ -89,15 +88,15 @@ public:
 	operator=(Digraph value) noexcept;
 
 	explicit Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
-	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...> && Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
+	requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...> && Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>;
 
 	template <typename EType, typename ... EArgs>
 	Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EType, EArgs ...>, auto&& ... eArgs)
-	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>;
+	requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...>;
 
 	template <typename VType, typename ... VArgs>
 	Digraph(DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
-	requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>;
+	requires Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>;
 
 	template <typename VType, typename ... VArgs, typename EType, typename ... EArgs>
 	Digraph(DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EType, EArgs ...>, auto&& ... eArgs);
@@ -561,5 +560,3 @@ public:
 }//namespace DS
 
 #include "../../src/DS/Digraph.tpp"
-
-#endif //DS_DIGRAPH_HPP

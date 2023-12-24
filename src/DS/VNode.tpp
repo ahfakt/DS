@@ -1,5 +1,4 @@
-#ifndef DS_VNODE_TPP
-#define DS_VNODE_TPP
+#pragma once
 
 #include "ENode.tpp"
 
@@ -68,5 +67,3 @@ struct VNode {
 };//struct VNode<V, E>
 
 }//namespace DS
-
-#endif //DS_VNODE_TPP

@@ -1,9 +1,7 @@
-#ifndef DS_SNODE_TPP
-#define DS_SNODE_TPP
+#pragma once
 
 #include "TNode.tpp"
 #include "Holder.tpp"
-#include <DP/Builder.hpp>
 #include <DP/Factory.hpp>
 
 namespace DS {
@@ -78,7 +76,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	static TNode<sizeof...(Cs)>*
 	Create(TNode<sizeof...(Cs)>* P, TNode<sizeof...(Cs)>* S,
 			Stream::Input& input, auto&& ... kArgs)
-	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
+	requires Stream::Deserializable<K, decltype(input), decltype(kArgs) ...>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = ::new SNode(input, std::forward<decltype(kArgs)>(kArgs) ...);
@@ -151,7 +149,7 @@ struct SNode : TNode<sizeof...(Cs)> {
 	get(auto&& ... args)
 	{
 		auto* t = this;
-		DP::Type<N, Cs ...> cmp;
+		TypeAt<N, Cs ...> cmp;
 		while(true) {
 			if (cmp(std::forward<decltype(args)>(args) ..., static_cast<K const&>(t->key))) {
 				if (t->d[N].hasLeft) {
@@ -175,12 +173,12 @@ struct SNode : TNode<sizeof...(Cs)> {
 	TNode<sizeof...(Cs)>*
 	attach(TNode<sizeof...(Cs)>** created) noexcept
 	{
-		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key), static_cast<K const&>(key)))
+		if (TypeAt<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key), static_cast<K const&>(key)))
 			return this->d[N].hasLeft
 				? this->template attachedToLeft<N>(this->template left<N, SNode>()->template attach<N>(created))
 				: this->template attachToLeft<N>(*created);
 
-		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key)))
+		if (TypeAt<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*created)->key)))
 			return this->d[N].hasRight
 				? this->template attachedToRight<N>(this->template right<N, SNode>()->template attach<N>(created))
 				: this->template attachToRight<N>(*created);
@@ -255,9 +253,9 @@ struct SNode : TNode<sizeof...(Cs)> {
 	TNode<sizeof...(Cs)>*
 	detach(TNode<sizeof...(Cs)>** toDel) noexcept
 	{
-		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key), static_cast<K const&>(key)))
+		if (TypeAt<N, Cs ...>{}(static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key), static_cast<K const&>(key)))
 			return detachFromLeft<N>(toDel);
-		if (DP::Type<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key)))
+		if (TypeAt<N, Cs ...>{}(static_cast<K const&>(key), static_cast<K const&>(reinterpret_cast<SNode*>(*toDel)->key)))
 			return detachFromRight<N>(toDel);
 		if (this != *toDel)
 			return *toDel = nullptr;
@@ -304,5 +302,3 @@ struct SNode : TNode<sizeof...(Cs)> {
 };//struct SNode<K, Cs ...>
 
 }//namespace DS
-
-#endif //DS_SNODE_TPP

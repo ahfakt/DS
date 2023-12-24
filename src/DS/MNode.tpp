@@ -1,5 +1,4 @@
-#ifndef DS_MNODE_TPP
-#define DS_MNODE_TPP
+#pragma once
 
 #include "SNode.tpp"
 
@@ -82,8 +81,10 @@ struct MNode : SNode<K, Cs ...> {
 
 	static MNode*
 	Create(MNode* P, MNode* S,
-			auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...> && Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
+			Stream::Input& input)
+	requires
+		Stream::Deserializable<K, decltype(input)> &&
+		Stream::Deserializable<V, decltype(input)>
 	{
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
@@ -91,10 +92,10 @@ struct MNode : SNode<K, Cs ...> {
 
 		try {
 			if (state & 0x20) {
-				::new(static_cast<void*>(t->val)) Holder<V>(input, std::forward<decltype(vArgs)>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(input);
 				t->d[0].hasValue = true;
 			}
-			::new(static_cast<void*>(t->key)) Holder<K>(input, std::forward<decltype(kArgs)>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(input);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -103,8 +104,116 @@ struct MNode : SNode<K, Cs ...> {
 		}
 
 		try {
-			t->left(state & 0x40 ? MNode::Create(P, t, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : P);
-			t->right(state & 0x10 ? MNode::Create(t, S, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...) : S);
+			t->left(state & 0x40 ? MNode::Create(P, t, input) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, input) : S);
+			t->state(state);
+			return t;
+		} catch (...) {
+			delete t;
+			throw;
+		}
+	}
+
+	template <typename ... VArgs>
+	static MNode*
+	Create(MNode* P, MNode* S,
+			Stream::Input& input, Pack<VArgs ...>& vArgs)
+	requires
+		Stream::Deserializable<K, decltype(input)> &&
+		Stream::Deserializable<V, decltype(input), VArgs ...>
+	{
+		auto state = Stream::Get<std::uint8_t>(input);
+		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
+		t->template state(2);
+
+		try {
+			if (state & 0x20) {
+				::new(static_cast<void*>(t->val)) Holder<V>(input, vArgs, std::make_index_sequence<sizeof...(VArgs)>{});
+				t->d[0].hasValue = true;
+			}
+			::new(static_cast<void*>(t->key)) Holder<K>(input);
+		} catch (...) {
+			if (t->d[0].hasValue)
+				t->val->~V();
+			::operator delete(t);
+			throw;
+		}
+
+		try {
+			t->left(state & 0x40 ? MNode::Create(P, t, input, vArgs) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, input, vArgs) : S);
+			t->state(state);
+			return t;
+		} catch (...) {
+			delete t;
+			throw;
+		}
+	}
+
+	template <typename ... KArgs>
+	static MNode*
+	Create(MNode* P, MNode* S,
+			Pack<KArgs ...>& kArgs, Stream::Input& input)
+	requires
+		Stream::Deserializable<K, decltype(input), KArgs ...> &&
+		Stream::Deserializable<V, decltype(input)>
+	{
+		auto state = Stream::Get<std::uint8_t>(input);
+		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
+		t->template state(2);
+
+		try {
+			if (state & 0x20) {
+				::new(static_cast<void*>(t->val)) Holder<V>(input);
+				t->d[0].hasValue = true;
+			}
+			::new(static_cast<void*>(t->key)) Holder<K>(input, kArgs, std::make_index_sequence<sizeof...(KArgs)>{});
+		} catch (...) {
+			if (t->d[0].hasValue)
+				t->val->~V();
+			::operator delete(t);
+			throw;
+		}
+
+		try {
+			t->left(state & 0x40 ? MNode::Create(P, t, kArgs, input) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, kArgs, input) : S);
+			t->state(state);
+			return t;
+		} catch (...) {
+			delete t;
+			throw;
+		}
+	}
+
+	template <typename ... KArgs, typename ... VArgs>
+	static MNode*
+	Create(MNode* P, MNode* S,
+			Pack<KArgs ...>& kArgs, Stream::Input& input, Pack<VArgs ...>& vArgs)
+	requires
+		Stream::Deserializable<K, decltype(input), KArgs ...> &&
+		Stream::Deserializable<V, decltype(input), VArgs ...>
+	{
+		auto state = Stream::Get<std::uint8_t>(input);
+		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
+		t->template state(2);
+
+		try {
+			if (state & 0x20) {
+				::new(static_cast<void*>(t->val)) Holder<V>(input, vArgs, std::make_index_sequence<sizeof...(VArgs)>{});
+				t->d[0].hasValue = true;
+			}
+			::new(static_cast<void*>(t->key)) Holder<K>(input, kArgs, std::make_index_sequence<sizeof...(KArgs)>{});
+		} catch (...) {
+			if (t->d[0].hasValue)
+				t->val->~V();
+			::operator delete(t);
+			throw;
+		}
+
+		try {
+			t->left(state & 0x40 ? MNode::Create(P, t, kArgs, input, vArgs) : P);
+			t->right(state & 0x10 ? MNode::Create(t, S, kArgs, input, vArgs) : S);
 			t->state(state);
 			return t;
 		} catch (...) {
@@ -117,9 +226,8 @@ struct MNode : SNode<K, Cs ...> {
 	static MNode*
 	Create(MNode* P, MNode* S,
 			auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
-	requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
+	requires Stream::Deserializable<K, decltype(input), decltype(kArgs) ...>
 	{
-		using vseq = std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
 
@@ -128,7 +236,7 @@ struct MNode : SNode<K, Cs ...> {
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, input, vseq{}, std::forward<decltype(vArgs)>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, input, std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>{}, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -163,9 +271,8 @@ struct MNode : SNode<K, Cs ...> {
 	static MNode*
 	Create(MNode* P, MNode* S,
 			DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
-	requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
+	requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...>
 	{
-		using kseq = std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		auto* t = reinterpret_cast<MNode*>(::operator new(sizeof(MNode)));
 		t->template state(2);
@@ -179,7 +286,7 @@ struct MNode : SNode<K, Cs ...> {
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, input, kseq{}, std::forward<decltype(kArgs)>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, input, std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>{}, std::forward<decltype(kArgs)>(kArgs) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -203,8 +310,6 @@ struct MNode : SNode<K, Cs ...> {
 	Create(MNode* P, MNode* S,
 			DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
 	{
-		using kseq = std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>;
-		using vseq = std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>;
 		auto state = Stream::Get<std::uint8_t>(input);
 		MNode* t;
 
@@ -213,7 +318,7 @@ struct MNode : SNode<K, Cs ...> {
 			t = reinterpret_cast<MNode*>(operator new(sizeof(MNode), vCreateInfo.size));
 			t->template state(2);
 			try {
-				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, input, vseq{}, std::forward<decltype(vArgs)>(vArgs) ...);
+				::new(static_cast<void*>(t->val)) Holder<V>(vCreateInfo, input, std::make_index_sequence<sizeof...(VArgs) - sizeof...(vArgs)>{}, std::forward<decltype(vArgs)>(vArgs) ...);
 				t->d[0].hasValue = true;
 			} catch (...) {
 				operator delete(t);
@@ -229,7 +334,7 @@ struct MNode : SNode<K, Cs ...> {
 			if (kCreateInfo.size > sizeof(K))
 				throw std::system_error(MException::Code::LargerKey, "kCreateInfo.size is greater than the size of K.");
 
-			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, input, kseq{}, std::forward<decltype(kArgs)>(kArgs) ...);
+			::new(static_cast<void*>(t->key)) Holder<K>(kCreateInfo, input, std::make_index_sequence<sizeof...(KArgs) - sizeof...(kArgs)>{}, std::forward<decltype(kArgs)>(kArgs) ...);
 		} catch (...) {
 			if (t->d[0].hasValue)
 				t->val->~V();
@@ -293,5 +398,3 @@ struct MNode : SNode<K, Cs ...> {
 };//struct MNode<K, V, Cs ...>
 
 }//namespace DS
-
-#endif //DS_MNODE_TPP

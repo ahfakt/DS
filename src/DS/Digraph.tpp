@@ -82,19 +82,21 @@ Digraph<V, E>::operator=(Digraph value) noexcept
 
 template <typename V, typename E>
 Digraph<V, E>::Digraph(auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
-requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...> && Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>
+requires
+	Stream::Deserializable<V, decltype(input), decltype(vArgs) ...> &&
+	Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>
 { deserializeEdges(deserializeVertices(input, std::forward<decltype(vArgs)>(vArgs) ...), input, std::forward<decltype(eArgs)>(eArgs) ...); }
 
 template <typename V, typename E>
 template <typename EType, typename ... EArgs>
 Digraph<V, E>::Digraph(auto&& ... vArgs, Stream::Input& input, DP::Factory<E, EType, EArgs ...>, auto&& ... eArgs)
-requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
+requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...>
 { deserializeEdges(deserializeVertices(input, std::forward<decltype(vArgs)>(vArgs) ...), input, DP::Factory<E, EType, EArgs ...>{}, std::forward<decltype(eArgs)>(eArgs) ...); }
 
 template <typename V, typename E>
 template <typename VType, typename ... VArgs>
 Digraph<V, E>::Digraph(DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs, Stream::Input& input, auto&& ... eArgs)
-requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>
+requires Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>
 { deserializeEdges(deserializeVertices(input, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...), input, std::forward<decltype(eArgs)>(eArgs) ...); }
 
 template <typename V, typename E>
@@ -136,7 +138,7 @@ Digraph<V, E>::~Digraph()
 template <typename V, typename E>
 Vector<VNode<V, E>*>
 Digraph<V, E>::deserializeVertices(Stream::Input& input, auto&& ... vArgs)
-requires Stream::DeserializableWith<V, decltype(input), decltype(vArgs) ...>
+requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...>
 {
 	mVerticesSize = Stream::Get<std::uint64_t>(input);
 	Vector<VNode<V, E>*> vs(mVerticesSize + 1);
@@ -199,7 +201,7 @@ Digraph<V, E>::deserializeVertices(Stream::Input& input, DP::Factory<V, VType, V
 template <typename V, typename E>
 void
 Digraph<V, E>::deserializeEdges(Vector<VNode<V, E>*> vs, Stream::Input& input, auto&& ... eArgs)
-requires Stream::DeserializableWith<E, decltype(input), decltype(eArgs) ...>
+requires Stream::Deserializable<E, decltype(input), decltype(eArgs) ...>
 {
 	try {
 		if (mEdgesSize = Stream::Get<std::uint64_t>(input)) {

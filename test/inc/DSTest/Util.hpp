@@ -1,5 +1,4 @@
-#ifndef DSTEST_UTIL
-#define DSTEST_UTIL
+#pragma once
 
 #include <Stream/InOut.hpp>
 #include <DP/Factory.hpp>
@@ -633,5 +632,3 @@ TestBalance(DS::TNode<M> const* t, int depth = 0) {
 }
 
 }//namespace DSTest
-
-#endif //DSTEST_UTIL

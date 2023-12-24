@@ -36,7 +36,7 @@ Set<K, C, Cs ...>::operator=(Set value) noexcept
 
 template <typename K, typename C, typename ... Cs>
 Set<K, C, Cs ...>::Set(Stream::Input& input, auto&& ... kArgs)
-requires Stream::DeserializableWith<K, decltype(input), decltype(kArgs) ...>
+requires Stream::Deserializable<K, decltype(input), decltype(kArgs) ...>
 		: Container(Stream::Get<std::uint64_t>(input))
 {
 	if (mSize) {
@@ -383,7 +383,7 @@ Set<K, C, Cs...>::Difference<N>::operator()(Set const& a, Set const& b) const
 	Set set;
 	if (a) {
 		if (b) {
-			DP::Type<N, C, Cs ...> cmp;
+			TypeAt<N, C, Cs ...> cmp;
 			auto* i = a.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
 			auto* j = b.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
 
@@ -419,7 +419,7 @@ requires Selector<S, K, decltype(args) ...>
 {
 	Set set;
 	if (a && b) {
-		DP::Type<N, C, Cs ...> cmp;
+		TypeAt<N, C, Cs ...> cmp;
 		S selector;
 		auto* i = a.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
 		auto* j = b.mRoot[N]->template leftMost<N, SNode<K, C, Cs...>>();
@@ -450,7 +450,7 @@ requires Selector<S, K, decltype(args) ...>
 	Set set;
 	if (a) {
 		if (b) {
-			DP::Type<N, C, Cs ...> cmp;
+			TypeAt<N, C, Cs ...> cmp;
 			S selector;
 			auto* i = a.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
 			auto* j = b.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
@@ -489,7 +489,7 @@ requires Selector<S, K, decltype(args) ...>
 	Set set;
 	if (a) {
 		if (b) {
-			DP::Type<N, C, Cs ...> cmp;
+			TypeAt<N, C, Cs ...> cmp;
 			S selector;
 			auto* i = a.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();
 			auto* j = b.mRoot[N]->template leftMost<N, SNode < K, C, Cs...>>();

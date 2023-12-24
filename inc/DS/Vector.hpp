@@ -1,5 +1,4 @@
-#ifndef DS_VECTOR_HPP
-#define DS_VECTOR_HPP
+#pragma once
 
 #include "Container.hpp"
 #include "../../src/DS/Holder.tpp"
@@ -40,7 +39,7 @@ public:
 	operator=(Vector value) noexcept;
 
 	explicit Vector(Stream::Input& input, auto&& ... tArgs)
-	requires Stream::DeserializableWith<T, decltype(input), decltype(tArgs) ...>;
+	requires Stream::Deserializable<T, decltype(input), decltype(tArgs) ...>;
 
 	template <typename Type, typename ... Args>
 	Vector(Stream::Input& input, DP::Factory<T, Type, Args ...>, auto&& ... tArgs);
@@ -180,5 +179,3 @@ public:
 }//namespace DS
 
 #include "../../src/DS/Vector.tpp"
-
-#endif //DS_VECTOR_HPP

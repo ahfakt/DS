@@ -1,5 +1,4 @@
-#ifndef DS_LNODE_TPP
-#define DS_LNODE_TPP
+#pragma once
 
 #include "Holder.tpp"
 
@@ -147,5 +146,3 @@ qsort(LNode<T>* l, LNode<T>* r, LNode<T>*& head, LNode<T>*& tail) noexcept
 }
 
 }//namespace DS
-
-#endif //DS_LNODE_TPP

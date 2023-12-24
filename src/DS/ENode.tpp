@@ -1,5 +1,4 @@
-#ifndef DS_ENODE_TPP
-#define DS_ENODE_TPP
+#pragma once
 
 #include "Holder.tpp"
 
@@ -69,5 +68,3 @@ struct ENode {
 };//struct ENode<V, E>
 
 }//namespace DS
-
-#endif //DS_ENODE_TPP

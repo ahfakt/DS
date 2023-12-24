@@ -1,7 +1,5 @@
-#ifndef DS_TNODE_TPP
-#define DS_TNODE_TPP
+#pragma once
 
-#include "Holder.tpp"
 #include <Format/Dot.hpp>
 
 namespace DS {
@@ -351,5 +349,3 @@ struct TNode {
 };//struct TNode<std::size_t>
 
 }//namespace DS
-
-#endif //DS_TNODE_TPP
