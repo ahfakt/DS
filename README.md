@@ -25,8 +25,8 @@ cmake \
 # Stream | StreamDoc
 # Format | FormatDoc
 # DSDoc
-# Test targets are avaiable only when BUILD_TYPE=Debug
-# Documentation is avaiable only when BUILD_TYPE=Release
+# Test targets are available only when BUILD_TYPE=Debug
+# Documentation is available only when BUILD_TYPE=Release
 cmake \
     --build ../build/${SYSTEM_PROCESSOR}/${BUILD_TYPE}/DS \
     --config ${BUILD_TYPE} \
