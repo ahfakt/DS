@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20.0)
 project(DS VERSION 0.7 DESCRIPTION "Data Structures Template Library")
 
 
+set(CMAKE_CXX_STANDARD 20)
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	add_compile_options(--param destructive-interference-size=64)
+endif()
+
+
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE inc)
 file(GLOB INC ${CMAKE_CURRENT_SOURCE_DIR}/inc/${PROJECT_NAME}/*.hpp)
@@ -23,7 +29,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 elseif (CMAKE_BUILD_TYPE MATCHES Release)
 	find_package(Doxygen)
 	if (DOXYGEN_FOUND)
-		configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.cfg ${CMAKE_CURRENT_BINARY_DIR}/doxygen.cfg @ONLY)
+		configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/doxygen.cfg ${CMAKE_CURRENT_BINARY_DIR}/doxygen.cfg @ONLY)
 		add_custom_target(${PROJECT_NAME}Doc
 			WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/doc
 			COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen.cfg
