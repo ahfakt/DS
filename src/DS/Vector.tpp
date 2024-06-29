@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DS/Vector.hpp"
 
 namespace DS {

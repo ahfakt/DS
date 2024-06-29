@@ -45,7 +45,10 @@ struct valueAt<0, V, U ...>
 template <std::size_t i, auto ... V>
 inline constexpr TypeAt<i, decltype(V) ...> ValueAt = valueAt<i, V ...>::value;
 
-
+/**
+ * @brief	Tuple like structure.
+ * @class	Pack
+ */
 template <typename T, typename ... U>
 struct Pack
 {
@@ -53,6 +56,10 @@ struct Pack
 	Pack<U ...> next;
 };
 
+/**
+ * @brief	Tuple like structure.
+ * @class	Pack
+ */
 template <typename T>
 struct Pack<T>
 {
@@ -184,7 +191,7 @@ enum class Order : bool {
 	POSTORDER	= true
 };
 
-///concepts
+/// concepts
 
 template <typename D, typename T>
 concept Derived = std::derived_from<D, T>;
@@ -234,10 +241,10 @@ struct RandomSelector : protected Random<std::bernoulli_distribution, E> {
 };
 
 template <typename T>
-using LeftSelector = decltype([](T const& a, T const& b) -> T const& { return a; });
+using LeftSelector = decltype([](T const& a, T const& b) noexcept -> T const& { return a; });
 
 template <typename T>
-using RightSelector = decltype([](T const& a, T const& b) -> T const& { return b; });
+using RightSelector = decltype([](T const& a, T const& b) noexcept -> T const& { return b; });
 
 template <typename T, Constness c>
 using TConstness = std::conditional_t<c == Constness::CONST, T const, T>;
@@ -249,12 +256,12 @@ struct Aggregation : Types ... {};
 
 template <typename P>
 constexpr std::size_t
-Offset(auto P::* m)
+Offset(auto P::* m) noexcept
 { return reinterpret_cast<std::byte*>(&(reinterpret_cast<P*>(0)->*m)) - reinterpret_cast<std::byte*>(0); }
 
 template <typename P>
-auto*
-ToParent(void* val, auto P::* m)
+P*
+ToParent(void* val, auto P::* m) noexcept
 { return reinterpret_cast<P*>(reinterpret_cast<std::byte*>(val) - Offset(m)); }
 
 }//namespace DS

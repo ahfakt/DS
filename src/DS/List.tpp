@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DS/List.hpp"
 
 namespace DS {

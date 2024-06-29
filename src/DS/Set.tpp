@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DS/Set.hpp"
 
 namespace DS {

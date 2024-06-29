@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DS/Digraph.hpp"
 
 namespace DS {
