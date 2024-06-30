@@ -15,7 +15,7 @@ namespace DS {
  * @details	K can be any type, including abstract class
  */
 template <typename K, typename C = std::less<>, typename ... Cs>
-class Set : public Container {
+class Set : public Container<> {
 	TNode<sizeof...(Cs) + 1>* mRoot[sizeof...(Cs) + 1] = {};
 
 	template <std::size_t N = 0>

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <atomic>
+#include <new>
 
 namespace DS {
 
@@ -8,9 +10,10 @@ namespace DS {
  * @brief	Base class for data structures.
  * @class	Container Container.hpp "DS/Container.hpp"
  */
+template <bool Concurrent = false>
 class Container {
 protected:
-	std::uint64_t mSize{0};
+	alignas(Concurrent ? std::hardware_destructive_interference_size : alignof(std::uint64_t)) std::uint64_t mSize{0};
 
 	Container() = default;
 
@@ -24,14 +27,14 @@ public:
 	 */
 	[[nodiscard]] std::uint64_t
 	size() const noexcept
-	{ return mSize; }
+	{ return Concurrent ? std::atomic_ref{mSize}.load(std::memory_order::acquire) : mSize; }
 
 	/**
 	 * @brief	bool conversion operator.
 	 * @return	false, if no element is stored in the Container object
 	 */
 	explicit operator bool() const noexcept
-	{ return mSize; }
+	{ return Concurrent ? std::atomic_ref{mSize}.load(std::memory_order::acquire) : mSize; }
 };//class DS::Container
 
 }//namespace DS

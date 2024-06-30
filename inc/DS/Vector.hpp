@@ -7,7 +7,7 @@
 namespace DS {
 
 template <typename T>
-class Vector : public Container {
+class Vector : public Container<> {
 	Holder<T>* mHead{nullptr};
 	std::uint64_t mCapacity{0};
 public:

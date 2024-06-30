@@ -13,7 +13,7 @@ namespace DS {
  * @tparam	T Value type to be stored in List
  */
 template <typename T>
-class List : public Container {
+class List : public Container<> {
 	template <typename v, typename e>
 	friend class Digraph;
 
