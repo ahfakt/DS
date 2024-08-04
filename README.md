@@ -17,7 +17,6 @@ mkdir build && cd DS
 cmake \
     -B../build/${SYSTEM_PROCESSOR}/${BUILD_TYPE}/DS \
     -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} \
-    -DCMAKE_CXX_STANDARD:STRING=20 \
     -G "Unix Makefiles"
 
 # Build

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Container.hpp"
+#include "../../src/DS/Container.tpp"
 #include "../../src/DS/MNode.tpp"
+#include "Random.hpp"
 #include <DP/Factory.hpp>
 #include <Format/Dot.hpp>
 
@@ -10,12 +11,12 @@ namespace DS {
 /**
  * @brief	Balanced multi-index search tree implementation.
  * @class	Map Map.hpp "DS/Map.hpp"
- * @tparam	K Key type of the mapped type to be stored in Map
- * @tparam	V Value type to be mapped by K in Map
+ * @tparam	K Key type of the mapped type to be stored in %Map
+ * @tparam	V Value type to be mapped by K in %Map
  * @details	K and V can be any type, including abstract class
  */
 template <typename K, typename V, typename C = std::less<>, typename ... Cs>
-class Map : public Container {
+class Map : public Container<> {
 	TNode<sizeof...(Cs) + 1>* mRoot[sizeof...(Cs) + 1] = {};
 
 	template <std::size_t N = 0>
@@ -73,11 +74,11 @@ public:
 	};//struct DS::Map<K, V, C, Cs ...>::Intersection<S, N>
 
 	template <typename S, std::size_t N = 0>
-	struct LeftJoin {
+	struct Join {
 		Map
 		operator()(Map const& a, Map const& b, auto&& ... args) const
 		requires Selector<S, K, decltype(args) ...>;
-	};//struct DS::Map<K, V, C, Cs ...>::LeftJoin<S, N>
+	};//struct DS::Map<K, V, C, Cs ...>::Join<S, N>
 
 	template <typename S, std::size_t N = 0>
 	struct Union {
@@ -93,37 +94,76 @@ public:
 		auto operator<=>(Entry const& other) const = default;
 	};//struct DS::Map<K, V, C, Cs ...>::Entry<k, v>
 
+	/**
+	 * @brief	Default constructor
+	 */
 	Map() noexcept = default;
 
+	/**
+	 * @brief	Copy constructor
+	 */
 	Map(Map const& other)
 	requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V>;
 
+	/**
+	 * @brief	Move constructor
+	 */
 	Map(Map&& other) noexcept;
 
+	/**
+	 * @brief	Swap
+	 */
 	template <typename k, typename v, typename c, typename ... cs>
 	friend void
 	swap(Map<k, v, c, cs ...>& a, Map<k, v, c, cs ...>& b) noexcept;
 
+	/**
+	 * @brief	Value assignment
+	 */
 	Map&
 	operator=(Map value) noexcept;
 
+	/**
+	 * @brief	Construct K(input), V(input)
+	 * @param	input Stream::Input to be used to deserialize from
+	 */
 	explicit Map(Stream::Input& input)
 	requires
 		Stream::Deserializable<K, decltype(input)> &&
 		Stream::Deserializable<V, decltype(input)>;
 
+	/**
+	 * @brief	Construct K(input), V (input, vArgs ...)
+	 * @tparam	VArgs Deduced types of the vArgs
+	 * @param	input Stream::Input to be used to deserialize from
+	 * @param	vArgs Trailing parameters to be passed for every V along with the input
+	 */
 	template <typename ... VArgs>
 	Map(Stream::Input& input, Pack<VArgs ...> vArgs)
 	requires
 		Stream::Deserializable<K, decltype(input)> &&
 		Stream::Deserializable<V, decltype(input), VArgs ...>;
 
+	/**
+	 * @brief	Construct K(input, kArgs ...), V(input)
+	 * @tparam	KArgs Deduced types of the kArgs
+	 * @param	kArgs Trailing parameters to be passed for every K along with the input
+	 * @param	input Stream::Input to be used to deserialize from
+	 */
 	template <typename ... KArgs>
 	Map(Pack<KArgs ...> kArgs, Stream::Input& input)
 	requires
 		Stream::Deserializable<K, decltype(input), KArgs ...> &&
 		Stream::Deserializable<V, decltype(input)>;
 
+	/**
+	 * @brief	Construct K(input, kArgs ...), V(input, vArgs ...)
+	 * @tparam	KArgs Deduced types of the kArgs
+	 * @tparam	VArgs Deduced types of the vArgs
+	 * @param	kArgs Trailing parameters to be passed for every K along with the input
+	 * @param	input Stream::Input to be used to deserialize from
+	 * @param	vArgs Trailing parameters to be passed for every V along with the input
+	 */
 	template <typename ... KArgs, typename ... VArgs>
 	Map(Pack<KArgs ...> kArgs, Stream::Input& input, Pack<VArgs ...> vArgs)
 	requires
@@ -131,8 +171,16 @@ public:
 		Stream::Deserializable<V, decltype(input), VArgs ...>;
 
 /*
-	template <typename VType, typename ... VArgs>
-	Map(auto&& ... kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
+	// TODO
+	template <typename VType, typename ... VFArgs, typename ... VArgs>
+	Map(Stream::Input& input, DP::Factory<V, VType, VFArgs ...> vFactory, Pack<VArgs ...> vArgs)
+	requires
+		Stream::Deserializable<K, decltype(input)> &&
+		Stream::Deserializable<V, decltype(input), VFArgs ...>;
+
+
+	template <typename VType, typename ... KArgs, typename ... VArgs>
+	Map(Pack<KArgs ...> kArgs, Stream::Input& input, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
 	requires Stream::Deserializable<K, decltype(input), decltype(kArgs) ...>;
 
 	template <typename KType, typename ... KArgs>
@@ -156,6 +204,9 @@ public:
 		Stream::InsertableTo<k, decltype(dotOutput)> &&
 		Stream::InsertableTo<v, decltype(dotOutput)>;
 
+	/**
+	 * @brief	Destructor
+	 */
 	~Map();
 
 	/**

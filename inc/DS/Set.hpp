@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Container.hpp"
+#include "../../src/DS/Container.tpp"
 #include "../../src/DS/SNode.tpp"
+#include "Random.hpp"
 #include <Format/Dot.hpp>
 
 namespace DS {
@@ -65,11 +66,11 @@ public:
 	};//struct DS::Set<K, C, Cs ...>::Intersection<S, N>
 
 	template <typename S, std::size_t N = 0>
-	struct LeftJoin {
+	struct Join {
 		Set
 		operator()(Set const& a, Set const& b, auto&& ... args) const
 		requires Selector<S, K, decltype(args) ...>;
-	};//struct DS::Set<K, C, Cs ...>::LeftJoin<S, N>
+	};//struct DS::Set<K, C, Cs ...>::Join<S, N>
 
 	template <typename S, std::size_t N = 0>
 	struct Union {

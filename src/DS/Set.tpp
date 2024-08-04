@@ -446,7 +446,7 @@ requires Selector<S, K, decltype(args) ...>
 template <typename K, typename C, typename... Cs>
 template <typename S, std::size_t N>
 Set<K, C, Cs...>
-Set<K, C, Cs...>::LeftJoin<S, N>::operator()(Set const& a, Set const& b, auto&& ... args) const
+Set<K, C, Cs...>::Join<S, N>::operator()(Set const& a, Set const& b, auto&& ... args) const
 requires Selector<S, K, decltype(args) ...>
 {
 	Set set;

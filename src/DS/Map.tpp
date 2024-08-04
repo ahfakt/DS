@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DS/Map.hpp"
 
 namespace DS {
@@ -9,7 +11,7 @@ requires std::is_copy_constructible_v<K> && std::is_copy_constructible_v<V>
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, other.mRoot[0]);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
@@ -43,7 +45,7 @@ requires
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, input);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
@@ -58,7 +60,7 @@ requires
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, input, vArgs);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
@@ -73,7 +75,7 @@ requires
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, kArgs, input);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
@@ -88,11 +90,27 @@ requires
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, kArgs, input, vArgs);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
+
 /*
+template <typename K, typename V, typename C, typename ... Cs>
+template <typename VType, typename ... VFArgs, typename ... VArgs>
+Map<K, V, C, Cs ...>::Map(Stream::Input& input, DP::Factory<V, VType, VFArgs ...>, Pack<VArgs ...> vArgs)
+requires
+	Stream::Deserializable<K, decltype(input)> &&
+	Stream::Deserializable<V, decltype(input), VFArgs ...>
+		: Container(Stream::Get<std::uint64_t>(input))
+{
+	if (mSize) {
+		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, input, vArgs);
+		if constexpr (sizeof...(Cs) > 0)
+			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
+	}
+}
+
 template <typename K, typename V, typename C, typename ... Cs>
 template <typename ... KArgs, typename VType, typename ... VArgs>
 Map<K, V, C, Cs ...>::Map(Stream::Input& input, Pack<KArgs ...> kArgs, DP::Factory<V, VType, VArgs ...>, auto&& ... vArgs)
@@ -101,11 +119,10 @@ requires Stream::Deserializable<K, decltype(input), KArgs ...>
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, input, kArgs, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
-
 template <typename K, typename V, typename C, typename ... Cs>
 template <typename KType, typename ... KArgs>
 Map<K, V, C, Cs ...>::Map(DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, Stream::Input& input, auto&& ... vArgs)
@@ -114,7 +131,7 @@ requires Stream::Deserializable<V, decltype(input), decltype(vArgs) ...>
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, DP::Factory<K, KType, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, std::forward<decltype(vArgs)>(vArgs) ...);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
@@ -126,7 +143,7 @@ Map<K, V, C, Cs ...>::Map(DP::Factory<K, KType, KArgs ...>, auto&& ... kArgs, St
 {
 	if (mSize) {
 		mRoot[0] = MNode<K, V, C, Cs ...>::Create(nullptr, nullptr, DP::Factory<K, KType, KArgs ...>{}, std::forward<decltype(kArgs)>(kArgs) ..., input, DP::Factory<V, VType, VArgs ...>{}, std::forward<decltype(vArgs)>(vArgs) ...);
-		if constexpr(sizeof...(Cs) > 0)
+		if constexpr (sizeof...(Cs) > 0)
 			SNode<K, C, Cs ...>::template BuildTree<MNode<K, V, C, Cs ...>, Exception>(mRoot);
 	}
 }
@@ -646,7 +663,7 @@ requires Selector<S, K, decltype(args) ...>
 template <typename K, typename V, typename C, typename ... Cs>
 template <typename S, std::size_t N>
 Map<K, V, C, Cs ...>
-Map<K, V, C, Cs ...>::LeftJoin<S, N>::operator()(Map const& a, Map const& b, auto&& ... args) const
+Map<K, V, C, Cs ...>::Join<S, N>::operator()(Map const& a, Map const& b, auto&& ... args) const
 requires Selector<S, K, decltype(args) ...>
 {
 	Map map;

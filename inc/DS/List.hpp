@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Container.hpp"
+#include "../../src/DS/Container.tpp"
 #include "../../src/DS/LNode.tpp"
 #include <DP/Factory.hpp>
 #include <Format/Dot.hpp>
@@ -47,17 +47,32 @@ public:
 	using const_iterator = Iterator<Direction::FORWARD, Constness::CONST>;
 	using const_reverse_iterator = Iterator<Direction::BACKWARD, Constness::CONST>;
 
+	/**
+	 * @brief	Default constructor
+	 */
 	List() noexcept = default;
 
+	/**
+	 * @brief	Copy constructor
+	 */
 	List(List const& other)
 	requires std::is_copy_constructible_v<T>;
 
+	/**
+	 * @brief	Move constructor
+	 */
 	List(List&& other) noexcept;
 
+	/**
+	 * @brief	Swap
+	 */
 	template <typename t>
 	friend void
 	swap(List<t>& a, List<t>& b) noexcept;
 
+	/**
+	 * @brief	Value assignment
+	 */
 	List&
 	operator=(List value) noexcept;
 

@@ -3,9 +3,11 @@ project(DS VERSION 0.7 DESCRIPTION "Data Structures Template Library")
 
 
 set(CMAKE_CXX_STANDARD 20)
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	add_compile_options(--param destructive-interference-size=64) #target_compile_options
-	add_compile_definitions(__GCC_CONSTRUCTIVE_SIZE=64 __GCC_DESTRUCTIVE_SIZE=64) #target_compile_definitions
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	#add_compile_definitions(__GCC_CONSTRUCTIVE_SIZE=64 __GCC_DESTRUCTIVE_SIZE=64) #target_compile_definitions
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	#add_compile_options(--param destructive-interference-size=64) #target_compile_options
+	#add_compile_definitions(__GCC_CONSTRUCTIVE_SIZE=64 __GCC_DESTRUCTIVE_SIZE=64) #target_compile_definitions
 endif()
 
 

@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <atomic>
-#include <new>
 
 namespace DS {
 
@@ -11,14 +10,14 @@ namespace DS {
  * @class	Container Container.hpp "DS/Container.hpp"
  */
 template <bool Concurrent = false>
-class Container {
+class alignas(Concurrent ? 64 /* std::hardware_destructive_interference_size */ : alignof(std::uint64_t)) Container {
 protected:
-	alignas(Concurrent ? std::hardware_destructive_interference_size : alignof(std::uint64_t)) std::uint64_t mSize{0};
+	std::uint64_t mSize{0};
 
 	Container() = default;
 
 	explicit Container(std::uint64_t size) noexcept
-			: mSize(size)
+			: mSize{size}
 	{}
 
 public:
@@ -35,6 +34,6 @@ public:
 	 */
 	explicit operator bool() const noexcept
 	{ return Concurrent ? std::atomic_ref{mSize}.load(std::memory_order::acquire) : mSize; }
-};//class DS::Container
+};//class DS::Container<Concurrent>
 
 }//namespace DS
