@@ -1,16 +1,5 @@
 var searchData=
 [
-  ['inet_0',['Inet',['../../Stream/dd/ddd/structStream_1_1Socket_1_1Address_1_1Inet.html',1,'Stream::Socket::Address']]],
-  ['input_1',['Input',['../../Stream/d7/d83/classStream_1_1Input.html',1,'Stream']]],
-  ['intersection_2',['Intersection',['../da/d94/structDS_1_1Map_1_1Intersection.html',1,'DS::Map&lt; K, V, C, Cs &gt;::Intersection&lt; S, N &gt;'],['../d8/d94/structDS_1_1Set_1_1Intersection.html',1,'DS::Set&lt; K, C, Cs &gt;::Intersection&lt; S, N &gt;']]],
-  ['is_5ferror_5fcode_5fenum_3c_20format_3a_3abase_3a_3aexception_3a_3acode_20_3e_3',['is_error_code_enum&lt; Format::Base::Exception::Code &gt;',['../../Format/d1/def/structstd_1_1is__error__code__enum_3_01Format_1_1Base_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['is_5ferror_5fcode_5fenum_3c_20format_3a_3adot_3a_3aexception_3a_3acode_20_3e_4',['is_error_code_enum&lt; Format::Dot::Exception::Code &gt;',['../../Format/dc/dde/structstd_1_1is__error__code__enum_3_01Format_1_1Dot_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['is_5ferror_5fcode_5fenum_3c_20format_3a_3astring_3a_3aexception_3a_3acode_20_3e_5',['is_error_code_enum&lt; Format::String::Exception::Code &gt;',['../../Format/de/d92/structstd_1_1is__error__code__enum_3_01Format_1_1String_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['is_5ferror_5fcode_5fenum_3c_20stream_3a_3abuffer_3a_3aexception_3a_3acode_20_3e_6',['is_error_code_enum&lt; Stream::Buffer::Exception::Code &gt;',['../../Stream/d5/dba/structstd_1_1is__error__code__enum_3_01Stream_1_1Buffer_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['is_5ferror_5fcode_5fenum_3c_20stream_3a_3ainput_3a_3aexception_3a_3acode_20_3e_7',['is_error_code_enum&lt; Stream::Input::Exception::Code &gt;',['../../Stream/dd/d49/structstd_1_1is__error__code__enum_3_01Stream_1_1Input_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['is_5ferror_5fcode_5fenum_3c_20stream_3a_3aoutput_3a_3aexception_3a_3acode_20_3e_8',['is_error_code_enum&lt; Stream::Output::Exception::Code &gt;',['../../Stream/d1/d30/structstd_1_1is__error__code__enum_3_01Stream_1_1Output_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['is_5ferror_5fcode_5fenum_3c_20stream_3a_3asocket_3a_3aaddress_3a_3aexception_3a_3acode_20_3e_9',['is_error_code_enum&lt; Stream::Socket::Address::Exception::Code &gt;',['../../Stream/d9/d77/structstd_1_1is__error__code__enum_3_01Stream_1_1Socket_1_1Address_1_1Exception_1_1Code_01_4.html',1,'std']]],
-  ['iterator_10',['Iterator',['../d7/dd9/classDS_1_1Digraph_1_1AdjacencyList_1_1Iterator.html',1,'DS::Digraph&lt; V, E &gt;::AdjacencyList&lt; d, c &gt;::Iterator&lt; Direction, Constness &gt;'],['../d5/d5c/classDS_1_1Digraph_1_1EView_1_1Iterator.html',1,'DS::Digraph&lt; V, E &gt;::EView&lt; c &gt;::Iterator&lt; Direction, Constness &gt;'],['../d0/dda/classDS_1_1Digraph_1_1VView_1_1Iterator.html',1,'DS::Digraph&lt; V, E &gt;::VView&lt; c &gt;::Iterator&lt; Direction, Constness &gt;'],['../d0/d6c/classDS_1_1List_1_1Iterator.html',1,'DS::List&lt; T &gt;::Iterator&lt; d, c &gt;'],['../df/dc5/classDS_1_1Map_1_1Iterator.html',1,'DS::Map&lt; K, V, C, Cs &gt;::Iterator&lt; d, c, n &gt;'],['../dd/d9e/classDS_1_1Set_1_1Iterator.html',1,'DS::Set&lt; K, C, Cs &gt;::Iterator&lt; d, n &gt;'],['../de/dba/classDS_1_1Vector_1_1Iterator.html',1,'DS::Vector&lt; T &gt;::Iterator&lt; d, c &gt;']]],
-  ['iterator_20public_20edescriptor_11',['Iterator public EDescriptor',['../d2/d5e/classIterator_01public_01EDescriptor.html',1,'']]],
-  ['iterator_20public_20vdescriptor_12',['Iterator public VDescriptor',['../d6/d31/classIterator_01public_01VDescriptor.html',1,'']]]
+  ['getat_0',['getAt',['../d2/dac/structDS_1_1getAt.html',1,'DS']]],
+  ['getat_3c_200_20_3e_1',['getAt&lt; 0 &gt;',['../d7/de6/structDS_1_1getAt_3_010_01_4.html',1,'DS']]]
 ];

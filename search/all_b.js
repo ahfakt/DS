@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['pipe_0',['Pipe',['../../Stream/d3/de2/classStream_1_1Pipe.html#a0ab8de8162c7f2d937b4cdbfad3befb4',1,'Stream::Pipe::Pipe()'],['../../Stream/d3/de2/classStream_1_1Pipe.html',1,'Stream::Pipe']]]
+  ['operator_3d_0',['operator=',['../d3/df2/classDS_1_1CQueue.html#a08eb566c39ea1276cbd26a53dae0f609',1,'DS::CQueue::operator=(CQueue const &amp;)=delete'],['../d3/df2/classDS_1_1CQueue.html#a8fab1b004f4b8367f4ae307870260087',1,'DS::CQueue::operator=(CQueue &amp;&amp;)=delete'],['../d9/d41/classDS_1_1List.html#a0667497ddf6500d7a40bb9c44c4ef8be',1,'DS::List::operator=()'],['../d5/db6/classDS_1_1Map.html#ad70b7133ab89803c704c6d4af41cffef',1,'DS::Map::operator=()']]],
+  ['output_1',['Output',['../../Stream/df/dc2/classStream_1_1Output.html',1,'Stream']]]
 ];
