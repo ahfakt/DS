@@ -11,13 +11,15 @@ struct CountedPtr {
 
 	CountedPtr(T* ptr) noexcept;
 
-	T& operator*() const noexcept;
+	T&
+	operator*() const noexcept;
 
 	T*
 	operator->() const noexcept;
 
 	operator T*() const noexcept;
 
+	explicit
 	operator bool() const noexcept;
 
 	bool
@@ -33,9 +35,11 @@ class atomic<DS::CountedPtr<T>> {
 	DS::CountedPtr<T> val;
 
 public:
-	constexpr atomic() noexcept = default;
+	constexpr
+	atomic() noexcept = default;
 
-	constexpr atomic(DS::CountedPtr<T> desired) noexcept;
+	constexpr
+	atomic(DS::CountedPtr<T> desired) noexcept;
 
 	atomic(atomic const&) = delete;
 
@@ -45,6 +49,7 @@ public:
 	atomic&
 	operator=(atomic const&) = delete;
 
+	[[nodiscard]]
 	bool
 	is_lock_free() const noexcept;
 
@@ -56,7 +61,6 @@ public:
 
 	operator DS::CountedPtr<T>() const noexcept;
 
-	// TODO
 	DS::CountedPtr<T>
 	exchange(DS::CountedPtr<T> desired, std::memory_order order = std::memory_order::seq_cst) noexcept;
 

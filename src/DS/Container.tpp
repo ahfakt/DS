@@ -16,7 +16,8 @@ protected:
 
 	Container() = default;
 
-	explicit Container(std::uint64_t size) noexcept
+	explicit
+	Container(std::uint64_t size) noexcept
 			: mSize{size}
 	{}
 

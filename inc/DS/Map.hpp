@@ -133,7 +133,7 @@ public:
 		Stream::Deserializable<V, decltype(input)>;
 
 	/**
-	 * @brief	Construct K(input), V (input, vArgs ...)
+	 * @brief	Construct K(input), V(input, vArgs ...)
 	 * @tparam	VArgs Deduced types of the vArgs
 	 * @param	input Stream::Input to be used to deserialize from
 	 * @param	vArgs Trailing parameters to be passed for every V along with the input

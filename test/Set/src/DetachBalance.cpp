@@ -1,7 +1,6 @@
 #include "DS/Set.hpp"
-#include <cassert>
+#include "DS/Test/Balance.hpp"
 #include <random>
-#include "DSTest/Util.hpp"
 
 using namespace DS;
 
@@ -18,7 +17,7 @@ int main()
 		set1D.put(distrib(gen));
 	for (int i{0}; i < set1D.size(); ++i) {
 		set1D.remove(*set1D.at(std::uniform_int_distribution<>{0, static_cast<int>(set1D.size() - i - 1)}(gen)));
-		DSTest::TestBalance<1, 0>(rootNode1D[0]);
+		DS::Test::TestBalance<1, 0>(rootNode1D[0]);
 	}
 
 	//
@@ -29,8 +28,8 @@ int main()
 		set2D.put(distrib(gen));
 	for (int i{0}; i < set2D.size(); ++i) {
 		set2D.remove(*set2D.at(std::uniform_int_distribution<>{0, static_cast<int>(set2D.size() - i - 1)}(gen)));
-		DSTest::TestBalance<2, 0>(rootNode2D[0]);
-		DSTest::TestBalance<2, 1>(rootNode2D[1]);
+		DS::Test::TestBalance<2, 0>(rootNode2D[0]);
+		DS::Test::TestBalance<2, 1>(rootNode2D[1]);
 	}
 
 	return 0;

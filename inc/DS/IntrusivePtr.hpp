@@ -17,16 +17,20 @@ public:
 	IntrusivePtr&
 	operator=(IntrusivePtr other) noexcept;
 
-	explicit IntrusivePtr(T* ptr = nullptr, std::size_t offset = 0) noexcept;
+	explicit
+	IntrusivePtr(T* ptr = nullptr, std::size_t offset = 0) noexcept;
 
 	~IntrusivePtr();
 
-	T& operator*() const noexcept;
+	T&
+	operator*() const noexcept;
 
-	T* operator->() const noexcept;
+	T*
+	operator->() const noexcept;
 
 	operator T*() const noexcept;
 
+	explicit
 	operator bool() const noexcept;
 };//class IntrusivePtr<T>
 

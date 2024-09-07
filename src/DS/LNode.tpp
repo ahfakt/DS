@@ -8,7 +8,7 @@ template <typename T>
 struct LNode {
 	LNode* prev;
 	LNode* next;
-	Holder<T> val;	
+	Holder<T> val;
 
 	static void*
 	operator new(std::size_t, std::size_t const valSize)
@@ -21,13 +21,14 @@ struct LNode {
 	operator delete(void* ptr)
 	{ ::operator delete(ptr); }
 
-	explicit LNode(auto&& ... args)
+	explicit
+	LNode(auto&& ... args)
 			: val(std::forward<decltype(args)>(args) ...)
 	{}
 
 	~LNode()
 	{ val->~T(); }
-};//struct LNode<T>
+};//struct DS::LNode<T>
 
 template <typename T>
 void

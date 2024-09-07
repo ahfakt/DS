@@ -12,14 +12,12 @@ requires std::is_copy_constructible_v<T>
 	if (mSize) {
 		(mTail = mHead = ::new LNode<T>(static_cast<T const&>(other.mHead->val)))->prev = nullptr;
 		LNode<T> const* src = other.mHead;
-		while ((src = src->next)) {
-			try {
-				(mTail->next = ::new LNode<T>(static_cast<T const&>(src->val)))->prev = mTail;
-				mTail = mTail->next;
-			} catch (...) {
-				this->~List();
-				throw;
-			}
+		while ((src = src->next)) try {
+			(mTail->next = ::new LNode<T>(static_cast<T const&>(src->val)))->prev = mTail;
+			mTail = mTail->next;
+		} catch (...) {
+			this->~List();
+			throw;
 		}
 		mTail->next = nullptr;
 	}
@@ -54,15 +52,12 @@ requires Stream::Deserializable<T, decltype(input), decltype(tArgs) ...>
 	if (mSize) {
 		(mTail = mHead = ::new LNode<T>(input, std::forward<decltype(tArgs)>(tArgs) ...))->prev = nullptr;
 		std::uint64_t size = mSize;
-		while (--size) {
-			try {
-				mTail->next = ::new LNode<T>(input, std::forward<decltype(tArgs)>(tArgs) ...);
-			} catch (...) {
-				this->~List();
-				throw;
-			}
-			mTail->next->prev = mTail;
+		while (--size) try {
+			(mTail->next = ::new LNode<T>(input, std::forward<decltype(tArgs)>(tArgs) ...))->prev = mTail;
 			mTail = mTail->next;
+		} catch (...) {
+			this->~List();
+			throw;
 		}
 		mTail->next = nullptr;
 	}
@@ -80,16 +75,13 @@ List<T>::List(Stream::Input& input, DP::Factory<T, Type, Args ...>, auto&& ... t
 			(mTail = mHead = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...))->prev = nullptr;
 		}
 		std::uint64_t size = mSize;
-		while (--size) {
-			try {
-				auto const& createInfo = DP::Factory<T, Type, Args ...>::GetCreateInfo(Stream::Get<Type>(input));
-				mTail->next = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...);
-			} catch (...) {
-				this->~List();
-				throw;
-			}
-			mTail->next->prev = mTail;
+		while (--size) try {
+			auto const& createInfo = DP::Factory<T, Type, Args ...>::GetCreateInfo(Stream::Get<Type>(input));
+			(mTail->next = new(createInfo.size) LNode<T>(createInfo, input, seq{}, std::forward<decltype(tArgs)>(tArgs) ...))->prev = mTail;
 			mTail = mTail->next;
+		} catch (...) {
+			this->~List();
+			throw;
 		}
 		mTail->next = nullptr;
 	}

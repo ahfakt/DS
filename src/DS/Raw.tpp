@@ -32,16 +32,20 @@ public:
 	operator T const&() const noexcept
 	{ return *reinterpret_cast<T const*>(raw); }
 
-	explicit operator T*() noexcept
+	explicit
+	operator T*() noexcept
 	{ return reinterpret_cast<T*>(raw); }
 
-	explicit operator T const*() const noexcept
+	explicit
+	operator T const*() const noexcept
 	{ return reinterpret_cast<T const*>(raw); }
 
-	explicit operator void*() noexcept
+	explicit
+	operator void*() noexcept
 	{ return raw; }
 
-	explicit operator void const*() const noexcept
+	explicit
+	operator void const*() const noexcept
 	{ return raw; }
 
 	auto

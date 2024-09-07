@@ -4,6 +4,7 @@
 #include "Raw.tpp"
 #include <DP/CreateInfo.hpp>
 #include <Stream/InOut.hpp>
+#include <tuple>
 #include <utility>
 
 namespace DS {
@@ -12,21 +13,20 @@ template <typename T>
 struct Holder : Raw<T> {
 	Holder() noexcept = default;
 
-	explicit Holder(auto&& ... args)
-	requires Stream::InitializableFrom<T, decltype(args) ...>
+	explicit
+	Holder(auto&& ... args)
+	requires Stream::Initializable<T, decltype(args) ...>
 	{ ::new(this) T{std::forward<decltype(args)>(args) ...}; }
 
-	explicit Holder(Stream::Source auto& input, auto&& ... args)
-	requires Stream::InitializableExtractableFrom<T, decltype(input), decltype(args) ...>
-	{ input >> *::new(this) T{std::forward<decltype(args)>(args) ...}; }
-
-	explicit Holder(Stream::Source auto& input)
-	requires Stream::TriviallyExtractableFrom<T, decltype(input)>
-	{ input >> *reinterpret_cast<T*>(this); }
-
-	template <typename ... Args, std::size_t ... I>
-	explicit Holder(Stream::Source auto& input, Pack<Args ...>& args, std::index_sequence<I ...>)
-			: Holder(input, GetAt<I>(args) ...) {}
+	explicit
+	Holder(Stream::Source auto& input, auto&& ... args)
+	requires Stream::Extractable<T, decltype(input), decltype(args) ...>
+	{
+		if constexpr (sizeof...(args) == 0 && std::is_trivially_default_constructible_v<T>)
+			input >> *reinterpret_cast<T*>(this);
+		else
+			input >> *::new(this) T{std::forward<decltype(args)>(args) ...};
+	}
 
 	template <typename ... Args>
 	explicit Holder(DP::CreateInfo<T, Args ...> const& createInfo, auto&& ... args)
